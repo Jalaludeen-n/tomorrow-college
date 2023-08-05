@@ -4,7 +4,7 @@ const HtmlWebpackPlugin = require('html-webpack-plugin')
 module.exports = {
     entry: path.resolve(__dirname, '..', './src/index.tsx'),
     resolve: {
-      extensions: ['.tsx', '.ts', '.js'],
+      extensions: ['.tsx', '.ts', '.js','.json'],
     },
     module: {
       rules: [
@@ -28,12 +28,15 @@ module.exports = {
         {
             test: /\.(wolf(2)?|eot|ttf|otf|svg|)$ /,
             type: 'asset/inline',
-        }
+        },
       ],
     },
     output: {
       path: path.resolve(__dirname, '..', './build'),
       filename: 'bundle.js',
+    },
+    devServer: {
+      hot: false, // Disable HMR
     },
     mode: 'development',
     plugins: [
