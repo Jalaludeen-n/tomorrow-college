@@ -1,9 +1,10 @@
 import React, { useState } from 'react';
 
-const RolePDFUpload = ({ levels, setLevels, pdfCount }) => {
+const RolePDFUpload = ({ levels, setLevels, pdfCount,onFormDataChange }) => {
   const handleAddLevel = () => {
     setLevels([...levels, { role: '', pdfs: Array.from({ length: pdfCount }, () => null) }]);
   };
+  const formData = new FormData();
 
   const handleRoleChange = (index, value) => {
     const newLevels = [...levels];
@@ -13,8 +14,8 @@ const RolePDFUpload = ({ levels, setLevels, pdfCount }) => {
 
   const handlePDFChange = (levelIndex, pdfIndex, file) => {
     const newLevels = [...levels];
-    newLevels[levelIndex].pdfs[pdfIndex] = file;
-    setLevels(newLevels);
+    newLevels[levelIndex].pdfs[pdfIndex] = new Blob([file], { type: "application/pdf" });
+    setLevels(newLevels); 
   };
   
   return (

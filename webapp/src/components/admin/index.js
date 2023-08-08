@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import '../../styles/components/admin/index.scss';
 import RolePDFUpload from './roles';
+import sendDataToAirtable from '../services/airtable';
 
 const Index = () => {
   // State for the first half of the form
@@ -11,25 +12,47 @@ const Index = () => {
   const [scoreVisibility, setScoreVisibility] = useState('');
   const [allowAutoSelection, setAllowAutoSelection] = useState(false);
   const [individualInstructions, setIndividualInstructions] = useState(false);
+  const [formData, setFormData] = useState(new FormData());
 
   const [levels, setLevels] = useState([]);
   const pdfCount = 3; // Define the pdfCount as needed
 
-
-
-
-
-  const submit = () => {
-   console.log(gameName)
-   console.log(numRounds)
-   console.log(excelLink)
-   console.log(resultsSubmission)
-   console.log(scoreVisibility)
-   console.log(allowAutoSelection)
-   console.log(individualInstructions)
-   console.log(levels)
+  const handleFormDataChange = (newFormData) => {
+    setFormData(...newFormData);
+   
   };
+
+
+
+  const handleSubmit = async () => {
+    const formattedData = formatDataForAirtable(levels); // Format your data
+    console.log(formattedData)
+
+    // try {
+    //   await sendDataToAirtable(formattedData); // Send data to Airtable
+    //   console.log('Data successfully sent to Airtable');
+    // } catch (error) {
+    //   console.error('Error sending data to Airtable:', error);
+    // }
+  };
+
+  // Format your data according to Airtable schema
+  const formatDataForAirtable = (levels) => {
+    // Format levels data as needed
   
+    const formattedData = levels.flatMap((level) =>
+  level.pdfs.map((pdf,index) => ({
+    fields:{
+    GameID: "1234",
+    Role: level.role,
+    LevelDescription: pdf,
+    Level: index+1,
+    }
+  }))
+);
+
+    return formattedData;
+  };
 
   // Dropdown options
   const resultsSubbmision = [
@@ -120,12 +143,12 @@ const Index = () => {
       </div>
     </div>
     <div className='half'>
-    <RolePDFUpload levels={levels} setLevels={setLevels} pdfCount={pdfCount} />
+    <RolePDFUpload levels={levels} setLevels={setLevels} pdfCount={pdfCount} onFormDataChange={handleFormDataChange}/>
          
       </div>
 
   </div>
-        <button onClick={submit}> submit</button>
+        <button onClick={handleSubmit}> submit</button>
         </>
 
 );
