@@ -13,6 +13,7 @@ const [scoreVisibility, setScoreVisibility] = useState('');
 const [allowAutoSelection, setAllowAutoSelection] = useState(false);
 const [individualInstructions, setIndividualInstructions] = useState(false);
 const [formData, setFormData] = useState(new FormData());
+const [individualPdf, setIndividualPdf] = useState(null);
 
 const [levels, setLevels] = useState([]);
 
@@ -47,19 +48,26 @@ const formatDataForAirtable = (levels) => {
     ScoreVisibility : scoreVisibility,
     RoleSelection : allowAutoSelection,
     IndividualInstructions : individualInstructions,
-
-
   }));
 
-  const roles = [];
 // Create FormData and append each data entry separately
+
 levels.forEach((level) => {
+  if(!individualInstructions){
+    formData.append("pdf", individualPdf);
+  }else{
 level.pdfs.forEach((pdf) => {
   formData.append("pdf", pdf);
 });
-roles.push(level.role);
+  }
+const role = {
+  role : level.role,
+  checked : level.checked
+}
+formData.append("roles",JSON.stringify(role))
 });
-formData.append("roles",roles)
+
+
   return formData;
 };
 
@@ -87,6 +95,11 @@ const handleDropdownChange = (event, setStateFunction) => {
 
 const handleCheckboxChange = (setStateFunction) => {
   setStateFunction((prevState) => !prevState);
+};
+const handlePDFChange = (file) => {
+  const modifiedFile = new File([file], "individualPdf.pdf",{ type: "application/pdf" });
+  setIndividualPdf(modifiedFile);
+
 };
 
 return (
@@ -152,6 +165,16 @@ return (
       />
       <label>Individual instructions per round</label>
     </div>
+    { !individualInstructions && 
+    <div className='checkbox-group'>
+
+    <input
+            type="file"
+            accept=".pdf"
+            onChange={(e) => handlePDFChange(e.target.files[0])}
+          />
+          </div>
+}
   </div>
   <div className='half'>
   <RolePDFUpload levels={levels} setLevels={setLevels} pdfCount={numRounds} resultsSubmission={resultsSubmission} individualInstructions = {individualInstructions}/>

@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 
 const RolePDFUpload = ({ levels, setLevels, pdfCount,resultsSubmission ,individualInstructions}) => {
 const handleAddLevel = () => {
-  setLevels([...levels, { role: '', pdfs: Array.from({ length: pdfCount }, () => null) }]);
+  setLevels([...levels, { role: '', pdfs: Array.from({ length: pdfCount }, () => null),checked: false }]);
 };
 const formData = new FormData();
 
@@ -15,13 +15,16 @@ const handleRoleChange = (index, value) => {
 const handlePDFChange = (levelIndex, pdfIndex, file) => {
   const newLevels = [...levels];
   const uniqueFilename = generateUniqueFilename(newLevels[levelIndex].role, pdfIndex, ".pdf");
-  const modifiedFile = new File([file], uniqueFilename, { type: "application/pdf" });
-  console.log(modifiedFile)
-  
+  const modifiedFile = new File([file], uniqueFilename, { type: "application/pdf" });  
   newLevels[levelIndex].pdfs[pdfIndex] = modifiedFile;
   setLevels(newLevels); 
 };
 
+const handleCheckboxChange = (index, value) => {
+  const newLevels = [...levels];
+  newLevels[index].checked = value;
+  setLevels(newLevels); 
+};
 const generateUniqueFilename = (role, pdfIndex, originalFilename) => {
   const sanitizedRole = role.replace(/\s+/g, "_"); // Replace spaces with underscores
   const extension = originalFilename.split('.').pop();
@@ -30,7 +33,7 @@ const generateUniqueFilename = (role, pdfIndex, originalFilename) => {
 
 return (
   <div className="role-pdf-upload">
-    {levels.map((level, levelIndex) => (
+    {pdfCount > 0 && levels.map((level, levelIndex) => (
       <div key={levelIndex} className="level">
         <input
           type="text"
@@ -46,11 +49,12 @@ return (
             onChange={(e) => handlePDFChange(levelIndex, pdfIndex, e.target.files[0])}
           />
         ))}
-{<div className='checkbox-group'>
+{resultsSubmission == "Only one peson can submit group answer" &&
+ <div className='checkbox-group'>
       <input
         type='checkbox'
-        // checked={individualInstructions}
-        // onChange={() => handleCheckboxChange(setIndividualInstructions)}
+        checked={level.checked}
+        onChange={(e) => handleCheckboxChange(levelIndex,e.target.checked)}
       />
       <label>This role can only submit the group result</label>
     </div>}
