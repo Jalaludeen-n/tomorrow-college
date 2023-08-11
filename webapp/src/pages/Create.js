@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
-import '../../styles/components/admin/index.scss';
-import RolePDFUpload from './roles';
-import sendDataToAirtable from '../services/airtable';
+import '../styles/components/admin/index.scss';
+import RolePDFUpload from './../components/admin/roles';
+import {sendDataToAirtable} from '../components/services/airtable';
 
-const Index = () => {
+const Create = () => {
 // State for the first half of the form
 const [gameName, setGameName] = useState('');
 const [numRounds, setNumRounds] = useState(0);
@@ -188,4 +188,4 @@ return (
 );
 };
 
-export default Index;
+export default Create;
