@@ -1,78 +1,95 @@
-import React, { useState, useEffect } from 'react';
-import './../styles/page/Start.css'; // Import your CSS file for styling
-import { useLocation } from 'react-router-dom';
+import React, { useState, useEffect } from "react";
+import "./../styles/page/Start.css"; // Import your CSS file for styling
+import { useLocation } from "react-router-dom";
+import { startGame } from "../components/services/airtable";
 
 const Start = () => {
-  const [roomID, setRoomID] = useState('');
+  const [roomID, setRoomID] = useState("");
   const [showRoomID, setShowRoomID] = useState(false);
   const [secondsLeft, setSecondsLeft] = useState(5);
-  const [numberOfPlayers, setNumberOfPlayers] = useState('');
-  const [playersPerGroup, setPlayersPerGroup] = useState('');
-  const [error, setError] = useState('');
-
+  const [numberOfPlayers, setNumberOfPlayers] = useState(0);
+  const [playersPerGroup, setPlayersPerGroup] = useState(0);
+  const [error, setError] = useState("");
   const location = useLocation();
   const gameId = location.state.id;
-
-  useEffect(() => {
-    if (showRoomID && secondsLeft > 0) {
-      const countdownInterval = setInterval(() => {
-        setSecondsLeft((prevSeconds) => prevSeconds - 1);
-      }, 1000);
-
-      return () => {
-        clearInterval(countdownInterval);
-      };
-    }
-  }, [showRoomID, secondsLeft]);
-
-  const generateRoomID = () => {
-    if ((numberOfPlayers%playersPerGroup) == 0) {
-      const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
-      let id = '';
+  // useEffect(() => {
+  //   if (showRoomID && secondsLeft > 0) {
+  //     const countdownInterval = setInterval(() => {
+  //       setSecondsLeft((prevSeconds) => prevSeconds - 1);
+  //     }, 1000);
+  //     return () => {
+  //       clearInterval(countdownInterval);
+  //     };
+  //   }
+  // }, [showRoomID, secondsLeft]);
+  const generateRoomID = async () => {
+    if (numberOfPlayers % playersPerGroup == 0) {
+      const characters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+      let id = "";
       for (let i = 0; i < 8; i++) {
         const randomIndex = Math.floor(Math.random() * characters.length);
         id += characters[randomIndex];
       }
       setRoomID(id);
       setShowRoomID(true);
-      setSecondsLeft(5); // Reset the countdown timer
-      setError('');
+      const data = formatDataForAirtable();
+      await startGame(data);
+      setSecondsLeft(0); // Reset the countdown timer
+      setError("");
     } else {
-      setError(`Unable to assign ${(numberOfPlayers/playersPerGroup).toFixed(1)} players per group, please adjust the value.`);
+      setError(
+        `Unable to assign ${(numberOfPlayers / playersPerGroup).toFixed(
+          0,
+        )} players per group, please adjust the value.`,
+      );
     }
+  };
+
+  const formatDataForAirtable = (levels) => {
+    const formData = new FormData();
+
+    formData.append(
+      `data`,
+      JSON.stringify({
+        gameId: gameId,
+        roomNumber: roomID,
+        numberOfPlayers: numberOfPlayers,
+        numbersOfGroups: (numberOfPlayers / playersPerGroup).toFixed(1),
+        playersPerGroup: playersPerGroup,
+      }),
+    );
+    return formData;
   };
 
   const copyToClipboard = () => {
     navigator.clipboard.writeText(roomID);
-    setShowRoomID(false); 
-    alert('Room ID copied to clipboard');
+    setShowRoomID(false);
+    alert("Room ID copied to clipboard");
   };
-
-  useEffect(() => {
-    if (showRoomID && secondsLeft === 0) {
-      window.location.href = '/';
-    }
-  }, [showRoomID, secondsLeft]);
-
+  // useEffect(() => {
+  //   if (showRoomID && secondsLeft === 0) {
+  //     window.location.href = "/";
+  //   }
+  // }, [showRoomID, secondsLeft]);
   return (
-    <div className="room-generator">
+    <div className='room-generator'>
       <h2>Create a Room</h2>
       <input
-        type="number"
-        placeholder="Number of players"
+        type='number'
+        placeholder='Number of players'
         value={numberOfPlayers}
         onChange={(e) => setNumberOfPlayers(e.target.value)}
       />
       <input
-        type="number"
-        placeholder="Number of players per group"
+        type='number'
+        placeholder='Number of players per group'
         value={playersPerGroup}
         onChange={(e) => setPlayersPerGroup(e.target.value)}
       />
       <button onClick={generateRoomID}>Generate Room ID</button>
-      {error && <p className="error">{error}</p>}
+      {error && <p className='error'>{error}</p>}
       {showRoomID && (
-        <div className="room-id">
+        <div className='room-id'>
           <p>Room ID: {roomID}</p>
           <button onClick={copyToClipboard}>Copy</button>
           <p>Redirecting in {secondsLeft} seconds...</p>
@@ -81,5 +98,4 @@ const Start = () => {
     </div>
   );
 };
-
 export default Start;

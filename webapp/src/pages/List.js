@@ -2,17 +2,13 @@ import React, { useEffect, useState } from 'react';
 import './../styles/page/ListPage.css';
 import { fetchGameDataFromAirtable } from '../components/services/airtable';
 import { Link } from 'react-router-dom';
-
-
 const List = () => {
   const [games, setGames] = useState([]); // State to store fetched game data
-
   // Function to fetch and set game data
   const fetchGamesData = async () => {
     try {
       const gameData = await fetchGameDataFromAirtable();
       console.log(gameData.data)
-
       // Assuming the fetched game data is an array of game names
       if (gameData) {
         setGames(gameData.data);
@@ -22,11 +18,9 @@ const List = () => {
       console.error('Error fetching game data:', error);
     }
   };
-
   useEffect(() => {
     fetchGamesData(); // Call the function to fetch and set game data
   }, []);
-
   return (
     <div className="list-container">
       <div className="title">List of Games</div>
@@ -41,5 +35,4 @@ const List = () => {
     </div>
   );
 };
-
 export default List;
