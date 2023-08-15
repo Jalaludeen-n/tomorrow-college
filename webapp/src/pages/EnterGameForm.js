@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import "./../styles/components/user/EnterGameForm.css";
+import { joinGame } from "../components/services/airtable";
 
 const EnterGameForm = () => {
   const [email, setEmail] = useState("");
@@ -18,9 +19,26 @@ const EnterGameForm = () => {
     setGroupNumber(event.target.value);
   };
 
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
     // Handle form submission, e.g. send data to server
+    const data = formatDataForAirtable();
+    await joinGame(data);
     console.log("Submitted:", email, roomNumber, groupNumber);
+    window.location.href = "/details";
+  };
+
+  const formatDataForAirtable = (levels) => {
+    const formData = new FormData();
+
+    formData.append(
+      `data`,
+      JSON.stringify({
+        roomNumber: roomNumber,
+        Email: email,
+        group: groupNumber,
+      }),
+    );
+    return formData;
   };
 
   return (

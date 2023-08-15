@@ -12,37 +12,22 @@ const Start = () => {
   const [error, setError] = useState("");
   const location = useLocation();
   const gameId = location.state.id;
-  // useEffect(() => {
-  //   if (showRoomID && secondsLeft > 0) {
-  //     const countdownInterval = setInterval(() => {
-  //       setSecondsLeft((prevSeconds) => prevSeconds - 1);
-  //     }, 1000);
-  //     return () => {
-  //       clearInterval(countdownInterval);
-  //     };
-  //   }
-  // }, [showRoomID, secondsLeft]);
-  const generateRoomID = async () => {
-    if (numberOfPlayers % playersPerGroup == 0) {
-      const characters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
-      let id = "";
-      for (let i = 0; i < 8; i++) {
-        const randomIndex = Math.floor(Math.random() * characters.length);
-        id += characters[randomIndex];
-      }
-      setRoomID(id);
-      setShowRoomID(true);
-      const data = formatDataForAirtable();
-      await startGame(data);
-      setSecondsLeft(0); // Reset the countdown timer
-      setError("");
-    } else {
-      setError(
-        `Unable to assign ${(numberOfPlayers / playersPerGroup).toFixed(
-          0,
-        )} players per group, please adjust the value.`,
-      );
+  useEffect(() => {
+    if (showRoomID && secondsLeft > 0) {
+      const countdownInterval = setInterval(() => {
+        setSecondsLeft((prevSeconds) => prevSeconds - 1);
+      }, 1000);
+      return () => {
+        clearInterval(countdownInterval);
+      };
     }
+  }, [showRoomID, secondsLeft]);
+  const generateRoomID = async () => {
+    setShowRoomID(true);
+    const data = formatDataForAirtable();
+    await startGame(data);
+    setSecondsLeft(5); // Reset the countdown timer
+    setError("");
   };
 
   const formatDataForAirtable = (levels) => {
@@ -66,11 +51,21 @@ const Start = () => {
     setShowRoomID(false);
     alert("Room ID copied to clipboard");
   };
-  // useEffect(() => {
-  //   if (showRoomID && secondsLeft === 0) {
-  //     window.location.href = "/";
-  //   }
-  // }, [showRoomID, secondsLeft]);
+  useEffect(() => {
+    const characters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+    let id = "";
+    if (roomID == "") {
+      for (let i = 0; i < 8; i++) {
+        const randomIndex = Math.floor(Math.random() * characters.length);
+        id += characters[randomIndex];
+      }
+      setRoomID(id);
+    }
+
+    if (showRoomID && secondsLeft === 0) {
+      window.location.href = "/";
+    }
+  }, [showRoomID, secondsLeft]);
   return (
     <div className='room-generator'>
       <h2>Create a Room</h2>

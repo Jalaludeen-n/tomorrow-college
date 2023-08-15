@@ -6,6 +6,8 @@ import List from "./pages/List";
 import Create from "./pages/Create";
 import Start from "./pages/Start";
 import EnterGameForm from "./pages/EnterGameForm";
+import GameDetails from "./pages/GameDetails";
+import Level from "./pages/Level";
 
 function App() {
   return (
@@ -16,6 +18,8 @@ function App() {
         <Route path='/create' element={<Create />} />
         <Route path='/start' element={<Start />} />
         <Route path='/enterGame' element={<EnterGameForm />} />
+        <Route path='/details' element={<GameDetails />} />
+        <Route path='/level' element={<Level />} />
       </Routes>
     </BrowserRouter>
   );

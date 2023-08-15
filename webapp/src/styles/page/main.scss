@@ -1,0 +1,127 @@
+@import url("../colors.css");
+
+.app-container {
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.top-section {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+  border-radius: 8px;
+  background-color: var(--primary-color);
+  height: 15vh;
+  padding: 30px;
+  color: var(--white);
+
+  &__message-container {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+
+    &__welcome-message {
+      font-size: 24px;
+      font-weight: bold;
+      padding: 8% 0px;
+    }
+
+    &__date {
+      font-size: 18px;
+      text-align: center;
+    }
+  }
+
+  &__top-buttons {
+    display: flex;
+    flex-direction: column;
+    width: 15%;
+    text-align: center;
+
+    &__top-button {
+      margin-left: 10px;
+      padding: 20px;
+      text-decoration: none;
+      border-radius: 5px;
+      margin: 5px;
+      height: 20%;
+      border-radius: 15px;
+      border: 3px var(--white) solid;
+      color: var(--white);
+
+      &:hover {
+        background-color: var(--white);
+        color: var(--secondary-color);
+      }
+    }
+  }
+}
+
+.bottom-section {
+  display: flex;
+  flex-grow: 1;
+  justify-content: space-between;
+
+  &__left,
+  &__right {
+    &__title {
+      font-size: 20px;
+      font-weight: bold;
+      margin-left: 20px;
+    }
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    padding: 10px;
+  }
+}
+
+.game-list {
+  border: 1px var(--primary-color) solid;
+  border-width: 0.5px;
+  border-radius: 15px 15px 0px 0px;
+  margin-top: 20px;
+  width: 95%;
+  margin: 0 auto;
+
+  &__headline {
+    font-weight: bold;
+    color: var(--white);
+    background-color: var(--primary-color);
+    padding: 10px 28px;
+    display: flex;
+    justify-content: space-between;
+    border-radius: 15px 15px 0px 0px;
+
+    &__title {
+      font-size: 20px;
+      font-weight: bold;
+    }
+  }
+
+  &__scrollable {
+    overflow-y: auto;
+    max-height: 50vh;
+    padding: 10px;
+
+    &__items {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+
+      &__item {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 16px 32px 8px 38px;
+
+        &__attribute {
+          text-align: center;
+        }
+      }
+    }
+  }
+}
