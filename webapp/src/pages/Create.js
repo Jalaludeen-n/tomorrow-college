@@ -1,225 +1,199 @@
-import React, { useState, useEffect } from "react";
-import "../styles/components/admin/index.scss";
-import RolePDFUpload from "./../components/admin/roles";
+import React, { useState, useReducer, useEffect, useRef } from "react";
+import "./../styles/page/create.scss";
+import { Container, Row, Form, Col, Button } from "react-bootstrap";
+import FormOne from "../components/admin/addGame";
+import PDFInstructionsForm from "../components/admin/addGame/PDFInstructionsForm";
+import {
+  initialState,
+  newGameReducer,
+} from "../components/helper.js/newGameReducer";
+import { toast } from "react-toastify";
 import { sendDataToAirtable } from "../components/services/airtable";
-import SuccessPopup from "./../components/admin/SuccessPopup";
-
 const Create = () => {
-  // State for the first half of the form
-  const [gameName, setGameName] = useState("");
-  const [numRounds, setNumRounds] = useState(0);
-  const [excelLink, setExcelLink] = useState("");
-  const [resultsSubmission, setResultsSubmission] = useState("");
-  const [scoreVisibility, setScoreVisibility] = useState("");
-  const [allowAutoSelection, setAllowAutoSelection] = useState(false);
-  const [individualInstructions, setIndividualInstructions] = useState(false);
+  const storedState =
+    JSON.parse(localStorage.getItem("formState")) || initialState;
+  const [state, dispatch] = useReducer(newGameReducer, storedState);
+  const [dublicateValue, setDublicateValue] = useState(false);
+  const [isNext, setIsNext] = useState(false); // Add state for submit button text
   const [formData, setFormData] = useState(new FormData());
-  const [individualPdf, setIndividualPdf] = useState(null);
-  const [showSuccessPopup, setShowSuccessPopup] = useState(false);
-
-  const [levels, setLevels] = useState([]);
-
-  const handleFormDataChange = (newFormData) => {
-    setFormData(...newFormData);
-  };
-
-  const handleSubmit = async () => {
-    const formattedData = formatDataForAirtable(levels);
-    console.log(formattedData); // Format your data
-
-    try {
-      await sendDataToAirtable(formattedData); // Send data to Airtable
-      console.log("Data successfully sent to Airtable");
-      setShowSuccessPopup(true);
-    } catch (error) {
-      console.error("Error sending data to Airtable:", error);
-    }
-  };
+  const [pdf, setPDFIns] = useState([null]);
+  const [roleInputs, setRoleInputs] = useState([
+    <Form.Control key={0} type='text' placeholder='Role name here' />,
+  ]);
 
   useEffect(() => {
-    if (showSuccessPopup) {
-      const redirectTimeout = setTimeout(() => {
-        window.location.href = "/"; // Redirect to the home page after a delay
-      }, 5000); // Delay in milliseconds (5 seconds)
-      return () => {
-        clearTimeout(redirectTimeout);
-      };
-    }
-  }, [showSuccessPopup]);
+    console.log(storedState);
+  }, []);
 
-  // Format your data according to Airtable schema
+  const handlePDFInstruction = (level, role, file, roleIndex) => {
+    const array = pdf;
+    const uniqueFilename = generateUniqueFilename(role, level, ".pdf");
+    const modifiedFile = new File([file], uniqueFilename, {
+      type: "application/pdf",
+    });
+    const index = roleIndex * storedState.roleValues.length + level;
+    array[index - 1] = modifiedFile;
+    setPDFIns(array);
+    
+  };
+
+  const generateUniqueFilename = (role, pdfIndex, extension) => {
+    return `${role}_Level${pdfIndex}${extension}`;
+  };
+
+  const handleDropdownChange = (e, actionType) => {
+    dispatch({
+      type: actionType,
+      payload: e.target.value,
+    });
+  };
+
   const formatDataForAirtable = (levels) => {
     const formData = new FormData();
 
     formData.append(
       `data`,
       JSON.stringify({
-        GameName: gameName,
-        NumberOfRounds: numRounds,
-        GoogleSheet: excelLink,
-        ResultsSubbmision: resultsSubmission,
-        ScoreVisibility: scoreVisibility,
-        RoleSelection: allowAutoSelection,
-        IndividualInstructions: individualInstructions,
+        GameName: state.gameName,
+        NumberOfRounds: state.rounds,
+        GoogleSheet: state.excel,
+        ResultsSubbmision: state.result,
+        ScoreVisibility: state.scoreVisibility,
+        RoleSelection: state.allowAutoSelection,
+        IndividualInstructions: state.individualInstructions,
       }),
     );
 
-    // Create FormData and append each data entry separately
+    formData.append(`pdf`, pdf);
 
-    levels.forEach((level) => {
-      if (!individualInstructions) {
-        formData.append("pdf", individualPdf);
-      } else {
-        level.pdfs.forEach((pdf) => {
-          formData.append("pdf", pdf);
-        });
-      }
-      const role = {
-        role: level.role,
-        checked: level.checked,
-      };
-      formData.append("roles", JSON.stringify(role));
+    pdf.forEach((pdf) => {
+      formData.append("pdf", pdf);
     });
+    formData.append("pdf", state.gameInstructions);
+
+    formData.append("roles", JSON.stringify(state.roleValues));
 
     return formData;
   };
 
-  // Dropdown options
-  const resultsSubbmision = [
-    { value: "", label: "Results subbmision" },
-    {
-      value: "Each member does  their own subbmision",
-      label: "Each member does  their own subbmision",
-    },
-    {
-      value: "Each group member can submit  group answer",
-      label: "Each group member can submit  group answer",
-    },
-    {
-      value: "Only one peson can submit group answer",
-      label: "Only one peson can submit group answer",
-    },
-  ];
-  const scoreVisibilityForPlayers = [
-    { value: "", label: "Score visibility for players" },
-    { value: "See others score", label: "See others score" },
-    { value: "See score per round", label: "See score per round" },
-    { value: "See score only in the end", label: "See score only in the end" },
-  ];
-
-  // Event handlers
-  const handleDropdownChange = (event, setStateFunction) => {
-    setStateFunction(event.target.value);
-  };
-
-  const handleCheckboxChange = (setStateFunction) => {
-    setStateFunction((prevState) => !prevState);
-  };
-  const handlePDFChange = (file) => {
-    const modifiedFile = new File([file], "individualPdf.pdf", {
-      type: "application/pdf",
+  const handleCheckboxChange = (value, actionType) => {
+    dispatch({
+      type: actionType,
+      payload: !value,
     });
-    setIndividualPdf(modifiedFile);
+  };
+
+  const handlePDFChange = (file, actionType) => {
+    const modifiedFile = new File(
+      [file],
+      `${state.gameName}GameInstruction.pdf`,
+      {
+        type: "application/pdf",
+      },
+    );
+    dispatch({
+      type: actionType,
+      payload: modifiedFile,
+    });
+  };
+
+  const handleInputChange = (index, role, dublicate, submit) => {
+    console.log(dublicate);
+    dispatch({
+      type: "SET_ROLE_VALUES",
+      payload: { index, role, dublicate, submit },
+    });
+  };
+  const next = async () => {
+    if (isNext) {
+      const formattedData = formatDataForAirtable();
+      try {
+        await sendDataToAirtable(formattedData);
+        // localStorage.removeItem("formState");
+        toast.success("Game saved successfully!", {
+          position: "top-center", // Display at the top center
+          autoClose: 5000, // Close after 5 seconds
+          hideProgressBar: true, // Hide progress bar
+        });
+      } catch (error) {
+        console.error("Error sending data to Airtable:", error);
+      }
+    } else {
+      localStorage.setItem("formState", JSON.stringify(state));
+      setIsNext(!isNext);
+    }
+  };
+
+  const cancle = () => {
+    if (isNext) {
+      setIsNext(!isNext);
+    } else {
+      window.location.href = "/";
+    }
+  };
+  const inputRef = useRef();
+  // useEffect(() => {
+  //   if (localStorage.getItem("file")) {
+  //   }
+  // }, [inputRef.current]);
+
+  const handleAddRoleClick = () => {
+    const roleValues = state.roleValues;
+    const lastInputValue = roleValues[roleValues.length - 1];
+    if (
+      lastInputValue !== "" &&
+      !roleValues.slice(0, roleValues.length - 1).includes(lastInputValue)
+    ) {
+      const newRoleInputs = [
+        ...roleInputs,
+        <Form.Control
+          key={roleInputs.length}
+          type='text'
+          placeholder='New Role'
+        />,
+      ];
+      const newRoleValues = [...roleValues, ""];
+
+      setRoleInputs(newRoleInputs);
+      setDublicateValue(false);
+    } else {
+      setDublicateValue(true);
+    }
   };
 
   return (
-    <>
-      <div className='container'>
-        <div className='half'>
-          <h2>Game Settings</h2>
-          <div className='input-group'>
-            <label>Game Name:</label>
-            <input
-              type='text'
-              value={gameName}
-              onChange={(e) => setGameName(e.target.value)}
-            />
-          </div>
-          <div className='input-group'>
-            <label>Number of Rounds:</label>
-            <input
-              type='number'
-              value={numRounds}
-              onChange={(e) => setNumRounds(e.target.value)}
-            />
-          </div>
-          <div className='input-group'>
-            <label>Link to Excel:</label>
-            <input
-              type='text'
-              value={excelLink}
-              onChange={(e) => setExcelLink(e.target.value)}
-            />
-          </div>
-          <div className='input-group'>
-            <label>Results Submission:</label>
-            <select
-              value={resultsSubmission}
-              onChange={(e) => handleDropdownChange(e, setResultsSubmission)}>
-              {resultsSubbmision.map((option) => (
-                <option key={option.value} value={option.value}>
-                  {option.label}
-                </option>
-              ))}
-            </select>
-          </div>
-          <div className='input-group'>
-            <label>Score Visibility for Players:</label>
-            <select
-              value={scoreVisibility}
-              onChange={(e) => handleDropdownChange(e, setScoreVisibility)}>
-              {scoreVisibilityForPlayers.map((option) => (
-                <option key={option.value} value={option.value}>
-                  {option.label}
-                </option>
-              ))}
-            </select>
-          </div>
-          <div className='checkbox-group'>
-            <input
-              type='checkbox'
-              checked={allowAutoSelection}
-              onChange={() => handleCheckboxChange(setAllowAutoSelection)}
-            />
-            <label>Allow for auto selection role</label>
-          </div>
-          <div className='checkbox-group'>
-            <input
-              type='checkbox'
-              checked={individualInstructions}
-              onChange={() => handleCheckboxChange(setIndividualInstructions)}
-            />
-            <label>Individual instructions per round</label>
-          </div>
-          {!individualInstructions && (
-            <div className='checkbox-group'>
-              <input
-                type='file'
-                accept='.pdf'
-                onChange={(e) => handlePDFChange(e.target.files[0])}
-              />
-            </div>
-          )}
-        </div>
-        <div className='half'>
-          <RolePDFUpload
-            levels={levels}
-            setLevels={setLevels}
-            pdfCount={numRounds}
-            resultsSubmission={resultsSubmission}
-            individualInstructions={individualInstructions}
-          />
-        </div>
-      </div>
-      <button onClick={handleSubmit}> submit</button>
-      {showSuccessPopup && (
-        <SuccessPopup
-          name={gameName}
-          onClose={() => setShowSuccessPopup(false)}
+    <Container>
+      <Row>Create Game</Row>
+      <Row>Basic information</Row>
+      {!isNext ? (
+        <FormOne
+          state={state}
+          handleDropdownChange={handleDropdownChange}
+          handlePDFChange={handlePDFChange}
+          handleCheckboxChange={handleCheckboxChange}
+          roleInputs={roleInputs}
+          handleInputChange={handleInputChange}
+          handleAddRoleClick={handleAddRoleClick}
+          inputRef={inputRef}
+        />
+      ) : (
+        <PDFInstructionsForm
+          handlePDFInstruction={handlePDFInstruction}
+          handleInputChange={handleInputChange}
+          storedState={state}
         />
       )}
-    </>
+      <Row className='justify-content-end'>
+        <Col md={3} className='text-right justify-content-end'>
+          <Button variant='primary' onClick={next}>
+            {!isNext ? "Next" : "Submit"}
+          </Button>{" "}
+          <Button variant='secondary' onClick={cancle}>
+            {!isNext ? "Cancel" : "Go Back"}
+          </Button>
+        </Col>
+      </Row>
+    </Container>
   );
 };
-
 export default Create;

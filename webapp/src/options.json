@@ -1,0 +1,24 @@
+{
+  "resultsSubbmision": [
+    {
+      "value": "Each member does  their own subbmision",
+      "label": "Each member does  their own subbmision"
+    },
+    {
+      "value": "Each group member can submit  group answer",
+      "label": "Each group member can submit  group answer"
+    },
+    {
+      "value": "Only one peson can submit group answer",
+      "label": "Only one peson can submit group answer"
+    }
+  ],
+  "scoreVisibilityForPlayers": [
+    { "value": "See others score", "label": "See others score" },
+    { "value": "See score per round", "label": "See score per round" },
+    {
+      "value": "See score only in the end",
+      "label": "See score only in the end"
+    }
+  ]
+}

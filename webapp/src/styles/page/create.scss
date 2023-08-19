@@ -1,0 +1,83 @@
+/* Create.css */
+.form-group {
+  display: flex;
+  flex-direction: column-reverse;
+  align-items: flex-start;
+  margin-bottom: 20px;
+}
+
+.form-control {
+  width: 100%;
+}
+.custom-dropdown {
+  display: flex;
+  flex-direction: column;
+}
+// variables
+
+$theme-color-text: #444;
+$theme-color-bg: #fff;
+
+// mixins
+
+@mixin input {
+  transition: 0.2s ease-out;
+  font-size: 20px;
+  line-height: 1.5em;
+  padding: 15px;
+  border: 2px solid;
+  font-family: Calibri, sans-serif;
+  color: $theme-color-text;
+  min-height: 64px;
+}
+@mixin color-default {
+  border-color: $theme-color-text;
+  background-color: $theme-color-bg;
+}
+@mixin hover-default {
+  &:hover {
+    transform: scale(1.1);
+  }
+}
+@mixin focus-default {
+  &:active {
+    transform: scale(0.85);
+  }
+}
+
+// reset
+
+* {
+  box-sizing: border-box;
+}
+
+// styling
+
+.fileinput {
+  &__input {
+    display: none;
+  }
+  &__face {
+    margin: 0 auto;
+  }
+  &__button {
+    @include input;
+    @include color-default;
+    @include hover-default;
+    @include focus-default;
+    float: left;
+    cursor: pointer;
+    text-align: center;
+    font-weight: bold;
+  }
+  &__status-text {
+    @include input;
+    border: none;
+    font-size: 15px;
+    line-height: 2em;
+    white-space: nowrap;
+    float: right;
+    overflow: hidden;
+    font-family: "Consolas", sans-serif;
+  }
+}

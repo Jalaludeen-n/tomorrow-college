@@ -25,7 +25,7 @@ export const sendDataToAirtable = async (formattedData) => {
       },
     );
     if (response.status === 200) {
-      console.log("Data successfully sent to Airtable");
+      console.log("Game Saved");
     } else {
       console.error("Unexpected response:", response);
     }
