@@ -1,6 +1,6 @@
 import { Link } from "react-router-dom";
 import "../../../styles/page/main.scss";
-import { formatDate } from "../../helper.js/date";
+import { formatDate } from "../../helper/date";
 
 const Header = () => {
   const formattedDate = formatDate();

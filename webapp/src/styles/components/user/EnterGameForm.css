@@ -7,6 +7,15 @@
   margin: auto;
   margin-top: 50px;
 }
+.centered-form-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+}
+.form-heading {
+  white-space: nowrap;
+}
 
 .enter-game-form h1 {
   text-align: center;

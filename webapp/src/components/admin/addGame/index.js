@@ -12,7 +12,7 @@ const Index = ({
   roleInputs,
   handleInputChange,
   handleAddRoleClick,
-  inputRef,
+  
 }) => {
   const { resultsSubbmision, scoreVisibilityForPlayers } = optionsData;
 

@@ -1,0 +1,72 @@
+// EnterGameForm.module.scss
+@import url("../../colors.css");
+
+.top-section {
+  background-color: var(--primary-color);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20px;
+  color: var(--white);
+
+  &__message-container {
+    color: var(--white);
+    display: flex;
+    flex-direction: column;
+    height: 100px;
+    padding: 15px 15px 15px 15px;
+  }
+
+  &__message-container__welcome-message {
+    font-size: 18px;
+    font-weight: bold;
+  }
+
+  &__message-container__date {
+    color: var(--white);
+    margin-top: 12px;
+    font-size: 16px;
+  }
+
+  &__top-buttons {
+    color: var(--white);
+
+    display: flex;
+    flex-direction: column;
+  }
+}
+
+.combined-button {
+  display: flex;
+  align-items: center;
+  padding: 10px 15px;
+  background-color: #007bff;
+  color: #fff;
+  border-radius: 5px;
+  cursor: pointer;
+  height: 100px;
+  width: 125px;
+  justify-content: center;
+  background-color: var(--white);
+
+  &__number {
+    color: var(--primary-color);
+    font-size: 20px;
+    font-weight: bold;
+    margin-right: 10px;
+  }
+  &__text {
+    font-size: 15px;
+    margin-right: 12px;
+    margin-top: 4px;
+    justify-content: center;
+    align-items: center;
+    display: flex;
+  }
+}
+
+.combined-button-text {
+  margin-top: 10px;
+  text-align: center;
+  color: var(--white);
+}

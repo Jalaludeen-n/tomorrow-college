@@ -1,29 +1,21 @@
-import React, { useState, useReducer, useEffect, useRef } from "react";
+import React, { useState, useReducer } from "react";
 import "./../styles/page/create.scss";
 import { Container, Row, Form, Col, Button } from "react-bootstrap";
 import FormOne from "../components/admin/addGame";
 import PDFInstructionsForm from "../components/admin/addGame/PDFInstructionsForm";
-import {
-  initialState,
-  newGameReducer,
-} from "../components/helper.js/newGameReducer";
-import { toast } from "react-toastify";
+import { initialState, newGameReducer } from "../components/helper/reducer";
 import { sendDataToAirtable } from "../components/services/airtable";
+
 const Create = () => {
   const storedState =
     JSON.parse(localStorage.getItem("formState")) || initialState;
   const [state, dispatch] = useReducer(newGameReducer, storedState);
   const [dublicateValue, setDublicateValue] = useState(false);
   const [isNext, setIsNext] = useState(false); // Add state for submit button text
-  const [formData, setFormData] = useState(new FormData());
   const [pdf, setPDFIns] = useState([null]);
   const [roleInputs, setRoleInputs] = useState([
     <Form.Control key={0} type='text' placeholder='Role name here' />,
   ]);
-
-  useEffect(() => {
-    console.log(storedState);
-  }, []);
 
   const handlePDFInstruction = (level, role, file, roleIndex) => {
     const array = pdf;
@@ -34,11 +26,10 @@ const Create = () => {
     const index = roleIndex * storedState.roleValues.length + level;
     array[index - 1] = modifiedFile;
     setPDFIns(array);
-    
   };
 
   const generateUniqueFilename = (role, pdfIndex, extension) => {
-    return `${role}_Level${pdfIndex}${extension}`;
+    return `${state.gameName}_${role}_Level${pdfIndex}${extension}`;
   };
 
   const handleDropdownChange = (e, actionType) => {
@@ -86,7 +77,7 @@ const Create = () => {
   const handlePDFChange = (file, actionType) => {
     const modifiedFile = new File(
       [file],
-      `${state.gameName}GameInstruction.pdf`,
+      `${state.gameName}_GameInstruction.pdf`,
       {
         type: "application/pdf",
       },
@@ -109,12 +100,8 @@ const Create = () => {
       const formattedData = formatDataForAirtable();
       try {
         await sendDataToAirtable(formattedData);
-        // localStorage.removeItem("formState");
-        toast.success("Game saved successfully!", {
-          position: "top-center", // Display at the top center
-          autoClose: 5000, // Close after 5 seconds
-          hideProgressBar: true, // Hide progress bar
-        });
+        localStorage.removeItem("formState");
+        window.location.href = "/list";
       } catch (error) {
         console.error("Error sending data to Airtable:", error);
       }
@@ -131,11 +118,6 @@ const Create = () => {
       window.location.href = "/";
     }
   };
-  const inputRef = useRef();
-  // useEffect(() => {
-  //   if (localStorage.getItem("file")) {
-  //   }
-  // }, [inputRef.current]);
 
   const handleAddRoleClick = () => {
     const roleValues = state.roleValues;
@@ -152,8 +134,6 @@ const Create = () => {
           placeholder='New Role'
         />,
       ];
-      const newRoleValues = [...roleValues, ""];
-
       setRoleInputs(newRoleInputs);
       setDublicateValue(false);
     } else {
@@ -174,7 +154,6 @@ const Create = () => {
           roleInputs={roleInputs}
           handleInputChange={handleInputChange}
           handleAddRoleClick={handleAddRoleClick}
-          inputRef={inputRef}
         />
       ) : (
         <PDFInstructionsForm

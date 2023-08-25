@@ -55,3 +55,43 @@ export const newGameReducer = (state, action) => {
       return state;
   }
 };
+
+// newGameReducer.js
+
+export const initialStateForGameDetails = {
+  gameName: "",
+  rounds: 0,
+  gameInstructions: null,
+  name: "",
+  email: "",
+  autoSelection: false,
+  roles: [],
+  role: "",
+  participants: [{}],
+};
+
+export const newGameDetailsReducer = (state, action) => {
+  switch (action.type) {
+    case "SET_GAME_NAME":
+      return { ...state, gameName: action.payload };
+    case "SET_NUM_ROUNDS":
+      return { ...state, rounds: action.payload };
+    case "SET_GAME_INSTRUCTIONS":
+      return { ...state, gameInstructions: action.payload };
+    case "SET_NAME":
+      return { ...state, name: action.payload };
+    case "SET_EMAIL":
+      return { ...state, email: action.payload };
+    case "SET_AUTO_SELECTION":
+      return { ...state, autoSelection: action.payload };
+    case "SET_ROLES":
+      return { ...state, roles: action.payload };
+    case "SET_ROLE":
+      return { ...state, role: action.payload };
+    case "SET_PARTICIPANTS":
+      return { ...state, participants: action.payload };
+
+    default:
+      return state;
+  }
+};

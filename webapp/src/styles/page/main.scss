@@ -130,6 +130,10 @@
 
         &__attribute {
           text-align: center;
+          &__clickable {
+            cursor: pointer;
+            text-align: center;
+          }
         }
       }
     }
