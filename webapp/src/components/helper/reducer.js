@@ -60,6 +60,7 @@ export const newGameReducer = (state, action) => {
 
 export const initialStateForGameDetails = {
   gameName: "",
+  groupName: "",
   rounds: 0,
   gameInstructions: null,
   name: "",
@@ -67,6 +68,10 @@ export const initialStateForGameDetails = {
   autoSelection: false,
   roles: [],
   role: "",
+  roomNumber: "",
+  gameID: "",
+  resultsSubbmision: "",
+  scoreVisibilityForPlayers: "",
   participants: [{}],
 };
 
@@ -74,6 +79,10 @@ export const newGameDetailsReducer = (state, action) => {
   switch (action.type) {
     case "SET_GAME_NAME":
       return { ...state, gameName: action.payload };
+    case "SET_GAME_ID":
+      return { ...state, gameID: action.payload };
+    case "SET_GROUP_NAME":
+      return { ...state, groupName: action.payload };
     case "SET_NUM_ROUNDS":
       return { ...state, rounds: action.payload };
     case "SET_GAME_INSTRUCTIONS":
@@ -88,8 +97,14 @@ export const newGameDetailsReducer = (state, action) => {
       return { ...state, roles: action.payload };
     case "SET_ROLE":
       return { ...state, role: action.payload };
+    case "SET_ROOM_NUMBER":
+      return { ...state, roomNumber: action.payload };
     case "SET_PARTICIPANTS":
       return { ...state, participants: action.payload };
+    case "SET_RESULTS_SUBBMISION":
+      return { ...state, resultsSubbmision: action.payload };
+    case "SET_SCORE_VISIBILITY_FOR_PLAYERS":
+      return { ...state, scoreVisibilityForPlayers: action.payload };
 
     default:
       return state;

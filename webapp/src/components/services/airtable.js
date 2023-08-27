@@ -1,59 +1,49 @@
 import axios from "axios";
-export const fetchGameDataFromAirtable = async () => {
+
+const handleSuccess = (response, successMessage) => {
+  if (response.status === 200 && response.data.success) {
+    console.log(successMessage);
+  } else {
+    console.error(response.message);
+  }
+  return response.data;
+};
+
+const handleError = (error) => {
+  console.error("Error:", error);
+  throw error;
+};
+
+export const fetchGameData = async () => {
   try {
     const response = await axios.get("http://localhost:3001/game/list");
     if (response.status === 200) {
-      return response.data; // Return the fetched data
+      return response.data;
+    } else {
+      console.error("Unexpected response:", response);
+      return null;
+    }
+  } catch (error) {
+    handleError(error);
+  }
+};
+
+export const fetchRunningAndPastGames = async () => {
+  try {
+    const response = await axios.get("http://localhost:3001/game/running", {
+      responseType: "json",
+    });
+    if (response.status === 200) {
+      return response.data;
     } else {
       console.error("Unexpected response:", response);
       return null; // Return null on error
     }
   } catch (error) {
-    console.error("Error:", error);
+    console.error("Error fetching game details:", error);
   }
 };
-export const fetchGameDetails = async (data) => {
-  try {
-    const response = await axios.post(
-      "http://localhost:3001/game/details",
-      data,
-      {
-        headers: {
-          "Content-Type": "application/json",
-        },
-      },
-    );
-    if (response.status === 200 && response.success) {
-      console.log("Data fetched successfully ");
-    } else {
-      console.error(response.message);
-    }
-    return response.data;
-  } catch (error) {
-    console.error("Error:", error);
-  }
-};
-export const fetchRolesAndParticipants = async (data) => {
-  try {
-    const response = await axios.post(
-      "http://localhost:3001/game/players",
-      data,
-      {
-        headers: {
-          "Content-Type": "application/json",
-        },
-      },
-    );
-    if (response.status === 200 && response.success) {
-      console.log("Data fetched successfully ");
-    } else {
-      console.error(response.message);
-    }
-    return response.data;
-  } catch (error) {
-    console.error("Error:", error);
-  }
-};
+
 export const fetchGroupDetails = async (data) => {
   try {
     const response = await axios.post(
@@ -75,23 +65,84 @@ export const fetchGroupDetails = async (data) => {
     console.error("Error:", error);
   }
 };
-export const fetchRunningAndPastGames = async () => {
+
+export const fetchGameDetails = async (data) => {
   try {
-    const response = await axios.get("http://localhost:3001/game/running", {
-      responseType: "json",
-    });
-    if (response.status == 200) {
-      return response.data;
-    } else {
-      console.error("Unexpected response:", response);
-      return null; // Return null on error
-    }
+    const response = await axios.post(
+      "http://localhost:3001/game/details",
+      data,
+      {
+        headers: {
+          "Content-Type": "application/json",
+        },
+      },
+    );
+    return handleSuccess(response, "Game details fetched successfully");
   } catch (error) {
-    console.error("Error fetching game details:", error);
+    handleError(error);
+  }
+};
+export const fetchLevelDetails = async (data) => {
+  try {
+    const response = await axios.post(
+      "http://localhost:3001/game/level",
+      data,
+      {
+        headers: {
+          "Content-Type": "application/json",
+        },
+      },
+    );
+    return handleSuccess(
+      response,
+      "Roles and participants fetched successfully",
+    );
+  } catch (error) {
+    handleError(error);
+  }
+};
+export const storeAnsweres = async (data) => {
+  try {
+    const response = await axios.post(
+      "http://localhost:3001/game/answeres",
+      data,
+      {
+        headers: {
+          "Content-Type": "application/json",
+        },
+      },
+    );
+    return handleSuccess(
+      response,
+      "Roles and participants fetched successfully",
+    );
+  } catch (error) {
+    handleError(error);
+  }
+};
+export const fetchRolesAndParticipants = async (data) => {
+  try {
+    const response = await axios.post(
+      "http://localhost:3001/game/players",
+      data,
+      {
+        headers: {
+          "Content-Type": "application/json",
+        },
+      },
+    );
+    return handleSuccess(
+      response,
+      "Roles and participants fetched successfully",
+    );
+  } catch (error) {
+    handleError(error);
   }
 };
 
-export const sendDataToAirtable = async (formattedData) => {
+// ... Other fetch functions ...
+
+export const sendGameData = async (formattedData) => {
   try {
     const response = await axios.post(
       "http://localhost:3001/game/new",
@@ -102,13 +153,9 @@ export const sendDataToAirtable = async (formattedData) => {
         },
       },
     );
-    if (response.status === 200) {
-      console.log("Game Saved");
-    } else {
-      console.error("Unexpected response:", response);
-    }
+    handleSuccess(response, "Game data sent to Airtable");
   } catch (error) {
-    console.error("Error:", error);
+    handleError(error);
   }
 };
 
@@ -123,14 +170,9 @@ export const joinGame = async (formattedData) => {
         },
       },
     );
-    if (response.status === 200 && response.status) {
-      console.log("Data successfully sent to Airtable");
-    } else {
-      console.error(response.message);
-    }
-    return response.data;
+    return handleSuccess(response, "Joined the game successfully");
   } catch (error) {
-    console.error("Error:", error);
+    handleError(error);
   }
 };
 
@@ -145,12 +187,24 @@ export const startGame = async (formattedData) => {
         },
       },
     );
-    if (response.status === 200) {
-      console.log("Data successfully sent to Airtable");
-    } else {
-      console.error("Unexpected response:", response);
-    }
+    handleSuccess(response, "Role Selected successfully");
   } catch (error) {
-    console.error("Error:", error);
+    handleError(error);
+  }
+};
+export const selectRole = async (formattedData) => {
+  try {
+    const response = await axios.post(
+      "http://localhost:3001/game/select-role",
+      formattedData,
+      {
+        headers: {
+          "Content-Type": "application/json",
+        },
+      },
+    );
+    handleSuccess(response, "Game started successfully");
+  } catch (error) {
+    handleError(error);
   }
 };

@@ -1,164 +1,259 @@
-import React, { useState } from "react";
-import "../styles/page/Level.css"; // Import your CSS file for styling
+import React, { useState, useEffect } from "react";
+import styles from "../styles/page/Level.module.css"; // Import your CSS file for styling
+import { Row, Col, Form, Button } from "react-bootstrap";
+import { Link } from "react-router-dom";
+import CryptoJS from "crypto-js";
+import {
+  fetchLevelDetails,
+  storeAnsweres,
+} from "../components/services/airtable";
 
 const Level = () => {
   const [pdfData, setPdfData] = useState("");
-  const [roundHeader, setRoundHeader] = useState("");
-  const [questions] = useState([
-    {
-      text: "Question 1: What is the capital of France?",
-      type: "multiple-choice",
-      options: ["Paris", "London", "Berlin", "Madrid"],
-      answer: "Paris",
-    },
-    {
-      text: "Question 2: Who painted the Mona Lisa?",
-      type: "multiple-choice",
-      options: [
-        "Leonardo da Vinci",
-        "Vincent van Gogh",
-        "Pablo Picasso",
-        "Michelangelo",
-      ],
-      answer: "Leonardo da Vinci",
-    },
-    {
-      text: "Question 3: What is the chemical symbol for gold?",
-      type: "multiple-choice",
-      options: ["Au", "Ag", "Fe", "Hg"],
-      answer: "Au",
-    },
-    {
-      text: "Question 4: Is the Earth flat?",
-      type: "boolean",
-      answer: "false",
-    },
-    {
-      text: "Question 5: How many continents are there?",
-      type: "number",
-      answer: "7",
-    },
-    {
-      text: 'Question 6: Which planet is known as the "Red Planet"?',
-      type: "multiple-choice",
-      options: ["Mars", "Venus", "Jupiter", "Saturn"],
-      answer: "Mars",
-    },
-    {
-      text: 'Question 7: Who wrote "Romeo and Juliet"?',
-      type: "multiple-choice",
-      options: [
-        "William Shakespeare",
-        "Jane Austen",
-        "Charles Dickens",
-        "Mark Twain",
-      ],
-      answer: "William Shakespeare",
-    },
-    {
-      text: "Question 8: True or false: The Great Wall of China is visible from space.",
-      type: "boolean",
-      answer: "false",
-    },
-    {
-      text: "Question 9: What is the largest mammal on Earth?",
-      type: "multiple-choice",
-      options: ["Blue whale", "Elephant", "Giraffe", "Hippopotamus"],
-      answer: "Blue whale",
-    },
-    {
-      text: "Question 10: How many sides does a hexagon have?",
-      type: "number",
-      answer: "6",
-    },
-  ]);
+  const [decryptedData, setDecryptedData] = useState();
+  const [loader, setLoader] = useState(false);
+  const [questions, setQustions] = useState([]);
+  const [answers, setAnswers] = useState([]);
+  const [submit, setSubmit] = useState(true);
+
+  const decryptAndFetchData = async (encryptedData) => {
+    try {
+      const bytes = CryptoJS.AES.decrypt(encryptedData, "secret_key");
+      const decryptedData = JSON.parse(bytes.toString(CryptoJS.enc.Utf8));
+      setDecryptedData(decryptedData);
+      setLoader(true);
+      await fetchLevelDetailsAndSet(decryptedData);
+
+      setLoader(false);
+    } catch (error) {
+      handleError(error);
+    }
+  };
+  const handleError = (error) => {
+    console.error("Error:", error);
+    // Handle error here, e.g., show an error message to the user
+  };
+
+  const fetchLevelDetailsAndSet = async (data) => {
+    try {
+      const formData = new FormData();
+      formData.append(
+        "data",
+        JSON.stringify({
+          email: data.email,
+          roomNumber: data.roomNumber,
+          groupName: data.groupName,
+          name: data.name,
+          gameID: data.gameID,
+          role: data.role,
+          level: data.level,
+          gameName: data.gameName,
+          scoreVisibilityForPlayers: data.scoreVisibilityForPlayers,
+          resultsSubbmision: data.resultsSubbmision,
+        }),
+      );
+
+      const res = await fetchLevelDetails(formData);
+      if (res.success) {
+        setQustions(res.data.qustions);
+        localStorage.setItem(`qstions`, JSON.stringify(res.data.qustions));
+      }
+    } catch (error) {
+      handleError(error);
+    }
+  };
+
+  useEffect(() => {
+    const searchParams = new URLSearchParams(window.location.search);
+    const encryptedData = searchParams.get("data");
+    const storedAnswers = JSON.parse(localStorage.getItem("answers"));
+    const storedQustions = JSON.parse(localStorage.getItem("qstions"));
+
+    if (encryptedData && !storedAnswers) {
+      decryptAndFetchData(encryptedData);
+    } else {
+      setAnswers(storedAnswers);
+      setQustions(storedQustions);
+    }
+  }, []);
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+
+    const newAnswers = Array.from(formData.entries()).map(
+      ([key, value]) => value,
+    );
+    setAnswers(newAnswers);
+    const formData = new FormData();
+    formData.append(
+      "data",
+      JSON.stringify({
+        email: decryptedData.email,
+        roomNumber: decryptedData.roomNumber,
+        groupName: decryptedData.groupName,
+        name: decryptedData.name,
+        gameID: decryptedData.gameID,
+        role: decryptedData.role,
+        level: decryptedData.level,
+        gameName: decryptedData.gameName,
+        answers: answers,
+      }),
+    );
+
+    await storeAnsweres(formData);
+
+    // Store answers in local storage
+    localStorage.setItem("answers", JSON.stringify(newAnswers));
+  };
+
+  const handleOtherPageClick = () => {
+    // Replace "/other-page" with the actual path of the other page
+    // history.push("/other-page");
+  };
+  const handleRadioChange = (questionIndex, selectedValue) => {
+    const newAnswers = [...answers];
+    newAnswers[questionIndex] = selectedValue;
+    setAnswers(newAnswers);
+    console.log(newAnswers);
+  };
 
   return (
+    <div className={`app-container ${styles.levelPage}`}>
+      <Row>
+        <Col className={`text-end ${styles.rightSection}`}>
+          <Link to='/' className={`${styles.icon}`}>
+            Home
+          </Link>
+          <button
+            className={`btn btn-link ${styles.icon}`}
+            onClick={handleOtherPageClick}>
+            Other Page
+          </button>
+        </Col>
+      </Row>
+      <Row>
+        <Col className={`${styles.rightSection}`}>
+          <div className={`${styles.welcomeText}`}>Welcome to Round 1</div>
+        </Col>
+      </Row>
+      <Form onSubmit={handleSubmit}>
+        <Row className={`p-2 mt3 ${styles.paddingTop} flex-grow-1`}>
+          <Col xs={5} className='flex-grow-1'>
+            ds
+          </Col>
+          <Col xs={6} className={`d-flex flex-column ${styles.rightSide}`}>
+            <h4 className={`${styles.roundHeader}`}>Qustions</h4>
+            <div className={`questions-container ${styles.questionsContainer}`}>
+              {questions.map((question, index) => (
+                <div key={index} className={`question ${styles.question}`}>
+                  <p>{question.question}</p>
+                  {question.type === "Multiple-Choice" && (
+                    <Form.Group
+                      className={`options ${styles.options}`}
+                      aria-required>
+                      {question.choices.map((option, optionIndex) => (
+                        <Form.Check
+                          key={optionIndex}
+                          type='radio'
+                          name={`question-${index}`}
+                          label={option}
+                          value={option}
+                          onChange={(e) =>
+                            handleRadioChange(index, e.target.value)
+                          } // Add an onChange handler
+                          checked={answers[index] === option}
+                          required
+                        />
+                      ))}
+                    </Form.Group>
+                  )}
+                  {question.type === "Boolean" && (
+                    <Form.Group className={`input ${styles.input}`} required>
+                      <Form.Check
+                        type='radio'
+                        name={`question-${index}`}
+                        label='True'
+                        value='true'
+                        onChange={() => handleRadioChange(index, "true")}
+                        checked={answers[index] === "true"}
+                        inline
+                        required
+                      />
+                      <Form.Check
+                        type='radio'
+                        name={`question-${index}`}
+                        label='False'
+                        value='false'
+                        checked={answers[index] === "false"}
+                        onChange={() => handleRadioChange(index, "false")}
+                        inline
+                      />
+                    </Form.Group>
+                  )}
+                  {question.type === "Number" && (
+                    <Form.Group className={`input ${styles.input}`}>
+                      <Form.Control
+                        type='Number'
+                        name={`question-${index}`}
+                        className={`form-control ${styles.numberInput}`}
+                        value={answers[index] || ""}
+                        onChange={(e) =>
+                          handleRadioChange(index, e.target.value)
+                        }
+                        required
+                      />
+                    </Form.Group>
+                  )}
+                </div>
+              ))}
+            </div>
+          </Col>
+        </Row>
+        <Row className={`${styles.submitButtonRow}`}>
+          <Col xs={12} className={`text-end ${styles.submitButtonCol}`}>
+            {submit && (
+              <Button
+                className={`btn btn-primary ${styles.submitButton}`}
+                variant='primary'
+                type='submit'>
+                Submit
+              </Button>
+            )}
+          </Col>
+        </Row>
+      </Form>
+    </div>
+  );
+  {
+    /* </div>
     <div className='game-details-container'>
-      {/* Left Side - PDF and Level Header */}
-      <div className='left-side'>
-        <div className='pdf-container'>
-          {/* <iframe
+      {/* Left Side - PDF and Level Header */
+  }
+  <div className='left-side'>
+    <div className='pdf-container'>
+      {/* <iframe
             src={`data:application/pdf;base64,${pdfData}`}
             title='PDF'
             width='100%'
             height='100%'
           /> */}
-          <iframe
-            // src={pdfPath}
-            title='PDF Viewer'
-            style={{
-              width: "100%",
-              height: "100%",
-              border: "none",
-              zoom: "100%",
-            }}
-            sandbox='allow-modals allow-scripts allow-same-origin'
-          />
-        </div>
-        <div className='level-header'>
-          <h2>Level</h2>
-        </div>
-      </div>
-
-      {/* Right Side - Round Header and GK Questions */}
-      <div className='right-side'>
-        <div className='round-header'>
-          <h2>{roundHeader}</h2>
-        </div>
-        <div className='questions-container'>
-          <h3>General Knowledge Questions</h3>
-          {questions.map((question, index) => (
-            <div key={index} className='question'>
-              <p>{question.text}</p>
-              {question.type === "multiple-choice" && (
-                <ul className='options'>
-                  {question.options.map((option, optionIndex) => (
-                    <li key={optionIndex}>
-                      <input
-                        type='radio'
-                        name={`question-${index}`}
-                        value={option}
-                      />{" "}
-                      {option}
-                    </li>
-                  ))}
-                </ul>
-              )}
-              {question.type === "boolean" && (
-                <div className='input'>
-                  <label>
-                    <input
-                      type='radio'
-                      name={`question-${index}`}
-                      value='true'
-                    />{" "}
-                    True
-                  </label>
-                  <label>
-                    <input
-                      type='radio'
-                      name={`question-${index}`}
-                      value='false'
-                    />{" "}
-                    False
-                  </label>
-                </div>
-              )}
-              {question.type === "number" && (
-                <div className='input'>
-                  <input type='number' name={`question-${index}`} />
-                </div>
-              )}
-            </div>
-          ))}
-        </div>
-        <div className='next-button'>
-          <button>Next</button>
-        </div>
-      </div>
+      <iframe
+        // src={pdfPath}
+        title='PDF Viewer'
+        style={{
+          width: "100%",
+          height: "100%",
+          border: "none",
+          zoom: "100%",
+        }}
+        sandbox='allow-modals allow-scripts allow-same-origin'
+      />
     </div>
-  );
+    <div className='level-header'>
+      <h2>Level</h2>
+    </div>
+  </div>;
+
+  /* Right Side - Round Header and GK Questions */
 };
 
 export default Level;

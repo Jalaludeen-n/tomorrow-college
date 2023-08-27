@@ -1,0 +1,146 @@
+.app-container {
+  padding: 20px;
+}
+
+.levelPage {
+  /* // Add any additional styles for the level page container here */
+}
+
+.buttonRow {
+  margin-bottom: 10px;
+}
+
+.leftSection {
+  background-color: #f0f0f0;
+  padding: 10px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+}
+
+.rightSection {
+  background-color: #d0d0d0;
+  padding: 10px;
+}
+
+.icon {
+  margin-bottom: 5px;
+}
+
+.submitButton {
+  /* // Add any additional styles for the submit button here */
+  margin-top: auto;
+}
+
+.questionsContainer {
+  max-height: 600px;
+  overflow-y: auto;
+}
+
+.questionTitle {
+  font-size: 20px;
+  font-weight: bold;
+}
+
+.question {
+  border: 1px solid #ccc;
+  padding: 10px;
+  margin-bottom: 10px;
+}
+
+.options {
+  list-style-type: none;
+  padding: 0;
+  margin: 0;
+}
+
+.input {
+  margin-top: 5px;
+}
+
+.numberInput {
+  width: 100px;
+}
+
+.options,
+.input {
+  display: flex;
+  flex-direction: column;
+}
+
+.flex-grow-3 {
+  flex-grow: 3;
+}
+
+.welcomeText {
+  font-size: 20px;
+  font-weight: bold;
+}
+
+.leftSection {
+  padding: 20px;
+}
+
+.rightSection {
+  padding: 20px;
+}
+
+.icon {
+  margin-right: 10px;
+}
+
+.submitButtonRow {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+}
+
+.submitButtonCol {
+  text-align: right;
+}
+.questionsCol {
+  height: 70vh;
+}
+
+/* .submitButton {
+  // Add any additional styles for the submit button here
+} */
+
+.game-details-container {
+  display: flex;
+  height: 100vh;
+}
+
+.left-side {
+  width: 50%;
+  padding: 20px;
+  background-color: #f0f0f0;
+}
+
+.pdf-container {
+  height: 70%;
+}
+
+.level-header {
+  margin-top: 20px;
+}
+
+.right-side {
+  width: 50%;
+  padding: 20px;
+  background-color: #ffffff;
+  overflow-y: auto;
+}
+
+.round-header {
+  margin-bottom: 20px;
+}
+
+.questions-container {
+  display: flex;
+  flex-direction: column;
+}
+
+.question {
+  margin-bottom: 10px;
+}

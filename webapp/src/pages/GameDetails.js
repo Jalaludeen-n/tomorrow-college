@@ -5,6 +5,7 @@ import styles from "../styles/page/GameDetails.module.scss";
 import {
   fetchGameDetails,
   fetchRolesAndParticipants,
+  selectRole,
 } from "../components/services/airtable";
 import Header from "../components/game/Header";
 import GameDescription from "../components/game/GameDescription";
@@ -14,187 +15,206 @@ import {
   initialStateForGameDetails,
   newGameDetailsReducer,
 } from "../components/helper/reducer";
+import Loader from "../pages/Loader";
 
 const GameDetails = () => {
   const storedState =
     JSON.parse(localStorage.getItem("gameDetails")) ||
     initialStateForGameDetails;
   const [state, dispatch] = useReducer(newGameDetailsReducer, storedState);
+  const [loader, setLoader] = useState(false);
 
   const fetchParticipants = async (email, roomNumber, groupNumber) => {
-    const formData = new FormData();
-    formData.append(
-      "data",
-      JSON.stringify({
-        groupName: groupNumber,
-        email: email,
-        roomNumber: roomNumber,
-      }),
-    );
+    try {
+      const formData = new FormData();
+      formData.append(
+        "data",
+        JSON.stringify({
+          groupName: groupNumber,
+          email: email,
+          roomNumber: roomNumber,
+        }),
+      );
 
-    const res = await fetchRolesAndParticipants(formData);
-    if (res) {
-      if (!res.data.roleAutoAssigned) {
+      const res = await fetchRolesAndParticipants(formData);
+
+      if (res && !res.data.roleAutoAssigned) {
         dispatch({ type: "SET_ROLES", payload: res.data.roles });
       }
-      if (res.data.filteredparticipants.length) {
+
+      if (res && res.data.filteredparticipants.length) {
         dispatch({
           type: "SET_PARTICIPANTS",
           payload: res.data.filteredparticipants,
         });
       }
+    } catch (error) {
+      handleError(error);
     }
   };
 
+  const handleError = (error) => {
+    console.error("Error:", error);
+    // Handle error here, e.g., show an error message to the user
+  };
+  const handleStartClick = () => {
+    const encryptedData = CryptoJS.AES.encrypt(
+      JSON.stringify({
+        gameName: state.gameName,
+        email: state.email,
+        roomNumber: state.roomNumber,
+        groupName: state.groupName,
+        name: state.name,
+        gameID: state.gameID,
+        role: state.role,
+        scoreVisibilityForPlayers: state.scoreVisibilityForPlayers,
+        resultsSubbmision: state.resultsSubbmision,
+        level: 1,
+      }),
+      "secret_key",
+    ).toString();
+    window.location.href = `/level?data=${encodeURIComponent(encryptedData)}`;
+  };
+
   const decryptAndFetchData = async (encryptedData) => {
-    const bytes = CryptoJS.AES.decrypt(encryptedData, "secret_key");
-    const decryptedData = JSON.parse(bytes.toString(CryptoJS.enc.Utf8));
-
-    const storedData = JSON.parse(localStorage.getItem("gameDetails"));
-    console.log(storedData);
-    console.log(storedData.rounds);
-    console.log(storedData.name);
-    console.log(storedData.email);
-    console.log(storedData.autoSelection);
-    console.log(storedData.role);
-    console.log(storedData.roles);
-    console.log(storedData.participants);
-
-    if (!storedData) {
-      await Promise.all([
-        fetchGameDetailsAndSet(decryptedData),
-        fetchParticipantsAndSet(decryptedData),
-      ]);
+    try {
+      const bytes = CryptoJS.AES.decrypt(encryptedData, "secret_key");
+      const decryptedData = JSON.parse(bytes.toString(CryptoJS.enc.Utf8));
+      const storedData = JSON.parse(localStorage.getItem("gameDetails"));
+      setLoader(true);
+      if (!storedData) {
+        await Promise.all([
+          fetchGameDetailsAndSet(decryptedData),
+          fetchParticipantsAndSet(decryptedData),
+        ]);
+      }
+      setLoader(false);
+    } catch (error) {
+      handleError(error);
     }
   };
 
   const fetchGameDetailsAndSet = async (data) => {
-    const formData = new FormData();
-    formData.append(
-      "data",
-      JSON.stringify({
-        groupName: data.groupNumber,
-        email: data.email,
-        roomNumber: data.roomNumber,
-      }),
-    );
+    try {
+      const formData = new FormData();
+      formData.append(
+        "data",
+        JSON.stringify({
+          groupName: data.groupNumber,
+          email: data.email,
+          roomNumber: data.roomNumber,
+        }),
+      );
 
-    const res = await fetchGameDetails(formData);
-    if (res.success) {
-      dispatch({ type: "SET_GAME_NAME", payload: res.data.gameName });
-      dispatch({ type: "SET_NUM_ROUNDS", payload: res.data.numberOfRounds });
-      dispatch({ type: "SET_GAME_INSTRUCTIONS", payload: res.data.pdf });
-      dispatch({ type: "SET_NAME", payload: res.data.name });
-      dispatch({ type: "SET_EMAIL", payload: res.data.email });
-      dispatch({
-        type: "SET_AUTO_SELECTION",
-        payload: res.roleAutoAssigned,
-      });
+      const res = await fetchGameDetails(formData);
+      if (res.success) {
+        dispatch({ type: "SET_GAME_NAME", payload: res.data.gameName });
+        dispatch({ type: "SET_GROUP_NAME", payload: data.groupNumber });
+        dispatch({ type: "SET_NUM_ROUNDS", payload: res.data.numberOfRounds });
+        dispatch({ type: "SET_GAME_INSTRUCTIONS", payload: res.data.pdf });
+        dispatch({ type: "SET_NAME", payload: res.data.name });
+        dispatch({ type: "SET_EMAIL", payload: res.data.email });
+        dispatch({ type: "SET_ROOM_NUMBER", payload: data.roomNumber });
+        dispatch({ type: "SET_GAME_ID", payload: res.data.gameID });
+        dispatch({
+          type: "SET_SCORE_VISIBILITY_FOR_PLAYERS",
+          payload: res.data.scoreVisibilityForPlayers,
+        });
+        dispatch({
+          type: "SET_AUTO_SELECTION",
+          payload: res.roleAutoAssigned,
+        });
+        dispatch({
+          type: "SET_RESULTS_SUBBMISION",
+          payload: res.data.resultsSubbmision,
+        });
 
-      if (res.roleAutoAssigned) {
-        dispatch({ type: "SET_ROLE", payload: res.data.role });
+        if (res.roleAutoAssigned) {
+          dispatch({ type: "SET_ROLE", payload: res.data.role });
+          dispatch({ type: "SET_ROLES", payload: [] });
+        }
+        setLoader(false);
+      } else {
+        alert(res.message);
       }
-    } else {
-      alert(res.message);
+    } catch (error) {
+      handleError(error);
     }
   };
 
   const fetchParticipantsAndSet = async (data) => {
-    await fetchParticipants(data.email, data.roomNumber, data.groupNumber);
+    try {
+      await fetchParticipants(data.email, data.roomNumber, data.groupNumber);
+    } catch (error) {
+      handleError(error);
+    }
+  };
+
+  const updateRole = async (role) => {
+    const formData = new FormData();
+    dispatch({ type: "SET_ROLE", payload: role });
+    formData.append(
+      "data",
+      JSON.stringify({
+        groupName: state.groupName,
+        email: state.email,
+        roomNumber: state.roomNumber,
+        role: role,
+      }),
+    );
+    try {
+      await selectRole(formData);
+    } catch (er) {
+      dispatch({ type: "SET_ROLE", payload: "" });
+      handleError(er);
+    }
   };
 
   useEffect(() => {
     const searchParams = new URLSearchParams(window.location.search);
     const encryptedData = searchParams.get("data");
-
     if (encryptedData) {
       decryptAndFetchData(encryptedData);
       localStorage.setItem("gameDetails", JSON.stringify(state));
     }
-  }, []);
+  }, [state]);
 
   return (
     <div className='app-container'>
       <Header
-        gameName={""}
-        groupName={""}
-        numberOfRounds={0}
+        gameName={state.gameName}
+        groupName={state.groupName}
+        numberOfRounds={state.rounds}
         className={`${styles.headerContainer}`} // Use the imported style
       />
       <div
         className={`bottom-section d-flex flex-column ${styles.bottomSection}`}>
-        <Row className={`p-2 ${styles.paddingTop} flex-grow-1`}>
+        <Row className={`p-2 mt3 ${styles.paddingTop} flex-grow-1`}>
           <Col xs={5} className='flex-grow-1'>
-            <Players />
+            {!loader ? (
+              <Players state={state} updateRole={updateRole} />
+            ) : (
+              <Loader />
+            )}
           </Col>
           <Col xs={7} className='flex-grow-3'>
-            <GameDescription games={[]} />
+            {!loader ? (
+              <GameDescription pdfData={state.gameInstructions} />
+            ) : (
+              <Loader />
+            )}
           </Col>
         </Row>
         <Row className={`mt-3 text-end ${styles.mt5}`}>
           <Col>
-            <button className='btn btn-primary'>Your Button</button>
+            <button className='btn btn-primary' onClick={handleStartClick}>
+              Start
+            </button>
           </Col>
         </Row>
       </div>
     </div>
   );
-
-  // <div className='game-details-page'>
-  //   <div className='left-side'>
-  //     <div className='welcome-text'>
-  //       <h1>Welcome to the Game!</h1>
-  //     </div>
-  //     <div className='role-selection'>
-  //       <h2>Your Role:</h2>
-  //       <select
-  //         value={selectedRole}
-  //         onChange={(e) => setSelectedRole(e.target.value)}>
-  //         <option value=''>Select Role</option>
-  //         {roles.map((role) => (
-  //           <option key={role} value={role}>
-  //             {role}
-  //           </option>
-  //         ))}
-  //       </select>
-  //     </div>
-  //     <div className='user-list'>
-  //       <h2>Players:</h2>
-  //       <ul>
-  //         {users.map((user) => (
-  //           <li key={user.id}>{user.name}</li>
-  //         ))}
-  //       </ul>
-  //     </div>
-  //     <div className='game-info'>
-  //       <h2>Game Information:</h2>
-  //       <p>Total Rounds: 5</p>
-  //       <p>Group Name: Group A</p>
-  //     </div>
-  //   </div>
-  //   <div className='right-side'>
-  //     <div className='pdf-container'>
-  //       {pdfData && (
-  //         <iframe
-  //           src={`data:application/pdf;base64,${pdfData}`}
-  //           title='PDF'
-  //           style={{
-  //             width: "100%",
-  //             height: "100vh",
-  //             border: "none",
-  //             // zoom: "100%",
-  //           }}
-  //         />
-  //       )}
-  //     </div>
-  //     <button
-  //       onClick={() => {
-  //         window.location.href = "/level";
-  //       }}>
-  //       start
-  //     </button>
-  //   </div>
-  // </div>
 };
 
 export default GameDetails;

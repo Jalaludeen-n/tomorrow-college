@@ -5,7 +5,6 @@ import io from "socket.io-client";
 import Header from "./../components/admin/main/Header";
 import GameList from "../components/admin/main/GameList";
 import { fetchRunningAndPastGames } from "../components/services/airtable";
-import { generateSampleGameData } from "../components/helper/utils";
 
 const Main = () => {
   const [runningGames, setrunningGames] = useState([]);

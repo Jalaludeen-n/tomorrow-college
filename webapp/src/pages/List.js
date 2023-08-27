@@ -1,9 +1,6 @@
 import React, { useEffect, useState } from "react";
 import "./../styles/page/ListPage.css";
-import {
-  fetchGameDataFromAirtable,
-  startGame,
-} from "../components/services/airtable";
+import { fetchGameData, startGame } from "../components/services/airtable";
 import GameList from "../components/admin/main/GameList";
 import { generateRoomID } from "../components/helper/utils";
 const List = () => {
@@ -19,7 +16,7 @@ const List = () => {
     await startGame(data);
   };
   const fetchData = () => {
-    fetchGameDataFromAirtable()
+    fetchGameData()
       .then((res) => {
         setGames(res.data);
       })

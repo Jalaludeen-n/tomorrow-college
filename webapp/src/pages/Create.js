@@ -4,7 +4,7 @@ import { Container, Row, Form, Col, Button } from "react-bootstrap";
 import FormOne from "../components/admin/addGame";
 import PDFInstructionsForm from "../components/admin/addGame/PDFInstructionsForm";
 import { initialState, newGameReducer } from "../components/helper/reducer";
-import { sendDataToAirtable } from "../components/services/airtable";
+import { sendGameData } from "../components/services/airtable";
 
 const Create = () => {
   const storedState =
@@ -99,7 +99,7 @@ const Create = () => {
     if (isNext) {
       const formattedData = formatDataForAirtable();
       try {
-        await sendDataToAirtable(formattedData);
+        await sendGameData(formattedData);
         localStorage.removeItem("formState");
         window.location.href = "/list";
       } catch (error) {

@@ -1,6 +1,5 @@
 .topSection {
   align-items: center;
-  justify-content: between;
 }
 
 .headerContainer {
@@ -35,8 +34,64 @@
 }
 .playerList {
 }
+
+/* GameDetails.module.scss */
+
+.playerList {
+  border: 1px solid #ccc;
+  padding: 20px;
+  background-color: #f7f7f7;
+  border-radius: 5px;
+}
+
 .playerListHeadline {
   display: flex;
-  flex-direction: row;
   justify-content: space-between;
+  align-items: center;
+  padding: 5px 0;
+  border-bottom: 1px solid #ddd;
 }
+
+.gameListTitle {
+  flex: 1;
+  padding: 0 10px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.gameListScrollable {
+  max-height: 300px;
+  overflow-y: auto;
+}
+
+.gameListScrollableItems {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.gameListScrollableItem {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 5px 0;
+}
+
+.evenItem {
+  background-color: #f7f7f7;
+}
+
+.oddItem {
+  background-color: #ffffff;
+}
+
+.gameListScrollableItemAttribute {
+  flex: 1;
+  padding: 0 10px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* ... Other styles ... */
