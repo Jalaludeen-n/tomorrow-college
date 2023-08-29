@@ -8,9 +8,6 @@ const PDFInstructionsForm = ({
 }) => {
   const [md, setMd] = useState(2);
 
-  useEffect(() => {
-    console.log(storedState);
-  }, []);
   return (
     <>
       {storedState.roleValues.map((value, index) => (

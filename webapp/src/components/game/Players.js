@@ -3,7 +3,6 @@ import React, { useState, useEffect } from "react";
 import styles from "../../styles/page/GameDetails.module.scss";
 
 const Players = ({ state, updateRole }) => {
-  console.log(state);
   const handleRoleChange = (value) => {
     updateRole(value);
   };

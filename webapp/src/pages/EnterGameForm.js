@@ -72,7 +72,6 @@ const EnterGameForm = () => {
           encryptedData,
         )}`;
       } else {
-        console.log(loader);
         setLoader(false);
         alert(res.message);
       }

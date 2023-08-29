@@ -14,7 +14,6 @@ const Main = () => {
     try {
       const res = await fetchRunningAndPastGames();
       const allGames = res.data;
-      console.log(allGames);
 
       const runningGames = allGames.filter(
         (game) => game.Status === "Running" || game.Status === "Started",

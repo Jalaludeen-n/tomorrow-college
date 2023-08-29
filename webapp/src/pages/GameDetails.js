@@ -37,8 +37,6 @@ const GameDetails = () => {
           roomNumber: roomNumber,
         }),
       );
-      console.log("___________________");
-      console.log(formData);
 
       const res = await fetchRolesAndParticipants(formData);
 

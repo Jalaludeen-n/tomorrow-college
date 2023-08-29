@@ -39,7 +39,6 @@ const List = () => {
   };
 
   const formatDataForAirtable = (Id, Number) => {
-    console.log(Number);
     const formData = new FormData();
     formData.append(
       `data`,

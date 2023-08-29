@@ -26,12 +26,10 @@ const Level = () => {
 
   const decryptAndFetchData = async (encryptedData) => {
     try {
-      console.log("why not  ");
       const bytes = CryptoJS.AES.decrypt(encryptedData, "secret_key");
       const decryptedData = JSON.parse(bytes.toString(CryptoJS.enc.Utf8));
       setDecryptedData(decryptedData);
       setLoader(true);
-      console.log(decryptedData.level);
       if (decryptedData.numberOfRounds >= decryptedData.level) {
         await fetchLevelDetailsAndSet(decryptedData);
       }
@@ -106,7 +104,6 @@ const Level = () => {
   useEffect(() => {
     const searchParams = new URLSearchParams(location.search);
     const encryptedData = searchParams.get("data");
-    console.log("++++++++");
     if (encryptedData) {
       decryptAndFetchData(encryptedData);
     }
@@ -152,9 +149,7 @@ const Level = () => {
       ).toString();
       setAnswers([]);
       setQustions([]);
-      console.log("come");
       if (decryptedData.numberOfRounds >= decryptedData.level) {
-        console.log("submit");
         navigate(`/level?data=${encodeURIComponent(updatedEncryptedData)}`);
       }
     }
@@ -172,7 +167,6 @@ const Level = () => {
     setAnswers([]);
     setQustions([]);
     if (decryptedData.numberOfRounds >= level) {
-      console.log("Updating");
       navigate(`/level?data=${encodeURIComponent(updatedEncryptedData)}`);
     }
   };

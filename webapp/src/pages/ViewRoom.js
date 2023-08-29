@@ -23,7 +23,6 @@ const ViewRoom = () => {
       );
 
       const res = await fetchGroupDetails(formData);
-      console.log(res.Data);
       const levels = res.Data.Levels;
       setName(res.Data.Name);
       setLevels(levels);
@@ -38,7 +37,6 @@ const ViewRoom = () => {
     if (encryptedData) {
       const bytes = CryptoJS.AES.decrypt(encryptedData, "secret_key");
       const decryptedData = JSON.parse(bytes.toString(CryptoJS.enc.Utf8));
-      console.log(decryptedData);
       setDecryptedData(decryptedData);
       setRoomNumber(decryptedData.roomNumber);
       fetchData(decryptedData.roomNumber, decryptedData.GameID);

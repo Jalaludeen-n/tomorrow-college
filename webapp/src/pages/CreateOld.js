@@ -25,7 +25,6 @@ const Create = () => {
 
   const handleSubmit = async () => {
     const formattedData = formatDataForAirtable(levels);
-    console.log(formattedData); // Format your data
 
     try {
       await sendDataToAirtable(formattedData); // Send data to Airtable

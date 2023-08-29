@@ -89,7 +89,6 @@ const Create = () => {
   };
 
   const handleInputChange = (index, role, dublicate, submit) => {
-    console.log(dublicate);
     dispatch({
       type: "SET_ROLE_VALUES",
       payload: { index, role, dublicate, submit },
