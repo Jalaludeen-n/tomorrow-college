@@ -1,6 +1,4 @@
 const GameDescription = ({ pdfData }) => {
-  console.log("ds");
-  console.log(pdfData);
   return (
     <div className='pdf-container'>
       <iframe

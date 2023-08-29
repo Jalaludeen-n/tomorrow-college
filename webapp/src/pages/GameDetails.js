@@ -2,6 +2,7 @@ import React, { useState, useEffect, useReducer } from "react";
 import CryptoJS from "crypto-js";
 import axios from "axios";
 import styles from "../styles/page/GameDetails.module.scss";
+import { io } from "socket.io-client";
 import {
   fetchGameDetails,
   fetchRolesAndParticipants,
@@ -23,6 +24,7 @@ const GameDetails = () => {
     initialStateForGameDetails;
   const [state, dispatch] = useReducer(newGameDetailsReducer, storedState);
   const [loader, setLoader] = useState(false);
+  const [decryptedData, setDecryptedData] = useState({});
 
   const fetchParticipants = async (email, roomNumber, groupNumber) => {
     try {
@@ -35,6 +37,8 @@ const GameDetails = () => {
           roomNumber: roomNumber,
         }),
       );
+      console.log("___________________");
+      console.log(formData);
 
       const res = await fetchRolesAndParticipants(formData);
 
@@ -58,21 +62,20 @@ const GameDetails = () => {
     // Handle error here, e.g., show an error message to the user
   };
   const handleStartClick = () => {
-    const encryptedData = CryptoJS.AES.encrypt(
-      JSON.stringify({
-        gameName: state.gameName,
-        email: state.email,
-        roomNumber: state.roomNumber,
-        groupName: state.groupName,
-        name: state.name,
-        gameID: state.gameID,
-        role: state.role,
-        scoreVisibilityForPlayers: state.scoreVisibilityForPlayers,
-        resultsSubbmision: state.resultsSubbmision,
-        level: 1,
-      }),
-      "secret_key",
-    ).toString();
+    const data = JSON.stringify({
+      gameName: state.gameName,
+      email: state.email,
+      roomNumber: state.roomNumber,
+      groupName: state.groupName,
+      name: state.name,
+      gameID: state.gameID,
+      role: state.role,
+      scoreVisibilityForPlayers: state.scoreVisibilityForPlayers,
+      resultsSubbmision: state.resultsSubbmision,
+      level: 1,
+      numberOfRounds: state.rounds,
+    });
+    const encryptedData = CryptoJS.AES.encrypt(data, "secret_key").toString();
     window.location.href = `/level?data=${encodeURIComponent(encryptedData)}`;
   };
 
@@ -80,15 +83,27 @@ const GameDetails = () => {
     try {
       const bytes = CryptoJS.AES.decrypt(encryptedData, "secret_key");
       const decryptedData = JSON.parse(bytes.toString(CryptoJS.enc.Utf8));
-      const storedData = JSON.parse(localStorage.getItem("gameDetails"));
+      // const storedData = JSON.parse(localStorage.getItem("gameDetails"));
       setLoader(true);
-      if (!storedData) {
-        await Promise.all([
-          fetchGameDetailsAndSet(decryptedData),
-          fetchParticipantsAndSet(decryptedData),
-        ]);
-      }
+      setDecryptedData(decryptedData);
+
+      await Promise.all([
+        fetchGameDetailsAndSet(decryptedData),
+        fetchParticipantsAndSet(decryptedData),
+      ]);
+
       setLoader(false);
+    } catch (error) {
+      handleError(error);
+    }
+  };
+  const decryptAndFetchRole = async (encryptedData) => {
+    try {
+      const bytes = CryptoJS.AES.decrypt(encryptedData, "secret_key");
+      const decryptedData = JSON.parse(bytes.toString(CryptoJS.enc.Utf8));
+      // const storedData = JSON.parse(localStorage.getItem("gameDetails"));
+
+      await fetchParticipantsAndSet(decryptedData);
     } catch (error) {
       handleError(error);
     }
@@ -171,13 +186,42 @@ const GameDetails = () => {
   };
 
   useEffect(() => {
+    // Establish a WebSocket connection to the server
+    const socket = io("http://localhost:3001", {
+      transports: ["websocket"],
+    });
+
+    // Listen for events from the server
+    socket.on("connect", () => {
+      console.log("Connected to WebSocket server");
+    });
+    socket.on("participants", (data) => {
+      const searchParams = new URLSearchParams(window.location.search);
+      const encryptedData = searchParams.get("data");
+      if (encryptedData) {
+        decryptAndFetchRole(encryptedData);
+        // localStorage.setItem("gameDetails", JSON.stringify(state));
+      }
+    });
+
+    socket.on("disconnect", () => {
+      console.log("Disconnected from WebSocket server");
+    });
+
+    // Clean up the connection when the component unmounts
+    return () => {
+      socket.disconnect();
+    };
+  }, []);
+
+  useEffect(() => {
     const searchParams = new URLSearchParams(window.location.search);
     const encryptedData = searchParams.get("data");
     if (encryptedData) {
       decryptAndFetchData(encryptedData);
-      localStorage.setItem("gameDetails", JSON.stringify(state));
+      // localStorage.setItem("gameDetails", JSON.stringify(state));
     }
-  }, [state]);
+  }, []);
 
   return (
     <div className='app-container'>
