@@ -19,6 +19,7 @@ import {
 import Loader from "../pages/Loader";
 
 const GameDetails = () => {
+  const api_url = process.env.REACT_APP_API_URL;
   const storedState =
     JSON.parse(localStorage.getItem("gameDetails")) ||
     initialStateForGameDetails;
@@ -185,7 +186,7 @@ const GameDetails = () => {
 
   useEffect(() => {
     // Establish a WebSocket connection to the server
-    const socket = io("http://localhost:3001", {
+    const socket = io(`${api_url}`, {
       transports: ["websocket"],
     });
 

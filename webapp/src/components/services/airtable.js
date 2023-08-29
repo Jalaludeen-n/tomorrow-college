@@ -1,4 +1,5 @@
 import axios from "axios";
+const api_url = process.env.REACT_APP_API_URL;
 
 const handleSuccess = (response, successMessage) => {
   if (response.status === 200 && response.data.success) {
@@ -16,7 +17,7 @@ const handleError = (error) => {
 
 export const fetchGameData = async () => {
   try {
-    const response = await axios.get("http://localhost:3001/game/list");
+    const response = await axios.get(`${api_url}/game/list`);
     if (response.status === 200) {
       return response.data;
     } else {
@@ -30,7 +31,9 @@ export const fetchGameData = async () => {
 
 export const fetchRunningAndPastGames = async () => {
   try {
-    const response = await axios.get("http://localhost:3001/game/running", {
+    console.log("work");
+    console.log(process.env.REACT_APP_API_URL);
+    const response = await axios.get(`${api_url}/game/running`, {
       responseType: "json",
     });
     if (response.status === 200) {
@@ -46,15 +49,11 @@ export const fetchRunningAndPastGames = async () => {
 
 export const fetchGroupDetails = async (data) => {
   try {
-    const response = await axios.post(
-      "http://localhost:3001/game/groups",
-      data,
-      {
-        headers: {
-          "Content-Type": "application/json",
-        },
+    const response = await axios.post(`${api_url}/game/groups`, data, {
+      headers: {
+        "Content-Type": "application/json",
       },
-    );
+    });
     if (response.status === 200) {
       console.log("Data successfully sent to Airtable");
     } else {
@@ -68,15 +67,11 @@ export const fetchGroupDetails = async (data) => {
 
 export const fetchGameDetails = async (data) => {
   try {
-    const response = await axios.post(
-      "http://localhost:3001/game/details",
-      data,
-      {
-        headers: {
-          "Content-Type": "application/json",
-        },
+    const response = await axios.post(`${api_url}/game/details`, data, {
+      headers: {
+        "Content-Type": "application/json",
       },
-    );
+    });
     return handleSuccess(response, "Game details fetched successfully");
   } catch (error) {
     handleError(error);
@@ -84,15 +79,11 @@ export const fetchGameDetails = async (data) => {
 };
 export const fetchLevelDetails = async (data) => {
   try {
-    const response = await axios.post(
-      "http://localhost:3001/game/level",
-      data,
-      {
-        headers: {
-          "Content-Type": "application/json",
-        },
+    const response = await axios.post(`${api_url}/game/level`, data, {
+      headers: {
+        "Content-Type": "application/json",
       },
-    );
+    });
     return handleSuccess(
       response,
       "Roles and participants fetched successfully",
@@ -103,15 +94,11 @@ export const fetchLevelDetails = async (data) => {
 };
 export const storeAnsweres = async (data) => {
   try {
-    const response = await axios.post(
-      "http://localhost:3001/game/answeres",
-      data,
-      {
-        headers: {
-          "Content-Type": "application/json",
-        },
+    const response = await axios.post(`${api_url}/game/answeres`, data, {
+      headers: {
+        "Content-Type": "application/json",
       },
-    );
+    });
     return handleSuccess(
       response,
       "Roles and participants fetched successfully",
@@ -122,15 +109,11 @@ export const storeAnsweres = async (data) => {
 };
 export const fetchRolesAndParticipants = async (data) => {
   try {
-    const response = await axios.post(
-      "http://localhost:3001/game/players",
-      data,
-      {
-        headers: {
-          "Content-Type": "application/json",
-        },
+    const response = await axios.post(`${api_url}/game/players`, data, {
+      headers: {
+        "Content-Type": "application/json",
       },
-    );
+    });
     return handleSuccess(
       response,
       "Roles and participants fetched successfully",
@@ -140,19 +123,14 @@ export const fetchRolesAndParticipants = async (data) => {
   }
 };
 
-// ... Other fetch functions ...
 
 export const sendGameData = async (formattedData) => {
   try {
-    const response = await axios.post(
-      "http://localhost:3001/game/new",
-      formattedData,
-      {
-        headers: {
-          "Content-Type": "multipart/form-data",
-        },
+    const response = await axios.post(`${api_url}/game/new`, formattedData, {
+      headers: {
+        "Content-Type": "multipart/form-data",
       },
-    );
+    });
     handleSuccess(response, "Game data sent to Airtable");
   } catch (error) {
     handleError(error);
@@ -161,15 +139,11 @@ export const sendGameData = async (formattedData) => {
 
 export const joinGame = async (formattedData) => {
   try {
-    const response = await axios.post(
-      "http://localhost:3001/game/join",
-      formattedData,
-      {
-        headers: {
-          "Content-Type": "application/json",
-        },
+    const response = await axios.post(`${api_url}/game/join`, formattedData, {
+      headers: {
+        "Content-Type": "application/json",
       },
-    );
+    });
     return handleSuccess(response, "Joined the game successfully");
   } catch (error) {
     handleError(error);
@@ -178,15 +152,11 @@ export const joinGame = async (formattedData) => {
 
 export const startGame = async (formattedData) => {
   try {
-    const response = await axios.post(
-      "http://localhost:3001/game/start",
-      formattedData,
-      {
-        headers: {
-          "Content-Type": "application/json",
-        },
+    const response = await axios.post(`${api_url}/game/start`, formattedData, {
+      headers: {
+        "Content-Type": "application/json",
       },
-    );
+    });
     handleSuccess(response, "Role Selected successfully");
   } catch (error) {
     handleError(error);
@@ -195,7 +165,7 @@ export const startGame = async (formattedData) => {
 export const selectRole = async (formattedData) => {
   try {
     const response = await axios.post(
-      "http://localhost:3001/game/select-role",
+      `${api_url}/game/select-role`,
       formattedData,
       {
         headers: {

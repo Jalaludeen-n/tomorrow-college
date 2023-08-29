@@ -15,6 +15,7 @@ import {
 import { useLocation } from "react-router-dom";
 
 const Level = () => {
+  const api_url = process.env.REACT_APP_API_URL;
   const navigate = useNavigate(); // Initialize the navigate function
   const [pdfData, setPdfData] = useState(null);
   const location = useLocation();
@@ -76,7 +77,7 @@ const Level = () => {
   };
 
   useEffect(() => {
-    const socket = io("http://localhost:3001", {
+    const socket = io(`${api_url}`, {
       transports: ["websocket"],
     });
 
