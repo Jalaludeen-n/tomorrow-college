@@ -123,7 +123,6 @@ export const fetchRolesAndParticipants = async (data) => {
   }
 };
 
-
 export const sendGameData = async (formattedData) => {
   try {
     const response = await axios.post(`${api_url}/game/new`, formattedData, {

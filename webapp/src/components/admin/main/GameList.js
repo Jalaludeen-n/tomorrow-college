@@ -14,6 +14,7 @@ const GameList = ({
     handleStartGameClick(id);
   };
   const isView = (roomNumber, GameID) => {
+    console.log("ds");
     const encryptedData = CryptoJS.AES.encrypt(
       JSON.stringify({ roomNumber, GameID }),
       "secret_key",
@@ -25,7 +26,7 @@ const GameList = ({
   return (
     <div className='game-list'>
       <div className='game-list__headline'>
-        <h2 className='game-list__title'>Room Number</h2>
+        <h2 className='game-list__title'>Game Name</h2>
         <h2 className='game-list__title'>Date</h2>
         <h2 className='game-list__title'>{isPage ? "" : "Players"}</h2>
       </div>
@@ -44,7 +45,7 @@ const GameList = ({
                       ? "game-list__scrollable__items__item__attribute"
                       : "game-list__scrollable__items__item__attribute__clickable"
                   }>
-                  {game.RoomNumber}
+                  {isPage ? game.GameName : game.RoomNumber}
                 </div>
                 <div className='game-list__scrollable__items__item__attribute'>
                   {game.Date}

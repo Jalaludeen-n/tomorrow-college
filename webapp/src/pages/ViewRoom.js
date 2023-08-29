@@ -24,6 +24,9 @@ const ViewRoom = () => {
 
       const res = await fetchGroupDetails(formData);
       const levels = res.Data.Levels;
+      console.log(res);
+      console.log("______________");
+      console.log(levels);
       setName(res.Data.Name);
       setLevels(levels);
     } catch (error) {
@@ -31,6 +34,7 @@ const ViewRoom = () => {
     }
   };
   useEffect(() => {
+    console.log("ds");
     const searchParams = new URLSearchParams(window.location.search);
     const encryptedData = searchParams.get("data");
 

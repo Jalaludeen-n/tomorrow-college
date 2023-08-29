@@ -13,17 +13,20 @@ import {
   storeAnsweres,
 } from "../components/services/airtable";
 import { useLocation } from "react-router-dom";
+import Loader from "./Loader";
 
 const Level = () => {
   const api_url = process.env.REACT_APP_API_URL;
   const navigate = useNavigate(); // Initialize the navigate function
   const [pdfData, setPdfData] = useState(null);
+  const [isSubmitted, setIssubmitted] = useState(false);
   const location = useLocation();
   const [decryptedData, setDecryptedData] = useState({});
   const [loader, setLoader] = useState(false);
   const [questions, setQustions] = useState([]);
   const [answers, setAnswers] = useState([]);
   const [submit, setSubmit] = useState(true);
+  const [socket, setSocket] = useState(false);
 
   const decryptAndFetchData = async (encryptedData) => {
     try {
@@ -31,9 +34,10 @@ const Level = () => {
       const decryptedData = JSON.parse(bytes.toString(CryptoJS.enc.Utf8));
       setDecryptedData(decryptedData);
       setLoader(true);
-      if (decryptedData.numberOfRounds >= decryptedData.level) {
+      if (decryptedData.NumberOfRounds >= decryptedData.level) {
         await fetchLevelDetailsAndSet(decryptedData);
       }
+      setSocket(false);
 
       setLoader(false);
     } catch (error) {
@@ -53,14 +57,15 @@ const Level = () => {
         JSON.stringify({
           email: data.email,
           roomNumber: data.roomNumber,
-          groupName: data.groupName,
+          groupName: data.groupNumber,
           name: data.name,
-          gameID: data.gameID,
+          gameID: data.GameID,
           role: data.role,
           level: data.level,
-          gameName: data.gameName,
-          scoreVisibilityForPlayers: data.scoreVisibilityForPlayers,
-          resultsSubbmision: data.resultsSubbmision,
+          gameName: data.GameName,
+          scoreVisibilityForPlayers: data.ScoreVisibilityForPlayers,
+          resultsSubbmision: data.ResultsSubbmision,
+          sheetID: data.GoogleSheetID,
         }),
       );
 
@@ -69,7 +74,6 @@ const Level = () => {
         setQustions(res.data.qustions);
         setSubmit(res.data.submit);
         setPdfData(res.data.instruction);
-        // localStorage.setItem(`qstions`, JSON.stringify(res.data.qustions));
       }
     } catch (error) {
       handleError(error);
@@ -89,6 +93,7 @@ const Level = () => {
       const searchParams = new URLSearchParams(window.location.search);
       const encryptedData = searchParams.get("data");
       if (encryptedData) {
+        setSocket(true);
         updateLevel(encryptedData, data);
       }
     });
@@ -111,7 +116,8 @@ const Level = () => {
   }, [location]);
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (decryptedData.numberOfRounds >= decryptedData.level) {
+    if (decryptedData.NumberOfRounds >= decryptedData.level) {
+      setLoader(true);
       const newLevel = decryptedData.level + 1;
       const scoreVisibilityForPlayers = decryptedData.scoreVisibilityForPlayers;
       const resultsSubbmision = decryptedData.resultsSubbmision;
@@ -122,19 +128,19 @@ const Level = () => {
         JSON.stringify({
           email: decryptedData.email,
           roomNumber: decryptedData.roomNumber,
-          groupName: decryptedData.groupName,
+          groupName: decryptedData.groupNumber,
           name: decryptedData.name,
-          gameID: decryptedData.gameID,
+          gameID: decryptedData.GameID,
           role: decryptedData.role,
-          level: decryptedData.level + 1,
-          gameName: decryptedData.gameName,
-          answers: answers,
-          resultsSubbmision,
-          scoreVisibilityForPlayers,
+          level: decryptedData.level,
+          gameName: decryptedData.GameName,
+          scoreVisibilityForPlayers: decryptedData.ScoreVisibilityForPlayers,
+          resultsSubbmision: decryptedData.ResultsSubbmision,
+          sheetID: decryptedData.GoogleSheetID,
         }),
       );
 
-      await storeAnsweres(formData);
+      const res = await storeAnsweres(formData);
 
       // Update the URL with the new level
       const updatedEncryptedData = CryptoJS.AES.encrypt(
@@ -150,7 +156,7 @@ const Level = () => {
       ).toString();
       setAnswers([]);
       setQustions([]);
-      if (decryptedData.numberOfRounds >= decryptedData.level) {
+      if (decryptedData.NumberOfRounds >= decryptedData.level) {
         navigate(`/level?data=${encodeURIComponent(updatedEncryptedData)}`);
       }
     }
@@ -165,11 +171,13 @@ const Level = () => {
       }),
       "secret_key",
     ).toString();
+    setLoader(true);
     setAnswers([]);
     setQustions([]);
-    if (decryptedData.numberOfRounds >= level) {
+    if (decryptedData.NumberOfRounds >= level) {
       navigate(`/level?data=${encodeURIComponent(updatedEncryptedData)}`);
     }
+    setLoader(false);
   };
   const handleOtherPageClick = () => {
     // Replace "/other-page" with the actual path of the other page
@@ -183,7 +191,7 @@ const Level = () => {
 
   return (
     <div className={`app-container ${styles.levelPage}`}>
-      {decryptedData.numberOfRounds >= decryptedData.level ? (
+      {decryptedData.NumberOfRounds >= decryptedData.level ? (
         <>
           <Row>
             <Col className={`text-end ${styles.rightSection}`}>
@@ -207,90 +215,100 @@ const Level = () => {
           <Form onSubmit={handleSubmit}>
             <Row className={`p-2 mt3 ${styles.paddingTop} flex-grow-1`}>
               <Col xs={5} className='flex-grow-1'>
-                <GameDescription pdfData={pdfData} />
+                {!loader ? <GameDescription pdfData={pdfData} /> : <Loader />}
               </Col>
               <Col xs={6} className={`d-flex flex-column ${styles.rightSide}`}>
                 <h4 className={`${styles.roundHeader}`}>Qustions</h4>
-                <div
-                  className={`questions-container ${styles.questionsContainer}`}>
-                  {questions.map((question, index) => (
-                    <div key={index} className={`question ${styles.question}`}>
-                      <p>{question.question}</p>
-                      {question.type === "Multiple-Choice" && (
-                        <Form.Group
-                          className={`options ${styles.options}`}
-                          aria-required>
-                          {question.choices.map((option, optionIndex) => (
+                {!loader ? (
+                  <div
+                    className={`questions-container ${styles.questionsContainer}`}>
+                    {questions.map((question, index) => (
+                      <div
+                        key={index}
+                        className={`question ${styles.question}`}>
+                        <p>{question.question}</p>
+                        {question.type === "Multiple-Choice" && (
+                          <Form.Group
+                            className={`options ${styles.options}`}
+                            aria-required>
+                            {question.choices.map((option, optionIndex) => (
+                              <Form.Check
+                                key={optionIndex}
+                                type='radio'
+                                name={`question-${index}`}
+                                label={option}
+                                value={option}
+                                onChange={(e) =>
+                                  handleRadioChange(index, e.target.value)
+                                } // Add an onChange handler
+                                checked={answers[index] === option}
+                                required
+                              />
+                            ))}
+                          </Form.Group>
+                        )}
+                        {question.type === "Boolean" && (
+                          <Form.Group
+                            className={`input ${styles.input}`}
+                            required>
                             <Form.Check
-                              key={optionIndex}
                               type='radio'
                               name={`question-${index}`}
-                              label={option}
-                              value={option}
-                              onChange={(e) =>
-                                handleRadioChange(index, e.target.value)
-                              } // Add an onChange handler
-                              checked={answers[index] === option}
+                              label='True'
+                              value='true'
+                              onChange={() => handleRadioChange(index, "true")}
+                              checked={answers[index] === "true"}
+                              inline
                               required
                             />
-                          ))}
-                        </Form.Group>
-                      )}
-                      {question.type === "Boolean" && (
-                        <Form.Group
-                          className={`input ${styles.input}`}
-                          required>
-                          <Form.Check
-                            type='radio'
-                            name={`question-${index}`}
-                            label='True'
-                            value='true'
-                            onChange={() => handleRadioChange(index, "true")}
-                            checked={answers[index] === "true"}
-                            inline
-                            required
-                          />
-                          <Form.Check
-                            type='radio'
-                            name={`question-${index}`}
-                            label='False'
-                            value='false'
-                            checked={answers[index] === "false"}
-                            onChange={() => handleRadioChange(index, "false")}
-                            inline
-                          />
-                        </Form.Group>
-                      )}
-                      {question.type === "Number" && (
-                        <Form.Group className={`input ${styles.input}`}>
-                          <Form.Control
-                            type='Number'
-                            name={`question-${index}`}
-                            className={`form-control ${styles.numberInput}`}
-                            value={answers[index] || ""}
-                            onChange={(e) =>
-                              handleRadioChange(index, e.target.value)
-                            }
-                            required
-                          />
-                        </Form.Group>
-                      )}
-                    </div>
-                  ))}
-                </div>
+                            <Form.Check
+                              type='radio'
+                              name={`question-${index}`}
+                              label='False'
+                              value='false'
+                              checked={answers[index] === "false"}
+                              onChange={() => handleRadioChange(index, "false")}
+                              inline
+                            />
+                          </Form.Group>
+                        )}
+                        {question.type === "Number" && (
+                          <Form.Group className={`input ${styles.input}`}>
+                            <Form.Control
+                              type='Number'
+                              name={`question-${index}`}
+                              className={`form-control ${styles.numberInput}`}
+                              value={answers[index] || ""}
+                              onChange={(e) =>
+                                handleRadioChange(index, e.target.value)
+                              }
+                              required
+                            />
+                          </Form.Group>
+                        )}
+                      </div>
+                    ))}
+                  </div>
+                ) : (
+                  <Loader />
+                )}
               </Col>
             </Row>
             <Row className={`${styles.submitButtonRow}`}>
-              <Col xs={12} className={`text-end ${styles.submitButtonCol}`}>
-                {submit && (
-                  <Button
-                    className={`btn btn-primary ${styles.submitButton}`}
-                    variant='primary'
-                    type='submit'>
-                    Submit
-                  </Button>
-                )}
-              </Col>
+              {!loader ? (
+                <Col xs={12} className={`text-end ${styles.submitButtonCol}`}>
+                  {submit && (
+                    <Button
+                      className={`btn btn-primary ${styles.submitButton}`}
+                      variant='primary'
+                      type='submit'>
+                      Submit
+                    </Button>
+                  )}
+                </Col>
+              ) : (
+                <Loader />
+              )}
             </Row>
           </Form>
         </>

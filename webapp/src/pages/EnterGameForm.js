@@ -31,7 +31,6 @@ const EnterGameForm = () => {
   };
 
   const handleGroupNumberChange = (event) => {
-    // Convert letters to lowercase and remove spaces
     const newValue = event.target.value.replace(/\s+/g, "").toLowerCase();
     setGroupNumber(newValue);
     setShowGroupNumberAlert(false);
@@ -40,41 +39,50 @@ const EnterGameForm = () => {
   const handleSubmit = async (event) => {
     event.preventDefault();
 
-    let isValid = true;
+    setLoader(true);
+    const data = formatDataForAirtable();
+    const res = await joinGame(data);
+    if (res.success) {
+      const {
+        RolesAutoSelection,
+        ResultsSubbmision,
+        GoogleSheetID,
+        GameName,
+        NumberOfRounds,
+        ScoreVisibilityForPlayers,
+        Date,
+        GameID,
+        roleAutoAssigned,
+        gameInstruction,
+      } = res.data;
 
-    if (!email) {
-      setShowEmailAlert(true);
-      isValid = false;
-    }
+      localStorage.setItem("gameInstruction", gameInstruction);
+      const encryptedData = CryptoJS.AES.encrypt(
+        JSON.stringify({
+          email,
+          roomNumber,
+          groupNumber,
+          name,
+          RolesAutoSelection,
+          ResultsSubbmision,
+          GameName,
+          NumberOfRounds,
+          ScoreVisibilityForPlayers,
+          Date,
+          GameID,
+          GoogleSheetID,
+          roleAutoAssigned,
+        }),
+        "secret_key",
+      ).toString();
 
-    if (!roomNumber) {
-      setShowRoomNumberAlert(true);
-      isValid = false;
-    }
-
-    if (!groupNumber || !/^[a-z]+$/.test(groupNumber)) {
-      setShowGroupNumberAlert(true);
-      isValid = false;
-    }
-
-    if (isValid) {
-      setLoader(!loader);
-      const data = formatDataForAirtable();
-      const res = await joinGame(data);
-      if (res.success) {
-        setLoader(false);
-        const encryptedData = CryptoJS.AES.encrypt(
-          JSON.stringify({ email, roomNumber, groupNumber, name }),
-          "secret_key",
-        ).toString();
-
-        window.location.href = `/details?data=${encodeURIComponent(
-          encryptedData,
-        )}`;
-      } else {
-        setLoader(false);
-        alert(res.message);
-      }
+      window.location.href = `/details?data=${encodeURIComponent(
+        encryptedData,
+      )}`;
+    } else {
+      console.log(res);
+      alert(res.message);
+      setLoader(false);
     }
   };
 
@@ -116,7 +124,7 @@ const EnterGameForm = () => {
                 <Form.Control
                   type='text'
                   value={name}
-                  pattern='[a-z,A-Z]{5,}'
+                  pattern='[a-zA-Z]{3,}'
                   onChange={handleNameChange}
                   required
                 />
@@ -143,7 +151,7 @@ const EnterGameForm = () => {
                   type='text'
                   value={groupNumber}
                   onChange={handleGroupNumberChange}
-                  pattern='[a-z]{5,}'
+                  pattern='^[a-z]{3,}$'
                   required
                 />
                 {showGroupNumberAlert && (

@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useReducer } from "react";
 import CryptoJS from "crypto-js";
 import axios from "axios";
+import { useNavigate } from "react-router-dom";
 import styles from "../styles/page/GameDetails.module.scss";
 import { io } from "socket.io-client";
 import {
@@ -19,11 +20,12 @@ import {
 import Loader from "../pages/Loader";
 
 const GameDetails = () => {
+  const navigate = useNavigate(); // Initialize the navigate function
   const api_url = process.env.REACT_APP_API_URL;
-  const storedState =
-    JSON.parse(localStorage.getItem("gameDetails")) ||
-    initialStateForGameDetails;
-  const [state, dispatch] = useReducer(newGameDetailsReducer, storedState);
+  const [state, dispatch] = useReducer(
+    newGameDetailsReducer,
+    initialStateForGameDetails,
+  );
   const [loader, setLoader] = useState(false);
   const [decryptedData, setDecryptedData] = useState({});
 
@@ -58,21 +60,11 @@ const GameDetails = () => {
 
   const handleError = (error) => {
     console.error("Error:", error);
-    // Handle error here, e.g., show an error message to the user
   };
   const handleStartClick = () => {
     const data = JSON.stringify({
-      gameName: state.gameName,
-      email: state.email,
-      roomNumber: state.roomNumber,
-      groupName: state.groupName,
-      name: state.name,
-      gameID: state.gameID,
-      role: state.role,
-      scoreVisibilityForPlayers: state.scoreVisibilityForPlayers,
-      resultsSubbmision: state.resultsSubbmision,
+      ...decryptedData,
       level: 1,
-      numberOfRounds: state.rounds,
     });
     const encryptedData = CryptoJS.AES.encrypt(data, "secret_key").toString();
     window.location.href = `/level?data=${encodeURIComponent(encryptedData)}`;
@@ -82,14 +74,42 @@ const GameDetails = () => {
     try {
       const bytes = CryptoJS.AES.decrypt(encryptedData, "secret_key");
       const decryptedData = JSON.parse(bytes.toString(CryptoJS.enc.Utf8));
-      // const storedData = JSON.parse(localStorage.getItem("gameDetails"));
+      console.log(decryptedData);
+      console.log("________");
+
       setLoader(true);
       setDecryptedData(decryptedData);
+      dispatch({ type: "SET_GAME_NAME", payload: decryptedData.GameName });
+      dispatch({ type: "SET_GROUP_NAME", payload: decryptedData.groupNumber });
+      dispatch({
+        type: "SET_NUM_ROUNDS",
+        payload: decryptedData.NumberOfRounds,
+      });
+      const gameInstruction = localStorage.getItem("gameInstruction");
+      // localStorage.setItem("gameInstruction", gameInstruction);
+      dispatch({ type: "SET_GAME_INSTRUCTIONS", payload: gameInstruction });
+      dispatch({ type: "SET_NAME", payload: decryptedData.name });
+      dispatch({ type: "SET_EMAIL", payload: decryptedData.email });
+      dispatch({ type: "SET_ROOM_NUMBER", payload: decryptedData.roomNumber });
+      dispatch({ type: "SET_GAME_ID", payload: decryptedData.gameID });
+      dispatch({
+        type: "SET_SCORE_VISIBILITY_FOR_PLAYERS",
+        payload: decryptedData.ScoreVisibilityForPlayers,
+      });
+      if (decryptedData.roleAutoAssigned) {
+        dispatch({ type: "SET_ROLE", payload: decryptedData.role });
+        dispatch({ type: "SET_ROLES", payload: [] });
+      }
+      dispatch({
+        type: "SET_AUTO_SELECTION",
+        payload: decryptedData.roleAutoAssigned,
+      });
+      dispatch({
+        type: "SET_RESULTS_SUBBMISION",
+        payload: decryptedData.ResultsSubbmision,
+      });
 
-      await Promise.all([
-        fetchGameDetailsAndSet(decryptedData),
-        fetchParticipantsAndSet(decryptedData),
-      ]);
+      await fetchParticipantsAndSet(decryptedData);
 
       setLoader(false);
     } catch (error) {
@@ -100,57 +120,7 @@ const GameDetails = () => {
     try {
       const bytes = CryptoJS.AES.decrypt(encryptedData, "secret_key");
       const decryptedData = JSON.parse(bytes.toString(CryptoJS.enc.Utf8));
-      // const storedData = JSON.parse(localStorage.getItem("gameDetails"));
-
       await fetchParticipantsAndSet(decryptedData);
-    } catch (error) {
-      handleError(error);
-    }
-  };
-
-  const fetchGameDetailsAndSet = async (data) => {
-    try {
-      const formData = new FormData();
-      formData.append(
-        "data",
-        JSON.stringify({
-          groupName: data.groupNumber,
-          email: data.email,
-          roomNumber: data.roomNumber,
-        }),
-      );
-
-      const res = await fetchGameDetails(formData);
-      if (res.success) {
-        dispatch({ type: "SET_GAME_NAME", payload: res.data.gameName });
-        dispatch({ type: "SET_GROUP_NAME", payload: data.groupNumber });
-        dispatch({ type: "SET_NUM_ROUNDS", payload: res.data.numberOfRounds });
-        dispatch({ type: "SET_GAME_INSTRUCTIONS", payload: res.data.pdf });
-        dispatch({ type: "SET_NAME", payload: res.data.name });
-        dispatch({ type: "SET_EMAIL", payload: res.data.email });
-        dispatch({ type: "SET_ROOM_NUMBER", payload: data.roomNumber });
-        dispatch({ type: "SET_GAME_ID", payload: res.data.gameID });
-        dispatch({
-          type: "SET_SCORE_VISIBILITY_FOR_PLAYERS",
-          payload: res.data.scoreVisibilityForPlayers,
-        });
-        dispatch({
-          type: "SET_AUTO_SELECTION",
-          payload: res.roleAutoAssigned,
-        });
-        dispatch({
-          type: "SET_RESULTS_SUBBMISION",
-          payload: res.data.resultsSubbmision,
-        });
-
-        if (res.roleAutoAssigned) {
-          dispatch({ type: "SET_ROLE", payload: res.data.role });
-          dispatch({ type: "SET_ROLES", payload: [] });
-        }
-        setLoader(false);
-      } else {
-        alert(res.message);
-      }
     } catch (error) {
       handleError(error);
     }
@@ -167,6 +137,18 @@ const GameDetails = () => {
   const updateRole = async (role) => {
     const formData = new FormData();
     dispatch({ type: "SET_ROLE", payload: role });
+    const roleAutoAssigned = true;
+
+    const updatedEncryptedData = CryptoJS.AES.encrypt(
+      JSON.stringify({
+        ...decryptedData,
+        role,
+        roleAutoAssigned,
+      }),
+      "secret_key",
+    ).toString();
+
+    navigate(`/details?data=${encodeURIComponent(updatedEncryptedData)}`);
     formData.append(
       "data",
       JSON.stringify({
@@ -185,12 +167,10 @@ const GameDetails = () => {
   };
 
   useEffect(() => {
-    // Establish a WebSocket connection to the server
     const socket = io(`${api_url}`, {
       transports: ["websocket"],
     });
 
-    // Listen for events from the server
     socket.on("connect", () => {
       console.log("Connected to WebSocket server");
     });
@@ -199,7 +179,6 @@ const GameDetails = () => {
       const encryptedData = searchParams.get("data");
       if (encryptedData) {
         decryptAndFetchRole(encryptedData);
-        // localStorage.setItem("gameDetails", JSON.stringify(state));
       }
     });
 
@@ -207,7 +186,6 @@ const GameDetails = () => {
       console.log("Disconnected from WebSocket server");
     });
 
-    // Clean up the connection when the component unmounts
     return () => {
       socket.disconnect();
     };
@@ -218,7 +196,6 @@ const GameDetails = () => {
     const encryptedData = searchParams.get("data");
     if (encryptedData) {
       decryptAndFetchData(encryptedData);
-      // localStorage.setItem("gameDetails", JSON.stringify(state));
     }
   }, []);
 
