@@ -15,7 +15,7 @@ const ViewRoom = () => {
     try {
       const formData = new FormData();
       formData.append(
-        `data`,
+        "data",
         JSON.stringify({
           GameID,
           RoomNumber,
@@ -23,16 +23,19 @@ const ViewRoom = () => {
       );
 
       const res = await fetchGroupDetails(formData);
-      const levels = res.Data.Levels;
-      console.log(res);
-      console.log("______________");
-      console.log(levels);
-      setName(res.Data.Name);
-      setLevels(levels);
+
+      if (res.success && res.Data) {
+        const levels = res.Data.Levels;
+        setName(res.Data.Name);
+        setLevels(levels);
+      } else {
+        console.log("No Active Games");
+      }
     } catch (error) {
       console.error("Error fetching data:", error);
     }
   };
+
   useEffect(() => {
     console.log("ds");
     const searchParams = new URLSearchParams(window.location.search);
