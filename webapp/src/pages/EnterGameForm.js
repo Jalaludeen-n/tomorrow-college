@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { Container, Row, Col, Button, Form } from "react-bootstrap";
-import "./../styles/components/user/EnterGameForm.css";
+import styles from "./../styles/components/user/EnterGameForm.module.css";
 import { joinGame } from "../components/services/airtable";
 import CryptoJS from "crypto-js";
 import Loader from "./Loader";
@@ -105,67 +105,79 @@ const EnterGameForm = () => {
   };
 
   return (
-    <Container className='centered-form-container'>
+    <Container className={styles["centered-form-container"]}>
       {!loader ? (
-        <Row className='enter-game-form'>
-          <Col className='text-center d-flex flex-wrap align-items-center'>
-            <h1 className='form-heading'>Join Game</h1>
-            <Form onSubmit={handleSubmit}>
-              <Form.Group controlId='formEmail'>
-                <Form.Label>Email:</Form.Label>
-                <Form.Control
-                  type='email'
-                  value={email}
-                  onChange={handleEmailChange}
-                  required
-                />
-                {showEmailAlert && (
-                  <p className='alert'>Please enter your email.</p>
-                )}
-              </Form.Group>
-              <Form.Group controlId='formName'>
-                <Form.Label>Name:</Form.Label>
-                <Form.Control
-                  type='text'
-                  value={name}
-                  pattern='[a-zA-Z]{3,}'
-                  onChange={handleNameChange}
-                  required
-                />
-                {showNameAlert && (
-                  <p className='alert'>Please enter your Name.</p>
-                )}
-              </Form.Group>
+        <Row className={styles["enter-game-form"]}>
+          <Col className={styles["top-left-form"]}>
+            <div className='d-flex flex-column'>
+              <div className='text-center'>
+                <h1 className='form-heading'>Join Game</h1>
+              </div>
+              <Form onSubmit={handleSubmit} className='pt-3 text-left'>
+                <Form.Group controlId='formEmail' className='mt-2'>
+                  <Form.Label className={styles["form-text"]}>
+                    Email:
+                  </Form.Label>
+                  <Form.Control
+                    type='email'
+                    value={email}
+                    onChange={handleEmailChange}
+                    required
+                  />
+                  {showEmailAlert && (
+                    <p className='alert'>Please enter your email.</p>
+                  )}
+                </Form.Group>
+                <Form.Group controlId='formName' className='mt-3'>
+                  <Form.Label className={styles["form-text"]}>Name:</Form.Label>
+                  <Form.Control
+                    type='text'
+                    value={name}
+                    pattern='[a-zA-Z]{3,}'
+                    onChange={handleNameChange}
+                    required
+                  />
+                  {showNameAlert && (
+                    <p className='alert'>Please enter your Name.</p>
+                  )}
+                </Form.Group>
 
-              <Form.Group controlId='formRoomNumber'>
-                <Form.Label>Room Number:</Form.Label>
-                <Form.Control
-                  type='text'
-                  value={roomNumber}
-                  onChange={handleRoomNumberChange}
-                  required
-                />
-                {showRoomNumberAlert && (
-                  <p className='alert'>Please enter the room number.</p>
-                )}
-              </Form.Group>
-              <Form.Group controlId='formGroupNumber'>
-                <Form.Label>Group Name:</Form.Label>
-                <Form.Control
-                  type='text'
-                  value={groupNumber}
-                  onChange={handleGroupNumberChange}
-                  pattern='^[a-z]{3,}$'
-                  required
-                />
-                {showGroupNumberAlert && (
-                  <p className='alert'>Please enter a valid group number.</p>
-                )}
-              </Form.Group>
-              <Button variant='primary' type='submit'>
-                Enter the Game
-              </Button>
-            </Form>
+                <Form.Group controlId='formRoomNumber' className='mt-3'>
+                  <Form.Label className={styles["form-text"]}>
+                    Room Number:
+                  </Form.Label>
+                  <Form.Control
+                    type='text'
+                    value={roomNumber}
+                    onChange={handleRoomNumberChange}
+                    required
+                  />
+                  {showRoomNumberAlert && (
+                    <p className='alert'>Please enter the room number.</p>
+                  )}
+                </Form.Group>
+                <Form.Group controlId='formGroupNumber' className='mt-3'>
+                  <Form.Label className={styles["form-text"]}>
+                    Group Name:
+                  </Form.Label>
+                  <Form.Control
+                    type='text'
+                    value={groupNumber}
+                    onChange={handleGroupNumberChange}
+                    pattern='^[a-z]{3,}$'
+                    required
+                  />
+                  {showGroupNumberAlert && (
+                    <p className='alert'>Please enter a valid group number.</p>
+                  )}
+                </Form.Group>
+                <div className='text-center mt-5'>
+                  <Button className={styles["primary"]} type='submit'>
+                    Enter the Game
+                  </Button>
+                </div>
+              </Form>
+            </div>
           </Col>
         </Row>
       ) : (
