@@ -96,6 +96,7 @@ const GameDetails = () => {
         type: "SET_SCORE_VISIBILITY_FOR_PLAYERS",
         payload: decryptedData.ScoreVisibilityForPlayers,
       });
+      console.log(decryptedData);
       if (decryptedData.roleAutoAssigned) {
         dispatch({ type: "SET_ROLE", payload: decryptedData.role });
         dispatch({ type: "SET_ROLES", payload: [] });

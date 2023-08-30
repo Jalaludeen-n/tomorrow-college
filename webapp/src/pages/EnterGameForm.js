@@ -58,6 +58,7 @@ const EnterGameForm = () => {
         GameID,
         roleAutoAssigned,
         gameInstruction,
+        role,
       } = res.data;
 
       localStorage.setItem("gameInstruction", gameInstruction);
@@ -76,6 +77,7 @@ const EnterGameForm = () => {
           GameID,
           GoogleSheetID,
           roleAutoAssigned,
+          role,
         }),
         "secret_key",
       ).toString();
