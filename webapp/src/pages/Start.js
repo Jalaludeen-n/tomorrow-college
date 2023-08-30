@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import "./../styles/page/Start.css"; // Import your CSS file for styling
 import { useLocation } from "react-router-dom";
 import { startGame } from "../components/services/airtable";
+import { useNavigate } from "react-router-dom";
 
 const Start = () => {
   const [roomID, setRoomID] = useState("");
@@ -10,6 +11,7 @@ const Start = () => {
   const [numberOfPlayers, setNumberOfPlayers] = useState(0);
   const [playersPerGroup, setPlayersPerGroup] = useState(0);
   const [error, setError] = useState("");
+  const navigate = useNavigate(); // Initialize the navigate function
   const location = useLocation();
   const gameId = location.state.id;
   useEffect(() => {
@@ -63,7 +65,7 @@ const Start = () => {
     }
 
     if (showRoomID && secondsLeft === 0) {
-      window.location.href = "/";
+      navigate("/");
     }
   }, [showRoomID, secondsLeft]);
   return (

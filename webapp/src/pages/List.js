@@ -3,10 +3,12 @@ import "./../styles/page/ListPage.css";
 import { fetchGameData, startGame } from "../components/services/airtable";
 import GameList from "../components/admin/main/GameList";
 import { generateRoomID } from "../components/helper/utils";
+import { useNavigate } from "react-router-dom";
 const List = () => {
   const [games, setGames] = useState([]); // State to store fetched game data
   const [showPopup, setShowPopup] = useState(false);
   const [randomNumber, setRandomNumber] = useState("");
+  const navigate = useNavigate(); // Initialize the navigate function
 
   const handleStartGameClick = async (id) => {
     const number = generateRoomID();
@@ -32,7 +34,7 @@ const List = () => {
       .writeText(textToCopy)
       .then(() => {
         setShowPopup(!showPopup);
-        window.location.href = "/";
+        navigate("/");
       })
       .catch((error) => {
         console.error("Error copying text:", error);

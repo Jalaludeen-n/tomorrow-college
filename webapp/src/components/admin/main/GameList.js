@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import "./../../../styles/page/main.scss";
 import CryptoJS from "crypto-js";
+import { useNavigate } from "react-router-dom";
 
 const GameList = ({
   games,
@@ -10,6 +11,8 @@ const GameList = ({
   randomNumber,
   handleClosePopup,
 }) => {
+  const navigate = useNavigate(); // Initialize the navigate function
+
   const startGame = (id) => {
     handleStartGameClick(id);
   };
@@ -19,9 +22,7 @@ const GameList = ({
       JSON.stringify({ roomNumber, GameID }),
       "secret_key",
     ).toString();
-    window.location.href = `/viewStatus?data=${encodeURIComponent(
-      encryptedData,
-    )}`;
+    navigate(`/viewStatus?data=${encodeURIComponent(encryptedData)}`);
   };
   return (
     <div className='game-list'>

@@ -5,8 +5,10 @@ import FormOne from "../components/admin/addGame";
 import PDFInstructionsForm from "../components/admin/addGame/PDFInstructionsForm";
 import { initialState, newGameReducer } from "../components/helper/reducer";
 import { sendGameData } from "../components/services/airtable";
+import { useNavigate } from "react-router-dom";
 
 const Create = () => {
+  const navigate = useNavigate(); // Initialize the navigate function
   const storedState =
     JSON.parse(localStorage.getItem("formState")) || initialState;
   const [state, dispatch] = useReducer(newGameReducer, storedState);
@@ -100,7 +102,7 @@ const Create = () => {
       try {
         await sendGameData(formattedData);
         localStorage.removeItem("formState");
-        window.location.href = "/list";
+        navigate("/list");
       } catch (error) {
         console.error("Error sending data to Airtable:", error);
       }
@@ -114,7 +116,7 @@ const Create = () => {
     if (isNext) {
       setIsNext(!isNext);
     } else {
-      window.location.href = "/";
+      navigate("/");
     }
   };
 

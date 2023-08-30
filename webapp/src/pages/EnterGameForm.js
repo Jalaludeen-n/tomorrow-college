@@ -4,8 +4,12 @@ import "./../styles/components/user/EnterGameForm.css";
 import { joinGame } from "../components/services/airtable";
 import CryptoJS from "crypto-js";
 import Loader from "./Loader";
+import { useLocation } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 const EnterGameForm = () => {
+  const navigate = useNavigate();
+  const location = useLocation();
   const [email, setEmail] = useState("");
   const [name, setName] = useState("");
   const [roomNumber, setRoomNumber] = useState("");
@@ -76,9 +80,7 @@ const EnterGameForm = () => {
         "secret_key",
       ).toString();
 
-      window.location.href = `/details?data=${encodeURIComponent(
-        encryptedData,
-      )}`;
+      navigate(`/details?data=${encodeURIComponent(encryptedData)}`);
     } else {
       console.log(res);
       alert(res.message);

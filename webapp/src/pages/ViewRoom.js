@@ -1,12 +1,13 @@
 import React, { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
 import CryptoJS from "crypto-js";
 import { fetchGroupDetails } from "../components/services/airtable";
 import { Container, Row, Form, Col, Button } from "react-bootstrap";
 import "../styles/page/ViewRoom.scss";
+import { useLocation } from "react-router-dom";
 
 const ViewRoom = () => {
   const [decryptedData, setDecryptedData] = useState(null);
+  const location = useLocation();
   const [levels, setLevels] = useState([]);
   const [name, setName] = useState("");
   const [roomNumber, setRoomNumber] = useState("");
@@ -37,10 +38,8 @@ const ViewRoom = () => {
   };
 
   useEffect(() => {
-    console.log("ds");
-    const searchParams = new URLSearchParams(window.location.search);
+    const searchParams = new URLSearchParams(location.search);
     const encryptedData = searchParams.get("data");
-
     if (encryptedData) {
       const bytes = CryptoJS.AES.decrypt(encryptedData, "secret_key");
       const decryptedData = JSON.parse(bytes.toString(CryptoJS.enc.Utf8));

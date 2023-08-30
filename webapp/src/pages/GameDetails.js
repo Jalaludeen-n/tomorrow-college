@@ -4,8 +4,9 @@ import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import styles from "../styles/page/GameDetails.module.scss";
 import { io } from "socket.io-client";
+import { useLocation } from "react-router-dom";
+
 import {
-  fetchGameDetails,
   fetchRolesAndParticipants,
   selectRole,
 } from "../components/services/airtable";
@@ -20,6 +21,8 @@ import {
 import Loader from "../pages/Loader";
 
 const GameDetails = () => {
+  const location = useLocation();
+
   const navigate = useNavigate(); // Initialize the navigate function
   const api_url = process.env.REACT_APP_API_URL;
   const [state, dispatch] = useReducer(
@@ -67,16 +70,13 @@ const GameDetails = () => {
       level: 1,
     });
     const encryptedData = CryptoJS.AES.encrypt(data, "secret_key").toString();
-    window.location.href = `/level?data=${encodeURIComponent(encryptedData)}`;
+    navigate(`/level?data=${encodeURIComponent(encryptedData)}`);
   };
 
   const decryptAndFetchData = async (encryptedData) => {
     try {
       const bytes = CryptoJS.AES.decrypt(encryptedData, "secret_key");
       const decryptedData = JSON.parse(bytes.toString(CryptoJS.enc.Utf8));
-      console.log(decryptedData);
-      console.log("________");
-
       setLoader(true);
       setDecryptedData(decryptedData);
       dispatch({ type: "SET_GAME_NAME", payload: decryptedData.GameName });
@@ -175,7 +175,7 @@ const GameDetails = () => {
       console.log("Connected to WebSocket server");
     });
     socket.on("participants", (data) => {
-      const searchParams = new URLSearchParams(window.location.search);
+      const searchParams = new URLSearchParams(location.search);
       const encryptedData = searchParams.get("data");
       if (encryptedData) {
         decryptAndFetchRole(encryptedData);
@@ -192,7 +192,7 @@ const GameDetails = () => {
   }, []);
 
   useEffect(() => {
-    const searchParams = new URLSearchParams(window.location.search);
+    const searchParams = new URLSearchParams(location.search);
     const encryptedData = searchParams.get("data");
     if (encryptedData) {
       decryptAndFetchData(encryptedData);

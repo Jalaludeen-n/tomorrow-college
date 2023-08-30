@@ -3,7 +3,6 @@ import styles from "../styles/page/Level.module.css"; // Import your CSS file fo
 import { Row, Col, Form, Button } from "react-bootstrap";
 import { Link } from "react-router-dom";
 import CryptoJS from "crypto-js";
-import { useHistory } from "history"; // Import useHistory from 'history' library
 import { useNavigate } from "react-router-dom";
 import GameDescription from "../components/game/GameDescription";
 import { io } from "socket.io-client";
@@ -90,7 +89,7 @@ const Level = () => {
       console.log("Connected to WebSocket server");
     });
     socket.on("level", (data) => {
-      const searchParams = new URLSearchParams(window.location.search);
+      const searchParams = new URLSearchParams(location.search);
       const encryptedData = searchParams.get("data");
       if (encryptedData) {
         setSocket(true);

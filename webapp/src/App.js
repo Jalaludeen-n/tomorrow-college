@@ -11,7 +11,7 @@ import ViewRoom from "./pages/ViewRoom.js";
 
 function App() {
   return (
-    <BrowserRouter>
+    <BrowserRouter basename='/tomorrow'>
       <Routes>
         <Route path='/' element={<Main />} />
         <Route path='/dashboard' element={<Main />} />
