@@ -18,6 +18,7 @@ const List = () => {
   const fetchData = () => {
     fetchGameData()
       .then((res) => {
+        console.log("ds");
         setGames(res.data);
       })
       .catch((error) => {
@@ -55,14 +56,18 @@ const List = () => {
   return (
     <div className='list-container'>
       <div className='title'>List of Games</div>
-      <GameList
-        games={games}
-        isPage={true}
-        handleStartGameClick={handleStartGameClick}
-        showPopup={showPopup}
-        randomNumber={randomNumber}
-        handleClosePopup={handleClosePopup}
-      />
+      {games.length === 0 ? (
+        <div>No active games</div>
+      ) : (
+        <GameList
+          games={games}
+          isPage={true}
+          handleStartGameClick={handleStartGameClick}
+          showPopup={showPopup}
+          randomNumber={randomNumber}
+          handleClosePopup={handleClosePopup}
+        />
+      )}
     </div>
   );
 };
