@@ -13,7 +13,11 @@ function App() {
   return (
     <BrowserRouter>
       <Routes>
-        <Route path='/' element={<EnterGameForm />} />
+        <Route path='/' element={<Main />} />
+        <Route path='/dashboard' element={<Main />} />
+        <Route path='/enterGame' element={<EnterGameForm />} />
+        <Route path='/joinGame' element={<EnterGameForm />} />
+        <Route path='/test' element={<Main />} />
         <Route path='/list' element={<List />} />
         <Route path='/create' element={<Create />} />
         <Route path='/details' element={<GameDetails />} />

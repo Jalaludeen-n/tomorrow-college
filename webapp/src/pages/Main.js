@@ -1,7 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
 import "./../styles/page/main.scss";
-import io from "socket.io-client";
 import Header from "./../components/admin/main/Header";
 import GameList from "../components/admin/main/GameList";
 import { fetchRunningAndPastGames } from "../components/services/airtable";
