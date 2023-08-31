@@ -1,7 +1,15 @@
-const GameDescription = ({ pdfData }) => {
+import styles from "../../styles/page/GameDetails.module.scss";
+
+const GameDescription = ({ pdfData, header }) => {
   return (
-    <div className='pdf-container'>
+    <div className={`${styles.pdfContainer}`}>
+      <div className={`${styles.descriptionHeadline}`}>
+        <div className={`${styles.descriptionTitle}`}>
+          Gameplay description{header}
+        </div>
+      </div>
       <iframe
+        className={`${styles.description}`}
         src={`data:application/pdf;base64,${pdfData}`}
         title='PDF'
         style={{

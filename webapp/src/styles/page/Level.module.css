@@ -10,8 +10,23 @@
   margin-bottom: 10px;
 }
 
+.rightSide {
+  color: #000;
+  font-family: Open Sans;
+  font-size: 30px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: normal;
+}
+.questionsContainer {
+  color: #000;
+  font-family: Open Sans;
+  font-size: 18px;
+  font-style: normal;
+  font-weight: 300;
+  line-height: normal;
+}
 .leftSection {
-  background-color: #f0f0f0;
   padding: 10px;
   display: flex;
   flex-direction: column;
@@ -19,8 +34,13 @@
 }
 
 .rightSection {
-  background-color: #d0d0d0;
   padding: 10px;
+  color: #000;
+  font-family: Open Sans;
+  font-size: 30px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: normal;
 }
 
 .icon {
@@ -126,10 +146,12 @@
 }
 
 .right-side {
-  width: 50%;
-  padding: 20px;
-  background-color: #ffffff;
-  overflow-y: auto;
+  color: #000;
+  font-family: Open Sans;
+  font-size: 30px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: normal;
 }
 
 .round-header {

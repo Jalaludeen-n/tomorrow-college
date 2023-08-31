@@ -2,6 +2,8 @@
 @import url("../../colors.css");
 
 .top-section {
+  border-radius: 8px;
+  background: #d90368;
   background-color: var(--primary-color);
   display: flex;
   justify-content: space-between;

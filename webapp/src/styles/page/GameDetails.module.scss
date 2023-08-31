@@ -6,8 +6,37 @@
   height: 18vh;
 }
 
+.app-container {
+  margin: 4px 4px 12px 30px;
+}
+
+.header-link {
+  text-decoration: none;
+  color: #000;
+  text-align: center;
+  font-family: Open Sans;
+  font-size: 17px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: normal;
+}
+
+.header-link:hover {
+  color: #0056b3; /* Change link color on hover */
+}
+
+.icon-container {
+  /* Styles for your icon container */
+}
+
+.button-container {
+  /* Styles for your button container */
+}
+
 .bottomSection {
   height: 70vh;
+  overflow: auto; /* Use auto to hide scrollbars when not needed */
+  padding-right: 15px; /* Adjust padding to prevent overlap with scrollbar */
 }
 
 .paddingTop {
@@ -36,28 +65,69 @@
 }
 
 /* GameDetails.module.scss */
-
-.playerList {
-  border: 1px solid #ccc;
-  padding: 20px;
-  background-color: #f7f7f7;
-  border-radius: 5px;
+.pdfContainer {
+  border: 1px solid #d90368;
+  border-radius: 10px 10px 0px 0px;
+  padding: 0px;
 }
-
-.playerListHeadline {
+.description {
+}
+.descriptionHeadline {
+  align-self: stretch;
+  background: #d90368;
+  border: 1px solid #d90368;
+  border-radius: 10px 10px 0px 0px;
+}
+.descriptionTitle {
+  color: #fff;
+  font-family: Open Sans;
+  font-size: 21px;
+  font-style: normal;
+  font-weight: 700;
+  line-height: 22.882px; /* 108.964% */
+  margin-left: 20px;
+  height: 8vh;
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 5px 0;
-  border-bottom: 1px solid #ddd;
+  align-self: stretch;
+  background: #d90368;
+  border-radius: 10px 10px 0px 0px;
+}
+
+.playerList {
+  border-radius: 11px 11px 0px 0px;
+  border: 1px solid #d90368;
+  height: 60vh;
+  overflow: auto; /* Use auto to hide scrollbars when not needed */
+  padding-right: 15px;
+}
+
+.playerListHeadline {
+  height: 8vh;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  align-items: center;
+  gap: 11.441px;
+  align-self: stretch;
+  background: #d90368;
+  border-radius: 10px 10px 0px 0px;
+  box-shadow: 0px -2.2882351875305176px 0px 0px #e3e5e8 inset;
 }
 
 .gameListTitle {
   flex: 1;
-  padding: 0 10px;
+  padding: 0 5vw;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+  color: #fff;
+  font-family: Open Sans;
+  font-size: 21px;
+  font-style: normal;
+  font-weight: 700;
+  line-height: 22.882px; /* 108.964% */
 }
 
 .gameListScrollable {

@@ -1,5 +1,5 @@
 import { Col, Row } from "react-bootstrap";
-import React, { useState, useEffect } from "react";
+import React from "react";
 import styles from "../../styles/page/GameDetails.module.scss";
 
 const Players = ({ state, updateRole }) => {

@@ -192,19 +192,7 @@ const Level = () => {
     <div className={`app-container ${styles.levelPage}`}>
       {decryptedData.NumberOfRounds >= decryptedData.level ? (
         <>
-          <Row>
-            <Col className={`text-end ${styles.rightSection}`}>
-              <Link to='/' className={`${styles.icon}`}>
-                Home
-              </Link>
-              <button
-                className={`btn btn-link ${styles.icon}`}
-                onClick={handleOtherPageClick}>
-                Other Page
-              </button>
-            </Col>
-          </Row>
-          <Row>
+          <Row className='mt-4 mb-4'>
             <Col className={`${styles.rightSection}`}>
               <div className={`${styles.welcomeText}`}>
                 Welcome to Round {decryptedData.level}
@@ -212,12 +200,21 @@ const Level = () => {
             </Col>
           </Row>
           <Form onSubmit={handleSubmit}>
-            <Row className={`p-2 mt3 ${styles.paddingTop} flex-grow-1`}>
+            <Row className={`p-2 mt-3 ${styles.paddingTop} flex-grow-1`}>
               <Col xs={5} className='flex-grow-1'>
-                {!loader ? <GameDescription pdfData={pdfData} /> : <Loader />}
+                {!loader ? (
+                  <GameDescription
+                    pdfData={pdfData}
+                    header={"Round scenario"}
+                  />
+                ) : (
+                  <Loader />
+                )}
               </Col>
               <Col xs={6} className={`d-flex flex-column ${styles.rightSide}`}>
-                <h4 className={`${styles.roundHeader}`}>Qustions</h4>
+                <h4 className={`${styles.roundHeader}`}>
+                  Welcome to Round {decryptedData.level}
+                </h4>
                 {!loader ? (
                   <div
                     className={`questions-container ${styles.questionsContainer}`}>

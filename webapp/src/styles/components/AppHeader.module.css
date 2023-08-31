@@ -1,0 +1,42 @@
+/* styles.module.css */
+
+.sub-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px;
+  background-color: #f5f5f5;
+}
+
+.icon-container img {
+  max-width: 100px;
+  height: auto;
+}
+
+.button-container {
+  display: flex;
+  gap: 20px;
+}
+
+.header-link {
+  text-decoration: none;
+  color: #333;
+  font-size: 16px;
+  padding: 8px 12px;
+  border-radius: 4px;
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.header-link:hover {
+  background: #d9e4e9;
+  color: #333;
+}
+
+.active {
+  display: flex;
+  padding: 8.825px 13.237px;
+  align-items: center;
+  gap: 13.237px;
+  border-radius: 4.412px;
+  background: #d9e4e9;
+}

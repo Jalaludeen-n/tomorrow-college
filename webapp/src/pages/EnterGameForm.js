@@ -6,6 +6,7 @@ import CryptoJS from "crypto-js";
 import Loader from "./Loader";
 import { useLocation } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
+import AppHeader from "../components/AppHeader";
 
 const EnterGameForm = () => {
   const navigate = useNavigate();
@@ -105,85 +106,92 @@ const EnterGameForm = () => {
   };
 
   return (
-    <Container className={styles["centered-form-container"]}>
-      {!loader ? (
-        <Row className={styles["enter-game-form"]}>
-          <Col className={styles["top-left-form"]}>
-            <div className='d-flex flex-column'>
-              <div className='text-center'>
-                <h1 className='form-heading'>Join Game</h1>
-              </div>
-              <Form onSubmit={handleSubmit} className='pt-3 text-left'>
-                <Form.Group controlId='formEmail' className='mt-2'>
-                  <Form.Label className={styles["form-text"]}>
-                    Email:
-                  </Form.Label>
-                  <Form.Control
-                    type='email'
-                    value={email}
-                    onChange={handleEmailChange}
-                    required
-                  />
-                  {showEmailAlert && (
-                    <p className='alert'>Please enter your email.</p>
-                  )}
-                </Form.Group>
-                <Form.Group controlId='formName' className='mt-3'>
-                  <Form.Label className={styles["form-text"]}>Name:</Form.Label>
-                  <Form.Control
-                    type='text'
-                    value={name}
-                    pattern='[a-zA-Z]{3,}'
-                    onChange={handleNameChange}
-                    required
-                  />
-                  {showNameAlert && (
-                    <p className='alert'>Please enter your Name.</p>
-                  )}
-                </Form.Group>
-
-                <Form.Group controlId='formRoomNumber' className='mt-3'>
-                  <Form.Label className={styles["form-text"]}>
-                    Room Number:
-                  </Form.Label>
-                  <Form.Control
-                    type='text'
-                    value={roomNumber}
-                    onChange={handleRoomNumberChange}
-                    required
-                  />
-                  {showRoomNumberAlert && (
-                    <p className='alert'>Please enter the room number.</p>
-                  )}
-                </Form.Group>
-                <Form.Group controlId='formGroupNumber' className='mt-3'>
-                  <Form.Label className={styles["form-text"]}>
-                    Group Name:
-                  </Form.Label>
-                  <Form.Control
-                    type='text'
-                    value={groupNumber}
-                    onChange={handleGroupNumberChange}
-                    pattern='^[a-z]{3,}$'
-                    required
-                  />
-                  {showGroupNumberAlert && (
-                    <p className='alert'>Please enter a valid group number.</p>
-                  )}
-                </Form.Group>
-                <div className='text-center mt-5'>
-                  <Button className={styles["primary"]} type='submit'>
-                    Enter the Game
-                  </Button>
+    <>
+      <AppHeader form={true} />
+      <Container className={styles["centered-form-container"]}>
+        {!loader ? (
+          <Row className={styles["enter-game-form"]}>
+            <Col className={styles["top-left-form"]}>
+              <div className='d-flex flex-column'>
+                <div className='text-center'>
+                  <h1 className='form-heading'>Join Game</h1>
                 </div>
-              </Form>
-            </div>
-          </Col>
-        </Row>
-      ) : (
-        <Loader />
-      )}
-    </Container>
+                <Form onSubmit={handleSubmit} className='pt-3 text-left'>
+                  <Form.Group controlId='formEmail' className='mt-2'>
+                    <Form.Label className={styles["form-text"]}>
+                      Email:
+                    </Form.Label>
+                    <Form.Control
+                      type='email'
+                      value={email}
+                      onChange={handleEmailChange}
+                      required
+                    />
+                    {showEmailAlert && (
+                      <p className='alert'>Please enter your email.</p>
+                    )}
+                  </Form.Group>
+                  <Form.Group controlId='formName' className='mt-3'>
+                    <Form.Label className={styles["form-text"]}>
+                      Name:
+                    </Form.Label>
+                    <Form.Control
+                      type='text'
+                      value={name}
+                      pattern='[a-zA-Z]{3,}'
+                      onChange={handleNameChange}
+                      required
+                    />
+                    {showNameAlert && (
+                      <p className='alert'>Please enter your Name.</p>
+                    )}
+                  </Form.Group>
+
+                  <Form.Group controlId='formRoomNumber' className='mt-3'>
+                    <Form.Label className={styles["form-text"]}>
+                      Room Number:
+                    </Form.Label>
+                    <Form.Control
+                      type='text'
+                      value={roomNumber}
+                      onChange={handleRoomNumberChange}
+                      required
+                    />
+                    {showRoomNumberAlert && (
+                      <p className='alert'>Please enter the room number.</p>
+                    )}
+                  </Form.Group>
+                  <Form.Group controlId='formGroupNumber' className='mt-3'>
+                    <Form.Label className={styles["form-text"]}>
+                      Group Name:
+                    </Form.Label>
+                    <Form.Control
+                      type='text'
+                      value={groupNumber}
+                      onChange={handleGroupNumberChange}
+                      pattern='^[a-z]{3,}$'
+                      required
+                    />
+                    {showGroupNumberAlert && (
+                      <p className='alert'>
+                        Please enter a valid group number.
+                      </p>
+                    )}
+                  </Form.Group>
+                  <div className='text-center mt-5'>
+                    <Button className={styles["primary"]} type='submit'>
+                      Join Game
+                    </Button>
+                  </div>
+                </Form>
+              </div>
+            </Col>
+          </Row>
+        ) : (
+          <Loader />
+        )}
+      </Container>
+    </>
   );
 };
 

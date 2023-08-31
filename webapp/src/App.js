@@ -8,6 +8,13 @@ import EnterGameForm from "./pages/EnterGameForm";
 import GameDetails from "./pages/GameDetails";
 import Level from "./pages/Level";
 import ViewRoom from "./pages/ViewRoom.js";
+import WithHeader from "./pages/WithHeader.js";
+import Leaderboard from "./pages/Leaderboard";
+import GameHomepage from "./pages/GameHomepage";
+
+const HeaderedLeaderboard = WithHeader(Leaderboard);
+const HeaderedLevel = WithHeader(Level);
+const HeaderedGameHomepage = WithHeader(GameHomepage);
 
 function App() {
   return (
@@ -15,15 +22,13 @@ function App() {
       <Routes>
         <Route path='/' element={<Main />} />
         <Route path='/dashboard' element={<Main />} />
-        <Route path='/enterGame' element={<EnterGameForm />} />
         <Route path='/joinGame' element={<EnterGameForm />} />
-        <Route path='/test' element={<Main />} />
         <Route path='/list' element={<List />} />
         <Route path='/create' element={<Create />} />
-        <Route path='/details' element={<GameDetails />} />
-        <Route path='/level' element={<Level />} />
+        <Route path='/home' element={<HeaderedGameHomepage />} />
+        <Route path='/level' element={<HeaderedLevel />} />
         <Route path='/viewStatus' element={<ViewRoom />} />
-        <Route path='/admin' element={<Main />} />
+        <Route path='/leader' element={<HeaderedLeaderboard />} />
       </Routes>
     </BrowserRouter>
   );

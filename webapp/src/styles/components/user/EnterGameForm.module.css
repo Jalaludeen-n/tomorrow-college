@@ -12,6 +12,15 @@
   flex-shrink: 0;
   border-radius: 20px;
   background: #d90368;
+
+  color: #fff;
+  font-family: Open Sans;
+  font-size: 16.8px;
+  font-style: normal;
+  font-weight: 700;
+  line-height: normal;
+  letter-spacing: 0.336px;
+  text-transform: uppercase;
 }
 .form-text {
   color: #000;

@@ -8,7 +8,7 @@ const EnterGameForm = ({ gameName, groupName, numberOfRounds }) => {
 
   return (
     <Row
-      className={`pt-4 mt-3 ${styles["top-section"]} align-items-center justify-content-between`}>
+      className={`pt-4 m-2 ${styles["top-section"]} align-items-center justify-content-between`}>
       <Col className={styles["top-section__message-container"]}>
         <div
           className={`${styles["top-section__message-container__welcome-message"]} mb-2`}>
