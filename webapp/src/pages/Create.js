@@ -19,7 +19,7 @@ const Create = () => {
   const [role, setRole] = useState("");
 
   const handlePDFInstruction = (level, role, file, roleIndex) => {
-    const array = pdf;
+    let array = pdf;
     const uniqueFilename = generateUniqueFilename(role, level, ".pdf");
     const modifiedFile = new File([file], uniqueFilename, {
       type: "application/pdf",
@@ -27,6 +27,7 @@ const Create = () => {
     const index = roleIndex * state.roleValues.length + level;
     array[index - 1] = modifiedFile;
     setPDFIns(array);
+    console.log(pdf);
   };
 
   const generateUniqueFilename = (role, pdfIndex, extension) => {
@@ -195,6 +196,7 @@ const Create = () => {
             handleInputChange={handleInputChange}
             storedState={state}
             setRole={setRole}
+            pdf={pdf}
           />
         )}
         <div className={`fixed-bottom pb-5`}>

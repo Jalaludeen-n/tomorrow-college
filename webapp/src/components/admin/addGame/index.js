@@ -17,7 +17,6 @@ const Index = ({
 }) => {
   const { resultsSubbmision, scoreVisibilityForPlayers } = optionsData;
 
-  useEffect(() => {}, []);
 
   return (
     <Container className={styles.container}>

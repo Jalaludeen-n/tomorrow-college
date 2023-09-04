@@ -9,7 +9,10 @@ const PDFInstructionsForm = ({
   storedState,
   role,
   setRole,
+  pdf,
 }) => {
+  useEffect(() => {}, [pdf]);
+
   const handleChange = (e) => {
     console.log(e.target.value);
     setRole(e.target.value);
@@ -48,11 +51,14 @@ const PDFInstructionsForm = ({
                       type='text'
                       className='form-control'
                       placeholder='Select a PDF file'
+                      value={
+                        pdf[index * storedState.roleValues.length + roundIndex]
+                          ?.name ?? ""
+                      }
                       aria-describedby='inputGroupFileAddon'
                       readOnly
                     />
                     <label
-                      htmlFor='inputGroupFile'
                       className={`btn btn-outline-secondary ${styles.uploadBtn}`}>
                       <img
                         src={UploadIcon}
@@ -62,7 +68,6 @@ const PDFInstructionsForm = ({
                       />
                       <input
                         type='file'
-                        id='inputGroupFile'
                         accept='.pdf'
                         onChange={(e) =>
                           handlePDFInstruction(
