@@ -6,6 +6,7 @@ import PDFInstructionsForm from "../components/admin/addGame/PDFInstructionsForm
 import { initialState, newGameReducer } from "../components/helper/reducer";
 import { sendGameData } from "../components/services/airtable";
 import { useNavigate } from "react-router-dom";
+import Loader from "../pages/Loader";
 
 const Create = () => {
   const navigate = useNavigate(); // Initialize the navigate function
@@ -13,6 +14,7 @@ const Create = () => {
   const [dublicateValue, setDublicateValue] = useState(false);
   const [isNext, setIsNext] = useState(false); // Add state for submit button text
   const [pdf, setPDFIns] = useState([null]);
+  const [loader, setLoader] = useState(false);
   const [roleInputs, setRoleInputs] = useState([
     { role: "" }, // Initial state with an empty role
   ]);
@@ -118,14 +120,37 @@ const Create = () => {
     if (isNext) {
       const formattedData = formatDataForAirtable();
       try {
+        setLoader(true);
         await sendGameData(formattedData);
-
         navigate("/list");
       } catch (error) {
         console.error("Error sending data to Airtable:", error);
       }
     } else {
-      setIsNext(!isNext);
+      const {
+        gameName,
+        rounds,
+        excel,
+        gameInstructions,
+        result,
+        scoreVisibility,
+        roleValues,
+      } = state;
+
+      const isValid =
+        gameName.trim() !== "" &&
+        roleValues.length > 1 &&
+        excel.trim() !== "" &&
+        gameInstructions !== null &&
+        result !== "" &&
+        scoreVisibility !== "" &&
+        rounds != 0;
+
+      if (isValid) {
+        setIsNext(!isNext);
+      } else {
+        alert("Form is not valid. Please fill in all required fields.");
+      }
     }
   };
 
@@ -153,58 +178,64 @@ const Create = () => {
   };
 
   return (
-    <Container>
-      <Form>
-        <Row className={`justify-content-center mt-5 ${styles.pageTitle}`}>
-          <h2>New game</h2>
-        </Row>
-        <Row className={`justify-content-center ${styles.sectionTitle}`}>
-          {!isNext ? (
-            <h3>Basic Information</h3>
-          ) : (
-            <div
-              style={{
-                display: !state.individualInstructions ? "none" : "flex",
-              }}>
-              <Col md={3}>Game roles</Col>
-              <Col>Instructions</Col>
+    <>
+      {!loader ? (
+        <Container>
+          <Form>
+            <Row className={`justify-content-center mt-5 ${styles.pageTitle}`}>
+              <h2>New game</h2>
+            </Row>
+            <Row className={`justify-content-center ${styles.sectionTitle}`}>
+              {!isNext ? (
+                <h3>Basic Information</h3>
+              ) : (
+                <div
+                  style={{
+                    display: !state.individualInstructions ? "none" : "flex",
+                  }}>
+                  <Col md={3}>Game roles</Col>
+                  <Col>Instructions</Col>
+                </div>
+              )}
+            </Row>
+            {!isNext ? (
+              <FormOne
+                state={state}
+                handleDropdownChange={handleDropdownChange}
+                handlePDFChange={handlePDFChange}
+                handleCheckboxChange={handleCheckboxChange}
+                roleInputs={roleInputs}
+                handleInputChange={handleInputChange}
+                handleAddRoleClick={handleAddRoleClick}
+              />
+            ) : (
+              <PDFInstructionsForm
+                handlePDFInstruction={handlePDFInstruction}
+                handleInputChange={handleInputChange}
+                storedState={state}
+                setRole={setRole}
+                pdf={pdf}
+                handleLevelPDF={handleLevelPDF}
+              />
+            )}
+            <div className={`fixed-bottom pb-5`}>
+              <Row className='justify-content-end'>
+                <Col md={3} className='text-right'>
+                  <button onClick={cancel} className={styles.cancelButton}>
+                    {!isNext ? "Cancel" : "Go Back"}
+                  </button>
+                  <button onClick={next} className={styles.nextButton}>
+                    {!isNext ? "Next" : "Submit"}
+                  </button>{" "}
+                </Col>
+              </Row>
             </div>
-          )}
-        </Row>
-        {!isNext ? (
-          <FormOne
-            state={state}
-            handleDropdownChange={handleDropdownChange}
-            handlePDFChange={handlePDFChange}
-            handleCheckboxChange={handleCheckboxChange}
-            roleInputs={roleInputs}
-            handleInputChange={handleInputChange}
-            handleAddRoleClick={handleAddRoleClick}
-            handleLevelPDF={handleLevelPDF}
-          />
-        ) : (
-          <PDFInstructionsForm
-            handlePDFInstruction={handlePDFInstruction}
-            handleInputChange={handleInputChange}
-            storedState={state}
-            setRole={setRole}
-            pdf={pdf}
-          />
-        )}
-        <div className={`fixed-bottom pb-5`}>
-          <Row className='justify-content-end'>
-            <Col md={3} className='text-right'>
-              <button onClick={cancel} className={styles.cancelButton}>
-                {!isNext ? "Cancel" : "Go Back"}
-              </button>
-              <button onClick={next} className={styles.nextButton}>
-                {!isNext ? "Next" : "Submit"}
-              </button>{" "}
-            </Col>
-          </Row>
-        </div>
-      </Form>
-    </Container>
+          </Form>
+        </Container>
+      ) : (
+        <Loader />
+      )}
+    </>
   );
 };
 export default Create;

@@ -4,10 +4,12 @@ import { fetchGameData, startGame } from "../components/services/airtable";
 import GameList from "../components/admin/main/GameList";
 import { generateRoomID } from "../components/helper/utils";
 import { useNavigate } from "react-router-dom";
+import Loader from "./Loader";
 const List = () => {
   const [games, setGames] = useState([]); // State to store fetched game data
   const [showPopup, setShowPopup] = useState(false);
   const [randomNumber, setRandomNumber] = useState("");
+  const [loader, setLoader] = useState(false);
   const navigate = useNavigate(); // Initialize the navigate function
 
   const handleStartGameClick = async (id) => {
@@ -21,6 +23,7 @@ const List = () => {
     fetchGameData()
       .then((res) => {
         setGames(res.data);
+        setLoader(false);
       })
       .catch((error) => {
         console.error("Error fetching data:", error);
@@ -52,24 +55,31 @@ const List = () => {
     return formData;
   };
   useEffect(() => {
+    setLoader(true);
     fetchData(); // Call the function to fetch and set game data
   }, []);
   return (
-    <div className='list-container'>
-      <div className='title'>List of Games</div>
-      {games.length === 0 ? (
-        <div>No active games</div>
+    <>
+      {!loader ? (
+        <div className='list-container'>
+          <div className='title'>List of Games</div>
+          {games.length === 0 ? (
+            <div>No active games</div>
+          ) : (
+            <GameList
+              games={games}
+              isPage={true}
+              handleStartGameClick={handleStartGameClick}
+              showPopup={showPopup}
+              randomNumber={randomNumber}
+              handleClosePopup={handleClosePopup}
+            />
+          )}
+        </div>
       ) : (
-        <GameList
-          games={games}
-          isPage={true}
-          handleStartGameClick={handleStartGameClick}
-          showPopup={showPopup}
-          randomNumber={randomNumber}
-          handleClosePopup={handleClosePopup}
-        />
+        <Loader />
       )}
-    </div>
+    </>
   );
 };
 export default List;

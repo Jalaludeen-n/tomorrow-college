@@ -11,7 +11,7 @@ const AppHeader = ({ form }) => {
       {!form && (
         <div className={styles["button-container"]}>
           <Link
-            to='/'
+            to='/home'
             className={`${styles["header-link"]} ${
               window.location.pathname === "/home" ? styles["active"] : ""
             }`}>

@@ -10,6 +10,7 @@ import { io } from "socket.io-client";
 import {
   fetchLevelDetails,
   storeAnsweres,
+  gameCompleted,
 } from "../components/services/airtable";
 import { useLocation } from "react-router-dom";
 import Loader from "./Loader";
@@ -25,7 +26,6 @@ const Level = () => {
   const [questions, setQustions] = useState([]);
   const [answers, setAnswers] = useState([]);
   const [submit, setSubmit] = useState(true);
-  const [socket, setSocket] = useState(false);
 
   const decryptAndFetchData = async (encryptedData) => {
     try {
@@ -35,8 +35,9 @@ const Level = () => {
       setLoader(true);
       if (decryptedData.NumberOfRounds >= decryptedData.level) {
         await fetchLevelDetailsAndSet(decryptedData);
+      } else {
+        await completed(decryptedData);
       }
-      setSocket(false);
 
       setLoader(false);
     } catch (error) {
@@ -47,7 +48,31 @@ const Level = () => {
     console.error("Error:", error);
     // Handle error here, e.g., show an error message to the user
   };
+  const completed = async (data) => {
+    try {
+      const formData = new FormData();
+      formData.append(
+        "data",
+        JSON.stringify({
+          email: data.email,
+          roomNumber: data.roomNumber,
+          groupName: data.groupNumber,
+          name: data.name,
+          gameID: data.GameID,
+          role: data.role,
+          level: data.level,
+          gameName: data.GameName,
+          scoreVisibilityForPlayers: data.ScoreVisibilityForPlayers,
+          resultsSubbmision: data.ResultsSubbmision,
+          sheetID: data.GoogleSheetID,
+        }),
+      );
 
+      await gameCompleted(formData);
+    } catch (error) {
+      handleError(error);
+    }
+  };
   const fetchLevelDetailsAndSet = async (data) => {
     try {
       const formData = new FormData();
@@ -92,7 +117,6 @@ const Level = () => {
       const searchParams = new URLSearchParams(location.search);
       const encryptedData = searchParams.get("data");
       if (encryptedData) {
-        setSocket(true);
         updateLevel(encryptedData, data);
       }
     });
@@ -139,7 +163,7 @@ const Level = () => {
         }),
       );
 
-      const res = await storeAnsweres(formData);
+      await storeAnsweres(formData);
 
       // Update the URL with the new level
       const updatedEncryptedData = CryptoJS.AES.encrypt(
@@ -178,10 +202,7 @@ const Level = () => {
     }
     setLoader(false);
   };
-  const handleOtherPageClick = () => {
-    // Replace "/other-page" with the actual path of the other page
-    // history.push("/other-page");
-  };
+
   const handleRadioChange = (questionIndex, selectedValue) => {
     const newAnswers = [...answers];
     newAnswers[questionIndex] = selectedValue;
@@ -309,7 +330,15 @@ const Level = () => {
           </Form>
         </>
       ) : (
-        <>You have successfully completed.</>
+        <>
+          <Row
+            className='d-flex justify-content-center align-items-center'
+            style={{ height: "100vh" }}>
+            <Col className='text-center'>
+              You have successfully completed. <Link to='/'> Go Home</Link>
+            </Col>
+          </Row>
+        </>
       )}
     </div>
   );

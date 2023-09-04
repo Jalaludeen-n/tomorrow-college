@@ -1,6 +1,6 @@
-import React, { useEffect } from "react";
+import React from "react";
 import styles from "../../../styles/page/Create.module.scss";
-import { Row, Col, Form, Button, Container } from "react-bootstrap";
+import { Row, Col, Form, Container } from "react-bootstrap";
 import optionsData from "./../../../options.json";
 import UploadIcon from "./../../../icons/Vector.svg";
 import AddRole from "./AddRole";
@@ -12,7 +12,7 @@ const Index = ({
   roleInputs,
   handleInputChange,
   handleAddRoleClick,
-  handleLevelPDF,
+  
 }) => {
   const { resultsSubbmision, scoreVisibilityForPlayers } = optionsData;
 
@@ -159,40 +159,7 @@ const Index = ({
             />
           </Form.Group>
         </Col>
-        <Col md={6} className='d-flex align-items-center'>
-          <div
-            className={`input-group ${styles.inputGroup}`}
-            style={{
-              width: "350px",
-              display: state.individualInstructions ? "none" : "flex",
-            }}>
-            <input
-              type='text'
-              className='form-control'
-              placeholder='Select a PDF file'
-              value={
-                state.levelInstruction && state.levelInstruction.name
-                  ? state.levelInstruction.name
-                  : ""
-              }
-              aria-describedby='inputGroupFileAddon'
-              readOnly
-            />
-            <label className={`btn btn-outline-secondary ${styles.uploadBtn}`}>
-              <img src={UploadIcon} alt='Upload Icon' width='16' height='16' />
-              <input
-                required
-                type='file'
-                id='inputLevelFile'
-                accept='.pdf'
-                disabled={!state.gameName}
-                onChange={(e) =>
-                  handleLevelPDF(e.target.files[0], "SET_LEVEL_INSTRUCTIONS")
-                }
-                style={{ display: "none" }}
-              />
-            </label>
-          </div>
+        <Col className='d-flex align-items-center'>
           <Form.Group controlId='checkbox2' className={styles.checkboxGroup}>
             <Form.Check
               type='checkbox'

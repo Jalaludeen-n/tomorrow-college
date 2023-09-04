@@ -4,6 +4,8 @@ import { fetchGroupDetails } from "../components/services/airtable";
 import { Container, Row, Form, Col, Button } from "react-bootstrap";
 import styles from "../styles/page/ViewRoom.module.scss";
 import { useLocation } from "react-router-dom";
+import { Link } from "react-router-dom";
+import Loader from "./Loader";
 
 const ViewRoom = () => {
   const [decryptedData, setDecryptedData] = useState(null);
@@ -11,6 +13,9 @@ const ViewRoom = () => {
   const [levels, setLevels] = useState([]);
   const [name, setName] = useState("");
   const [roomNumber, setRoomNumber] = useState("");
+  const [loader, setLoader] = useState(false);
+  const [activeGame, setActiveGame] = useState(true);
+  const [total, setTotal] = useState(0);
 
   const fetchData = async (RoomNumber, GameID) => {
     try {
@@ -24,13 +29,17 @@ const ViewRoom = () => {
       );
 
       const res = await fetchGroupDetails(formData);
+      console.log(res);
+      setLoader(false);
 
       if (res.success && res.Data) {
+        setTotal(res.Data.totalLevels);
         const levels = res.Data.Levels;
         setName(res.Data.Name);
         setLevels(levels);
       } else {
         console.log("No Active Games");
+        setActiveGame(false);
       }
     } catch (error) {
       console.error("Error fetching data:", error);
@@ -38,6 +47,7 @@ const ViewRoom = () => {
   };
 
   useEffect(() => {
+    setLoader(true);
     const searchParams = new URLSearchParams(location.search);
     const encryptedData = searchParams.get("data");
     if (encryptedData) {
@@ -49,59 +59,104 @@ const ViewRoom = () => {
     }
   }, []);
   return (
-    <Container className={styles.viewRoom_container}>
-      <Row>
-        <Col className={styles.viewRoom_container__GamePageTitle}>
-          <h3>GamePage</h3>
-        </Col>
-      </Row>
-      <Row className={`mt-4 ${styles.gameInfo}`}>
-        <Col md={8}>
-          <h4>Game Name</h4>
-        </Col>
-        <Col>
-          <h4>Room Number</h4>
-        </Col>
-      </Row>
-      <Row>
-        <Col
-          md={8}
-          className={`d-flex flex-column align-items-left justify-content-center ${styles.gameInfoName}`}>
-          <div className='p-4'>{name}</div>
-        </Col>
-        <Col
-          className={`d-flex flex-column align-items-left justify-content-center ${styles.gameInfoName}`}>
-          <div className='p-4'>{roomNumber}</div>
-        </Col>
-      </Row>
+    <>
+      {activeGame ? (
+        <Container className={styles.viewRoom_container}>
+          <Row>
+            <Col className={styles.viewRoom_container__GamePageTitle}>
+              <h3>GamePage</h3>
+            </Col>
+          </Row>
+          <Row className={`mt-4 ${styles.gameInfo}`}>
+            <Col md={8}>
+              <h4>Game Name</h4>
+            </Col>
+            <Col>
+              <h4 style={{ marginLeft: "35px" }}>Room Number</h4>
+            </Col>
+          </Row>
+          <Row>
+            <Col
+              md={8}
+              className={`d-flex flex-column align-items-left justify-content-center ${styles.gameInfoName}`}>
+              <div className='p-4'>{name}</div>
+            </Col>
+            <Col
+              className={`d-flex flex-column align-items-left justify-content-center ${styles.gameInfoName}`}>
+              <div className='p-4'>{roomNumber}</div>
+            </Col>
+          </Row>
 
-      <Row>
-        <Col>
-          <div className={styles.gameList}>
-            <div className={styles.gameList__headline}>
-              <h2 className={styles.gameList__title}>Group</h2>
-              <h2 className={styles.gameList__title}>Status</h2>
-            </div>
-            <div className={styles.gameList__scrollable}>
-              <ul className={styles.gameList__scrollable__items}>
-                {levels.map((level, index) => (
-                  <li
-                    key={index}
-                    className={styles.gameList__scrollable__items__item}>
-                    <div className={styles.gameList__attribute}>
-                      {level.groupName}
+          <>
+            {!loader ? (
+              <Row>
+                <Col>
+                  <div className={styles.gameList}>
+                    <div className={styles.gameList__headline}>
+                      <h2 className={styles.gameList__title}>Group</h2>
+                      {Array.from({ length: total }, (_, index) => (
+                        <h2 key={index} className={styles.gameList__title}>
+                          Round {index + 1}
+                        </h2>
+                      ))}
                     </div>
-                    <div className={styles.gameList__attribute}>
-                      {level.level}
+                    <div className={styles.gameList__scrollable}>
+                      <ul className={styles.gameList__scrollable__items}>
+                        {levels.map((level, index) => {
+                          const array = Array(total).fill("");
+                          if (level.level === "Completed") {
+                            array.fill("Completed", 0, total);
+                          } else if (level.level <= total) {
+                            for (let i = 0; i < level.level - 1; i++) {
+                              array[i] = "Completed";
+                            }
+                            array[level.level - 1] = "In Progress";
+                            for (let i = level.level; i < total; i++) {
+                              array[i] = "Not Started";
+                            }
+                          }
+
+                          return (
+                            <li
+                              key={index}
+                              className={
+                                styles.gameList__scrollable__items__item
+                              }>
+                              <div className={styles.gameList__attribute}>
+                                {level.groupName}
+                              </div>
+                              {array.map((status, roundIndex) => (
+                                <div
+                                  key={roundIndex}
+                                  className={styles.gameList__attribute}>
+                                  {status}
+                                </div>
+                              ))}
+                            </li>
+                          );
+                        })}
+                      </ul>
                     </div>
-                  </li>
-                ))}
-              </ul>
-            </div>
-          </div>
-        </Col>
-      </Row>
-    </Container>
+                  </div>
+                </Col>
+              </Row>
+            ) : (
+              <Loader />
+            )}
+          </>
+        </Container>
+      ) : (
+        <>
+          <Row
+            className='d-flex justify-content-center align-items-center'
+            style={{ height: "100vh" }}>
+            <Col className='text-center'>
+              No Active games <Link to='/'> Go Home</Link>
+            </Col>
+          </Row>
+        </>
+      )}
+    </>
   );
 };
 
