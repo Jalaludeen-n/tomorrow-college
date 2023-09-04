@@ -20,7 +20,6 @@ const List = () => {
   const fetchData = () => {
     fetchGameData()
       .then((res) => {
-        console.log("ds");
         setGames(res.data);
       })
       .catch((error) => {

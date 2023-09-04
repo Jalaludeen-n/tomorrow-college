@@ -1,10 +1,9 @@
 import React, { useEffect } from "react";
 import styles from "../../../styles/page/Create.module.scss";
 import { Row, Col, Form, Button, Container } from "react-bootstrap";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faPlus } from "@fortawesome/free-solid-svg-icons";
 import optionsData from "./../../../options.json";
 import UploadIcon from "./../../../icons/Vector.svg";
+import AddRole from "./AddRole";
 const Index = ({
   handleDropdownChange,
   state,
@@ -16,7 +15,6 @@ const Index = ({
   handleLevelPDF,
 }) => {
   const { resultsSubbmision, scoreVisibilityForPlayers } = optionsData;
-
 
   return (
     <Container className={styles.container}>
@@ -210,33 +208,12 @@ const Index = ({
           </Form.Group>
         </Col>
       </Row>
-      {roleInputs.map((input, index) => (
-        <Row key={index}>
-          <Col md={3}>
-            <Form.Control
-              type='text'
-              placeholder='Role name here'
-              value={input.role}
-              onChange={(e) =>
-                handleInputChange(index, e.target.value, false, false)
-              }
-            />
-          </Col>
-          {index === roleInputs.length - 1 && (
-            <Col md={3} className='d-flex align-items-end'>
-              <Button
-                style={{ backgroundColor: "white", color: "black" }}
-                onClick={handleAddRoleClick}>
-                Add another role
-                <FontAwesomeIcon
-                  icon={faPlus}
-                  style={{ color: "black", padding: "0px 4px" }}
-                />
-              </Button>
-            </Col>
-          )}
-        </Row>
-      ))}
+      <AddRole
+        roleInputs={roleInputs}
+        handleInputChange={handleInputChange}
+        handleAddRoleClick={handleAddRoleClick}
+        roles={state.roleValues}
+      />
     </Container>
   );
 };

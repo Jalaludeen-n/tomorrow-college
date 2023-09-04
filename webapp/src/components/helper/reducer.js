@@ -8,6 +8,7 @@ export const initialState = {
   levelInstruction: null,
   result: "",
   scoreVisibility: "",
+  dummy: "",
   allowAutoSelection: false,
   individualInstructions: false,
   roleValues: [{ role: "", dublicate: false, submit: false }],
@@ -34,6 +35,8 @@ export const newGameReducer = (state, action) => {
       };
     case "SET_RESULT":
       return { ...state, result: action.payload };
+    case "SET_DUMMY":
+      return { ...state, dummy: action.payload };
     case "SET_SCORE_VISIBILITY":
       return { ...state, scoreVisibility: action.payload };
     case "SET_ALLOW_AUTO_SELECTION":

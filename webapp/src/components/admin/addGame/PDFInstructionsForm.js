@@ -11,10 +11,7 @@ const PDFInstructionsForm = ({
   setRole,
   pdf,
 }) => {
-  useEffect(() => {}, [pdf]);
-
   const handleChange = (e) => {
-    console.log(e.target.value);
     setRole(e.target.value);
     const selectedIndex = e.target.selectedIndex;
     const selectedValue = e.target.options[selectedIndex].value;
@@ -43,8 +40,14 @@ const PDFInstructionsForm = ({
             { length: parseInt(storedState.rounds) },
             (_, roundIndex) => (
               <>
-                {roundIndex > 0 && roundIndex % 4 == 0 && <Col md={3}></Col>}
-                <Col md={2} key={roundIndex}>
+                {roundIndex > 0 && roundIndex % 4 === 0 && (
+                  <Col
+                    md={3}
+                    key={`col-${
+                      index * storedState.roleValues.length + roundIndex
+                    }`}></Col>
+                )}
+                <Col md={2} key={`col-${roundIndex}`}>
                   <Form.Label>Round {roundIndex + 1}</Form.Label>
                   <div className={`input-group ${styles.inputGroup}`}>
                     <input
@@ -57,6 +60,9 @@ const PDFInstructionsForm = ({
                       }
                       aria-describedby='inputGroupFileAddon'
                       readOnly
+                      key={`input-${
+                        index * storedState.roleValues.length + roundIndex
+                      }`}
                     />
                     <label
                       className={`btn btn-outline-secondary ${styles.uploadBtn}`}>

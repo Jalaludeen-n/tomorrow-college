@@ -85,7 +85,6 @@ const EnterGameForm = () => {
 
       navigate(`/home?data=${encodeURIComponent(encryptedData)}`);
     } else {
-      console.log(res);
       alert(res.message);
       setLoader(false);
     }

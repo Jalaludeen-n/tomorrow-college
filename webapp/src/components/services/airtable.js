@@ -31,8 +31,6 @@ export const fetchGameData = async () => {
 
 export const fetchRunningAndPastGames = async () => {
   try {
-    console.log("work");
-    console.log(process.env.REACT_APP_API_URL);
     const response = await axios.get(`${api_url}/game/running`, {
       responseType: "json",
     });

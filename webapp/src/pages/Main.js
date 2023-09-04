@@ -13,7 +13,6 @@ const Main = () => {
     try {
       const res = await fetchRunningAndPastGames();
       const allGames = res.data;
-
       const runningGames = allGames.filter(
         (game) => game.Status === "Running" || game.Status === "Started",
       );
@@ -29,7 +28,6 @@ const Main = () => {
   };
 
   useEffect(() => {
-    console.log(process.env.REACT_APP_ENV);
     fetchData();
   }, []);
   return (

@@ -17,7 +17,6 @@ const GameList = ({
     handleStartGameClick(id);
   };
   const isView = (roomNumber, GameID) => {
-    console.log("ds");
     const encryptedData = CryptoJS.AES.encrypt(
       JSON.stringify({ roomNumber, GameID }),
       "secret_key",

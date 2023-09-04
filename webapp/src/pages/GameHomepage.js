@@ -94,7 +94,6 @@ const GameHomepage = () => {
         type: "SET_SCORE_VISIBILITY_FOR_PLAYERS",
         payload: decryptedData.ScoreVisibilityForPlayers,
       });
-      console.log(decryptedData);
       if (decryptedData.roleAutoAssigned) {
         dispatch({ type: "SET_ROLE", payload: decryptedData.role });
         dispatch({ type: "SET_ROLES", payload: [] });
@@ -127,9 +126,6 @@ const GameHomepage = () => {
 
   const fetchParticipantsAndSet = async (data) => {
     try {
-      console.log("________________________");
-      console.log(data);
-      console.log("________________________");
       await fetchParticipants(data.email, data.roomNumber, data.groupNumber);
     } catch (error) {
       handleError(error);

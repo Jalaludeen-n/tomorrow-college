@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import CryptoJS from "crypto-js";
 import { fetchGroupDetails } from "../components/services/airtable";
 import { Container, Row, Form, Col, Button } from "react-bootstrap";
-import "../styles/page/ViewRoom.scss";
+import styles from "../styles/page/ViewRoom.module.scss";
 import { useLocation } from "react-router-dom";
 
 const ViewRoom = () => {
@@ -49,41 +49,49 @@ const ViewRoom = () => {
     }
   }, []);
   return (
-    <Container className='viewRoom_container'>
+    <Container className={styles.viewRoom_container}>
       <Row>
-        <Col className='viewRoom_container__GamePage-title'>
+        <Col className={styles.viewRoom_container__GamePageTitle}>
           <h3>GamePage</h3>
         </Col>
       </Row>
-      <Row>
-        <Col className='viewRoom_container__GameName-container'>
+      <Row className={`mt-4 ${styles.gameInfo}`}>
+        <Col md={8}>
           <h4>Game Name</h4>
-          <div className='viewRoom_container__GameName-container__name'>
-            {name}
-          </div>
         </Col>
-        <Col className='viewRoom_container'>
-          <h4>Game Number</h4>
-          <p>{roomNumber}</p>
+        <Col>
+          <h4>Room Number</h4>
         </Col>
       </Row>
       <Row>
+        <Col
+          md={8}
+          className={`d-flex flex-column align-items-left justify-content-center ${styles.gameInfoName}`}>
+          <div className='p-4'>{name}</div>
+        </Col>
+        <Col
+          className={`d-flex flex-column align-items-left justify-content-center ${styles.gameInfoName}`}>
+          <div className='p-4'>{roomNumber}</div>
+        </Col>
+      </Row>
+
+      <Row>
         <Col>
-          <div className='game-list'>
-            <div className='game-list__headline'>
-              <h2 className='game-list__title'>Group</h2>
-              <h2 className='game-list__title'>Status</h2>
+          <div className={styles.gameList}>
+            <div className={styles.gameList__headline}>
+              <h2 className={styles.gameList__title}>Group</h2>
+              <h2 className={styles.gameList__title}>Status</h2>
             </div>
-            <div className='game-list__scrollable'>
-              <ul className='game-list__scrollable__items'>
+            <div className={styles.gameList__scrollable}>
+              <ul className={styles.gameList__scrollable__items}>
                 {levels.map((level, index) => (
                   <li
                     key={index}
-                    className='game-list__scrollable__items__item'>
-                    <div className='game-list__scrollable__items__item__attribute'>
+                    className={styles.gameList__scrollable__items__item}>
+                    <div className={styles.gameList__attribute}>
                       {level.groupName}
                     </div>
-                    <div className='game-list__scrollable__items__item__attribute'>
+                    <div className={styles.gameList__attribute}>
                       {level.level}
                     </div>
                   </li>

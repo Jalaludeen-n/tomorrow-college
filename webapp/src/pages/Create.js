@@ -1,4 +1,4 @@
-import React, { useState, useReducer } from "react";
+import React, { useState, useReducer, useEffect } from "react";
 import styles from "./../styles/page/Create.module.scss";
 import { Container, Row, Form, Col, Button } from "react-bootstrap";
 import FormOne from "../components/admin/addGame";
@@ -14,8 +14,9 @@ const Create = () => {
   const [isNext, setIsNext] = useState(false); // Add state for submit button text
   const [pdf, setPDFIns] = useState([null]);
   const [roleInputs, setRoleInputs] = useState([
-    <Form.Control key={0} type='text' placeholder='Role name here' />,
+    { role: "" }, // Initial state with an empty role
   ]);
+
   const [role, setRole] = useState("");
 
   const handlePDFInstruction = (level, role, file, roleIndex) => {
@@ -27,7 +28,10 @@ const Create = () => {
     const index = roleIndex * state.roleValues.length + level;
     array[index - 1] = modifiedFile;
     setPDFIns(array);
-    console.log(pdf);
+    dispatch({
+      type: "SET_DUMMY",
+      payload: roleIndex * state.roleValues.length + level,
+    });
   };
 
   const generateUniqueFilename = (role, pdfIndex, extension) => {
@@ -77,7 +81,6 @@ const Create = () => {
     });
   };
   const handleLevelPDF = (file, actionType) => {
-    console.log("work");
     const modifiedFile = new File(
       [file],
       `${state.gameName}_LevelInstruction.pdf`,
@@ -89,7 +92,6 @@ const Create = () => {
       type: actionType,
       payload: modifiedFile,
     });
-    console.log(state);
   };
   const handlePDFChange = (file, actionType) => {
     const modifiedFile = new File(
@@ -110,15 +112,12 @@ const Create = () => {
       type: "SET_ROLE_VALUES",
       payload: { index, role, dublicate, submit },
     });
-    console.log(state);
   };
   const next = async (event) => {
     event.preventDefault();
-    console.log("_dsa");
     if (isNext) {
       const formattedData = formatDataForAirtable();
       try {
-        console.log(formattedData);
         await sendGameData(formattedData);
 
         navigate("/list");
@@ -145,14 +144,7 @@ const Create = () => {
       lastInputValue !== "" &&
       !roleValues.slice(0, roleValues.length - 1).includes(lastInputValue)
     ) {
-      const newRoleInputs = [
-        ...roleInputs,
-        <Form.Control
-          key={roleInputs.length}
-          type='text'
-          placeholder='New Role'
-        />,
-      ];
+      const newRoleInputs = [...roleInputs, { role: "" }];
       setRoleInputs(newRoleInputs);
       setDublicateValue(false);
     } else {
