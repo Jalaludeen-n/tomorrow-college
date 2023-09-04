@@ -1,0 +1,113 @@
+/* Create.css */
+.form-group {
+  display: flex;
+  flex-direction: column-reverse;
+  align-items: flex-start;
+  margin-bottom: 20px;
+}
+
+.form-control {
+  width: 100%;
+}
+.custom-dropdown {
+  display: flex;
+  flex-direction: column;
+}
+.form {
+  display: flex;
+  flex-direction: column;
+
+  padding: 20px; /* Add some padding for spacing */
+}
+.cancelButton {
+  border-radius: 19.667px;
+  border: 2px solid #d90368;
+  width: 8vw;
+  height: 7vh;
+  flex-shrink: 0;
+  background-color: inherit;
+  color: #d90368;
+  font-family: Open Sans;
+  font-size: 16.52px;
+  font-style: normal;
+  font-weight: 600;
+  line-height: normal;
+  letter-spacing: 0.33px;
+  text-transform: uppercase;
+  margin-right: 12px;
+}
+.nextButton {
+  border-radius: 19.667px;
+  border: 2px solid #d90368;
+  width: 8vw;
+  height: 7vh;
+  flex-shrink: 0;
+  background-color: inherit;
+  background-color: #d90368;
+  color: #fff;
+  font-family: Open Sans;
+  font-size: 16.52px;
+  font-style: normal;
+  font-weight: 700;
+  line-height: normal;
+  letter-spacing: 0.33px;
+  text-transform: uppercase;
+}
+
+// variables
+
+// mixins
+/* Create.module.css */
+.pageTitle {
+  margin-top: 20px;
+  color: #000;
+  font-family: Open Sans;
+  font-size: 30px;
+  font-style: normal;
+  font-weight: 700;
+  line-height: normal;
+  padding: 12px;
+}
+.dublicate {
+  margin-top: 12px;
+}
+.sectionTitle {
+  color: #000;
+  font-family: Open Sans;
+  font-size: 21px;
+  font-style: normal;
+  font-weight: 700;
+  line-height: normal;
+  padding: 12px;
+  margin-top: 12px;
+}
+.label {
+  color: #000;
+  font-family: Open Sans;
+  font-size: 17px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: normal;
+}
+.checkboxGroup {
+  display: flex;
+  color: #000;
+  font-family: Open Sans;
+  font-size: 16px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 24px; /* 150% */
+  margin: 12px 0px 30px 12px;
+}
+
+.checkbox-group {
+  display: flex;
+  align-items: center;
+}
+
+.custom-dropdown {
+  display: flex;
+  flex-direction: column;
+}
+
+/* Additional custom styles */

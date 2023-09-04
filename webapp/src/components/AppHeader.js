@@ -13,7 +13,7 @@ const AppHeader = ({ form }) => {
           <Link
             to='/'
             className={`${styles["header-link"]} ${
-              window.location.pathname === "/details" ? styles["active"] : ""
+              window.location.pathname === "/home" ? styles["active"] : ""
             }`}>
             Game Homepage
           </Link>

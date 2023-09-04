@@ -127,6 +127,9 @@ const GameHomepage = () => {
 
   const fetchParticipantsAndSet = async (data) => {
     try {
+      console.log("________________________");
+      console.log(data);
+      console.log("________________________");
       await fetchParticipants(data.email, data.roomNumber, data.groupNumber);
     } catch (error) {
       handleError(error);
@@ -147,7 +150,7 @@ const GameHomepage = () => {
       "secret_key",
     ).toString();
 
-    navigate(`/details?data=${encodeURIComponent(updatedEncryptedData)}`);
+    navigate(`/home?data=${encodeURIComponent(updatedEncryptedData)}`);
     formData.append(
       "data",
       JSON.stringify({
@@ -194,7 +197,7 @@ const GameHomepage = () => {
     const searchParams = new URLSearchParams(location.search);
     const encryptedData = searchParams.get("data");
     if (encryptedData) {
-      // decryptAndFetchData(encryptedData);
+      decryptAndFetchData(encryptedData);
     }
   }, []);
 

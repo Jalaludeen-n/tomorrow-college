@@ -5,6 +5,7 @@ export const initialState = {
   rounds: 0,
   excel: "",
   gameInstructions: null,
+  levelInstruction: null,
   result: "",
   scoreVisibility: "",
   allowAutoSelection: false,
@@ -25,6 +26,11 @@ export const newGameReducer = (state, action) => {
       return {
         ...state,
         gameInstructions: action.payload,
+      };
+    case "SET_LEVEL_INSTRUCTIONS":
+      return {
+        ...state,
+        levelInstruction: action.payload,
       };
     case "SET_RESULT":
       return { ...state, result: action.payload };

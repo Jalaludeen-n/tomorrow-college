@@ -45,7 +45,7 @@ const Main = () => {
           <GameList games={completedGames} />
         </div>
       </div>
-      <Link to='/enterGame' className='test-game'>
+      <Link to='/joinGame' className='test-game'>
         Test Game
       </Link>
     </div>

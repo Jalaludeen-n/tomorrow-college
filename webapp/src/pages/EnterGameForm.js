@@ -83,7 +83,7 @@ const EnterGameForm = () => {
         "secret_key",
       ).toString();
 
-      navigate(`/details?data=${encodeURIComponent(encryptedData)}`);
+      navigate(`/home?data=${encodeURIComponent(encryptedData)}`);
     } else {
       console.log(res);
       alert(res.message);
