@@ -6,12 +6,12 @@
   align-items: center;
   height: 100vh;
 }
-.primary {
+.loginButton {
   width: 216px;
   height: 60px;
   flex-shrink: 0;
   border-radius: 20px;
-  background: #d90368;
+  background-color: #d90368;
 
   color: #fff;
   font-family: Open Sans;

@@ -178,9 +178,9 @@ const EnterGameForm = () => {
                     )}
                   </Form.Group>
                   <div className='text-center mt-5'>
-                    <Button className={styles["primary"]} type='submit'>
+                    <button className={`${styles.loginButton}`} type='submit'>
                       Join Game
-                    </Button>
+                    </button>
                   </div>
                 </Form>
               </div>
