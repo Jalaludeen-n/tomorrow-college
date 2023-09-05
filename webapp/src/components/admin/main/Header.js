@@ -15,11 +15,13 @@ const Header = () => {
         </div>
       </div>
       <div className='top-section__top-buttons'>
-        <Link to='/create' className='top-section__top-buttons__top-button'>
-          Create Game
+        <Link
+          to='/create'
+          className='top-section__top-buttons__top-button__new-game'>
+          NEW GAME
         </Link>
         <Link to='/list' className='top-section__top-buttons__top-button'>
-          Start Game
+          DUPLICATE GAMES
         </Link>
       </div>
     </div>

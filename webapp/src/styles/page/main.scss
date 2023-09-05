@@ -19,6 +19,7 @@
   border-radius: 8px;
   background-color: var(--primary-color);
   height: 180px;
+  font-family: Poppins;
   padding: 30px;
   color: var(--white);
 
@@ -52,9 +53,22 @@
       border-radius: 5px;
       margin: 5px;
       height: 20%;
-      border-radius: 15px;
+      border-radius: 25px;
       border: 3px var(--white) solid;
       color: var(--white);
+      &__new-game {
+        color: #d90368;
+        margin-left: 10px;
+        padding: 20px;
+        text-decoration: none;
+        border-radius: 5px;
+        margin: 5px;
+        height: 20%;
+        border-radius: 25px;
+        border: 3px solid #fff;
+        background-color: #fff;
+        height: 20%;
+      }
 
       &:hover {
         background-color: var(--white);
@@ -69,7 +83,20 @@
   flex-grow: 1;
   justify-content: space-between;
 
-  &__left,
+  &__left {
+    &__title {
+      color: #000;
+      font-family: Proxima Nova;
+      font-size: 30px;
+      font-style: normal;
+      font-weight: 600;
+      line-height: normal;
+    }
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    padding-right: 3vw;
+  }
   &__right {
     &__title {
       color: #000;
@@ -78,12 +105,10 @@
       font-style: normal;
       font-weight: 600;
       line-height: normal;
-      margin-left: 20px;
     }
     flex: 1;
     display: flex;
     flex-direction: column;
-    padding: 10px;
   }
 }
 
@@ -92,7 +117,7 @@
   border-width: 0.5px;
   border-radius: 15px 15px 0px 0px;
   margin-top: 20px;
-  width: 95%;
+  width: 100%;
   margin: 0 auto;
 
   &__headline {
