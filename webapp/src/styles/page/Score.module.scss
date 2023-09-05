@@ -1,0 +1,26 @@
+.memberList {
+  flex: 1 0 0;
+  color: #2a2d31;
+  font-family: Open Sans;
+  font-size: 17px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 22.882px; /* 134.602% */
+  margin: 35px 10px 35px 35px;
+}
+.member {
+  padding: 12px;
+}
+.levelHeader {
+  //   display: flex;
+  //   width: 920px;
+  //   padding: 18.306px;
+  height: 100%;
+  //   align-items: flex-start;
+  gap: -11px;
+  background: rgba(217, 3, 104, 0.15);
+  box-shadow: 0px -2.28824px 0px 0px #e3e5e8 inset;
+}
+.fixed-height-div {
+  height: 200px; /* Adjust the height as needed */
+}

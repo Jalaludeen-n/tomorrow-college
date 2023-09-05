@@ -45,6 +45,41 @@ export const fetchRunningAndPastGames = async () => {
   }
 };
 
+export const fetchMember = async (data) => {
+  try {
+    const response = await axios.post(`${api_url}/game/member`, data, {
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+    if (response.status === 200) {
+      console.log("Data successfully sent to Airtable");
+    } else {
+      console.error("Unexpected response:", response);
+    }
+    return response.data;
+  } catch (error) {
+    console.error("Error:", error);
+  }
+};
+export const fetchScore = async (data) => {
+  try {
+    const response = await axios.post(`${api_url}/game/score`, data, {
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+    if (response.status === 200) {
+      console.log("Data successfully sent to Airtable");
+    } else {
+      console.error("Unexpected response:", response);
+    }
+    return response.data;
+  } catch (error) {
+    console.error("Error:", error);
+  }
+};
+
 export const fetchGroupDetails = async (data) => {
   try {
     const response = await axios.post(`${api_url}/game/groups`, data, {

@@ -11,6 +11,7 @@ import ViewRoom from "./pages/ViewRoom.js";
 import WithHeader from "./pages/WithHeader.js";
 import Leaderboard from "./pages/Leaderboard";
 import GameHomepage from "./pages/GameHomepage";
+import Score from "./pages/Score";
 
 const HeaderedLeaderboard = WithHeader(Leaderboard);
 const HeaderedLevel = WithHeader(Level);
@@ -29,6 +30,7 @@ function App() {
         <Route path='/level' element={<HeaderedLevel />} />
         <Route path='/viewStatus' element={<ViewRoom />} />
         <Route path='/leader' element={<HeaderedLeaderboard />} />
+        <Route path='/score' element={<Score />} />
       </Routes>
     </BrowserRouter>
   );

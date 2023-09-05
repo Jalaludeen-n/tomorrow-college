@@ -6,6 +6,7 @@ import styles from "../styles/page/ViewRoom.module.scss";
 import { useLocation } from "react-router-dom";
 import { Link } from "react-router-dom";
 import Loader from "./Loader";
+import { useNavigate } from "react-router-dom";
 
 const ViewRoom = () => {
   const [decryptedData, setDecryptedData] = useState(null);
@@ -15,7 +16,9 @@ const ViewRoom = () => {
   const [roomNumber, setRoomNumber] = useState("");
   const [loader, setLoader] = useState(false);
   const [activeGame, setActiveGame] = useState(true);
+
   const [total, setTotal] = useState(0);
+  const navigate = useNavigate(); // Initialize the navigate function
 
   const fetchData = async (RoomNumber, GameID) => {
     try {
@@ -29,7 +32,6 @@ const ViewRoom = () => {
       );
 
       const res = await fetchGroupDetails(formData);
-      console.log(res);
       setLoader(false);
 
       if (res.success && res.Data) {
@@ -45,6 +47,39 @@ const ViewRoom = () => {
       console.error("Error fetching data:", error);
     }
   };
+  const handleClick = (data) => {
+    const groupName = data.groupName;
+    const roomNumber = decryptedData.roomNumber;
+    const gameID = decryptedData.GameID;
+    const updatedEncryptedData = CryptoJS.AES.encrypt(
+      JSON.stringify({
+        groupName,
+        roomNumber,
+        gameID,
+        total,
+      }),
+      "secret_key",
+    ).toString();
+
+    navigate(`/score?data=${encodeURIComponent(updatedEncryptedData)}`);
+  };
+
+  // const getchAndUpdateScore = async (groupName, roomNumber, gameID) => {
+  //   try {
+  //     const formData = new FormData();
+  //     formData.append(
+  //       "data",
+  //       JSON.stringify({
+  //         groupName,
+  //         roomNumber,
+  //         gameID,
+  //       }),
+  //     );
+  //     await fetchScore(formData);
+  //   } catch (err) {
+  //     console.log(err);
+  //   }
+  // };
 
   useEffect(() => {
     setLoader(true);
@@ -119,6 +154,7 @@ const ViewRoom = () => {
                           return (
                             <li
                               key={index}
+                              onClick={(e) => handleClick(level)}
                               className={
                                 styles.gameList__scrollable__items__item
                               }>
