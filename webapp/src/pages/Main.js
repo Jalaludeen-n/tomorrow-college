@@ -35,11 +35,11 @@ const Main = () => {
       <Header />
       <div className='bottom-section'>
         <div className='bottom-section__left'>
-          <h2 className='bottom-section__left__title'>Running Games</h2>
+          <h2 className='bottom-section__left__title'>Active games</h2>
           <GameList games={runningGames} />
         </div>
         <div className='bottom-section__right'>
-          <h2 className='bottom-section__right__title'>Past Games</h2>
+          <h2 className='bottom-section__right__title'>Past games</h2>
           <GameList games={completedGames} />
         </div>
       </div>

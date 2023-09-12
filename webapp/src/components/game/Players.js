@@ -18,10 +18,10 @@ const Players = ({ state, updateRole }) => {
             <ul className={`${styles.gameListScrollableItems}`}>
               <li className={`${styles.gameListScrollableItem}`}>
                 <div className={`${styles.gameListScrollableItemAttribute}`}>
-                  {state.name}
+                  1&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{state.name}
                 </div>
                 <div
-                  className={`${styles.gameListScrollableItemAttribute} ${
+                  className={`${styles.gameListScrollableItemAttributeRole} ${
                     state.autoSelection && styles.roleAutoSelected
                   }`}>
                   {state.autoSelection || state.role ? (
@@ -40,20 +40,24 @@ const Players = ({ state, updateRole }) => {
                   )}
                 </div>
               </li>
-              {state.participants.map((data, index) => (
-                <li
-                  key={index}
-                  className={`${styles.gameListScrollableItem} ${
-                    index % 2 === 0 ? styles.evenItem : styles.oddItem
-                  }`}>
-                  <div className={`${styles.gameListScrollableItemAttribute}`}>
-                    {data.Name}
-                  </div>
-                  <div className={`${styles.gameListScrollableItemAttribute}`}>
-                    {data.Role}
-                  </div>
-                </li>
-              ))}
+              {state.participants
+                .filter((participant) => participant.length > 0) // Filter out empty arrays
+                .map((data, index) => (
+                  <li
+                    key={index}
+                    className={`${styles.gameListScrollableItem} ${
+                      index % 2 === 0 ? styles.evenItem : styles.oddItem
+                    }`}>
+                    <div
+                      className={`${styles.gameListScrollableItemAttribute}`}>
+                      {index + 2}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{data.Name}
+                    </div>
+                    <div
+                      className={`${styles.gameListScrollableItemAttributeRole}`}>
+                      {data.Role}
+                    </div>
+                  </li>
+                ))}
             </ul>
           </div>
         </div>

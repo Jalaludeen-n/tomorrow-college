@@ -110,6 +110,19 @@ export const fetchGameDetails = async (data) => {
     handleError(error);
   }
 };
+export const checkLevelStatus = async (data) => {
+  try {
+    const response = await axios.post(`${api_url}/game/levelStatus`, data, {
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+    return handleSuccess(response, "Game details fetched successfully");
+  } catch (error) {
+    handleError(error);
+  }
+};
+
 export const fetchLevelDetails = async (data) => {
   try {
     const response = await axios.post(`${api_url}/game/level`, data, {
@@ -201,7 +214,39 @@ export const startGame = async (formattedData) => {
         "Content-Type": "application/json",
       },
     });
-    handleSuccess(response, "Role Selected successfully");
+    handleSuccess(response, "game started");
+  } catch (error) {
+    handleError(error);
+  }
+};
+export const startLevel = async (formattedData) => {
+  try {
+    const response = await axios.post(
+      `${api_url}/game/startLevel`,
+      formattedData,
+      {
+        headers: {
+          "Content-Type": "application/json",
+        },
+      },
+    );
+    handleSuccess(response, "Level started ");
+  } catch (error) {
+    handleError(error);
+  }
+};
+export const getLevelStatus = async (formattedData) => {
+  try {
+    const response = await axios.post(
+      `${api_url}/game/levelStatus`,
+      formattedData,
+      {
+        headers: {
+          "Content-Type": "application/json",
+        },
+      },
+    );
+    return handleSuccess(response, "Level fetched");
   } catch (error) {
     handleError(error);
   }

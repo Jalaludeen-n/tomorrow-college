@@ -26,7 +26,7 @@ const GameList = ({
   return (
     <div className='game-list'>
       <div className='game-list__headline'>
-        <h2 className='game-list__title'>Game Name</h2>
+        <h2 className='game-list__title'>Game name</h2>
         <h2 className='game-list__title'>Date</h2>
         <h2 className='game-list__title'>{isPage ? "" : "Players"}</h2>
       </div>

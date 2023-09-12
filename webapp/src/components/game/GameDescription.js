@@ -4,9 +4,7 @@ const GameDescription = ({ pdfData, header }) => {
   return (
     <div className={`${styles.pdfContainer}`}>
       <div className={`${styles.descriptionHeadline}`}>
-        <div className={`${styles.descriptionTitle}`}>
-          Gameplay description{header}
-        </div>
+        <div className={`${styles.descriptionTitle}`}>{header}</div>
       </div>
       <iframe
         className={`${styles.description}`}
@@ -14,7 +12,7 @@ const GameDescription = ({ pdfData, header }) => {
         title='PDF'
         style={{
           width: "100%",
-          height: "60vh",
+          height: "58vh",
           border: "none",
           zoom: "100%",
         }}

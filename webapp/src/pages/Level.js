@@ -11,6 +11,7 @@ import {
   fetchLevelDetails,
   storeAnsweres,
   gameCompleted,
+  checkLevelStatus,
 } from "../components/services/airtable";
 import { useLocation } from "react-router-dom";
 import Loader from "./Loader";
@@ -26,6 +27,7 @@ const Level = () => {
   const [questions, setQustions] = useState([]);
   const [answers, setAnswers] = useState([]);
   const [submit, setSubmit] = useState(true);
+  const [started, setStarted] = useState(false);
 
   const decryptAndFetchData = async (encryptedData) => {
     try {
@@ -33,10 +35,10 @@ const Level = () => {
       const decryptedData = JSON.parse(bytes.toString(CryptoJS.enc.Utf8));
       setDecryptedData(decryptedData);
       setLoader(true);
-      if (decryptedData.NumberOfRounds >= decryptedData.level) {
+      if (started) {
         await fetchLevelDetailsAndSet(decryptedData);
       } else {
-        await completed(decryptedData);
+        await checkIfLevelStarted(decryptedData);
       }
 
       setLoader(false);
@@ -93,11 +95,16 @@ const Level = () => {
         }),
       );
 
-      const res = await fetchLevelDetails(formData);
-      if (res.success) {
-        setQustions(res.data.qustions);
-        setSubmit(res.data.submit);
-        setPdfData(res.data.instruction);
+      if (data.NumberOfRounds >= data.level) {
+        const res = await fetchLevelDetails(formData);
+
+        if (res.success) {
+          setQustions(res.data.qustions);
+          setSubmit(res.data.submit);
+          setPdfData(res.data.instruction);
+        }
+      } else {
+        await completed(decryptedData);
       }
     } catch (error) {
       handleError(error);
@@ -137,10 +144,36 @@ const Level = () => {
       decryptAndFetchData(encryptedData);
     }
   }, [location]);
+
+  const checkIfLevelStarted = async (decryptedData) => {
+    try {
+      const formData = new FormData();
+      formData.append(
+        "data",
+        JSON.stringify({
+          RoomNumber: decryptedData.roomNumber,
+          GameID: decryptedData.GameID,
+        }),
+      );
+      const res = await checkLevelStatus(formData);
+      const data = res.data;
+
+      const currentLevel = 1;
+      const isLevelStarted = data.some((obj) => obj.Level === currentLevel);
+
+      if (isLevelStarted) {
+        setStarted(true);
+      } else {
+        console.log(`Level ${currentLevel} is not present in the array.`);
+      }
+    } catch (err) {
+      console.log(err);
+    }
+  };
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (decryptedData.NumberOfRounds >= decryptedData.level) {
-      setLoader(true);
+      // setLoader(true);
       const newLevel = decryptedData.level + 1;
       const scoreVisibilityForPlayers = decryptedData.scoreVisibilityForPlayers;
       const resultsSubbmision = decryptedData.resultsSubbmision;
@@ -163,25 +196,28 @@ const Level = () => {
         }),
       );
 
-      await storeAnsweres(formData);
+      // await storeAnsweres(formData);
+      console.log("_)__________");
+      console.log(decryptedData);
+      setLoader(false);
 
       // Update the URL with the new level
-      const updatedEncryptedData = CryptoJS.AES.encrypt(
-        JSON.stringify({
-          ...decryptedData,
-          level: newLevel,
-          submit: submit,
-          scoreVisibilityForPlayers,
-          resultsSubbmision,
-          sheetID,
-        }),
-        "secret_key",
-      ).toString();
-      setAnswers([]);
-      setQustions([]);
-      if (decryptedData.NumberOfRounds >= decryptedData.level) {
-        navigate(`/level?data=${encodeURIComponent(updatedEncryptedData)}`);
-      }
+      // const updatedEncryptedData = CryptoJS.AES.encrypt(
+      //   JSON.stringify({
+      //     ...decryptedData,
+      //     level: newLevel,
+      //     submit: submit,
+      //     scoreVisibilityForPlayers,
+      //     resultsSubbmision,
+      //     sheetID,
+      //   }),
+      //   "secret_key",
+      // ).toString();
+      // setAnswers([]);
+      // setQustions([]);
+      // if (decryptedData.NumberOfRounds >= decryptedData.level) {
+      //   navigate(`/level?data=${encodeURIComponent(updatedEncryptedData)}`);
+      // }
     }
 
     // localStorage.setItem("answers", JSON.stringify(answers));
@@ -211,134 +247,155 @@ const Level = () => {
 
   return (
     <div className={`app-container ${styles.levelPage}`}>
-      {decryptedData.NumberOfRounds >= decryptedData.level ? (
+      {started ? (
         <>
-          <Row className='mt-4 mb-4'>
-            <Col className={`${styles.rightSection}`}>
-              <div className={`${styles.welcomeText}`}>
-                Welcome to Round {decryptedData.level}
-              </div>
-            </Col>
-          </Row>
-          <Form onSubmit={handleSubmit}>
-            <Row className={`p-2 mt-3 ${styles.paddingTop} flex-grow-1`}>
-              <Col xs={5} className='flex-grow-1'>
-                {!loader ? (
-                  <GameDescription
-                    pdfData={pdfData}
-                    header={"Round scenario"}
-                  />
-                ) : (
-                  <Loader />
-                )}
-              </Col>
-              <Col xs={6} className={`d-flex flex-column ${styles.rightSide}`}>
-                <h4 className={`${styles.roundHeader}`}>
-                  Welcome to Round {decryptedData.level}
-                </h4>
-                {!loader ? (
-                  <div
-                    className={`questions-container ${styles.questionsContainer}`}>
-                    {questions.map((question, index) => (
-                      <div
-                        key={index}
-                        className={`question ${styles.question}`}>
-                        <p>{question.question}</p>
-                        {question.type === "Multiple-Choice" && (
-                          <Form.Group
-                            className={`options ${styles.options}`}
-                            aria-required>
-                            {question.choices.map((option, optionIndex) => (
-                              <Form.Check
-                                key={optionIndex}
-                                type='radio'
-                                name={`question-${index}`}
-                                label={option}
-                                value={option}
-                                onChange={(e) =>
-                                  handleRadioChange(index, e.target.value)
-                                } // Add an onChange handler
-                                checked={answers[index] === option}
-                                required
-                              />
-                            ))}
-                          </Form.Group>
-                        )}
-                        {question.type === "Boolean" && (
-                          <Form.Group
-                            className={`input ${styles.input}`}
-                            required>
-                            <Form.Check
-                              type='radio'
-                              name={`question-${index}`}
-                              label='True'
-                              value='true'
-                              onChange={() => handleRadioChange(index, "true")}
-                              checked={answers[index] === "true"}
-                              inline
-                              required
-                            />
-                            <Form.Check
-                              type='radio'
-                              name={`question-${index}`}
-                              label='False'
-                              value='false'
-                              checked={answers[index] === "false"}
-                              onChange={() => handleRadioChange(index, "false")}
-                              inline
-                            />
-                          </Form.Group>
-                        )}
-                        {question.type === "Number" && (
-                          <Form.Group className={`input ${styles.input}`}>
-                            <Form.Control
-                              type='Number'
-                              name={`question-${index}`}
-                              className={`form-control ${styles.numberInput}`}
-                              value={answers[index] || ""}
-                              onChange={(e) =>
-                                handleRadioChange(index, e.target.value)
-                              }
-                              required
-                            />
-                          </Form.Group>
-                        )}
-                      </div>
-                    ))}
+          {decryptedData.NumberOfRounds >= decryptedData.level ? (
+            <>
+              <Row className='mt-4 mb-4'>
+                <Col className={`${styles.rightSection}`}>
+                  <div className={`${styles.welcomeText}`}>
+                    Welcome to Round {decryptedData.level}
                   </div>
-                ) : (
-                  <Loader />
-                )}
-              </Col>
-            </Row>
-            <Row className={`${styles.submitButtonRow}`}>
-              {!loader ? (
-                <Col xs={12} className={`text-end ${styles.submitButtonCol}`}>
-                  {submit && (
-                    <Button
-                      className={`btn btn-primary ${styles.submitButton}`}
-                      variant='primary'
-                      type='submit'>
-                      Submit
-                    </Button>
-                  )}
                 </Col>
-              ) : (
-                <Loader />
-              )}
-            </Row>
-          </Form>
+              </Row>
+              <Form onSubmit={handleSubmit}>
+                <Row className={`p-2 mt-3 ${styles.paddingTop} flex-grow-1`}>
+                  <Col xs={5} className='flex-grow-1'>
+                    {!loader ? (
+                      <GameDescription
+                        pdfData={pdfData}
+                        header={"Round scenario"}
+                      />
+                    ) : (
+                      <Loader />
+                    )}
+                  </Col>
+                  <Col
+                    xs={6}
+                    className={`d-flex flex-column ${styles.rightSide}`}>
+                    <h4 className={`${styles.roundHeader}`}>
+                      Welcome to Round {decryptedData.level}
+                    </h4>
+                    {!loader ? (
+                      <div
+                        className={`questions-container ${styles.questionsContainer}`}>
+                        {questions.map((question, index) => (
+                          <div
+                            key={index}
+                            className={`question ${styles.question}`}>
+                            <p>{question.question}</p>
+                            {question.type === "Multiple-Choice" && (
+                              <Form.Group
+                                className={`options ${styles.options}`}
+                                aria-required>
+                                {question.choices.map((option, optionIndex) => (
+                                  <Form.Check
+                                    key={optionIndex}
+                                    type='radio'
+                                    name={`question-${index}`}
+                                    label={option}
+                                    value={option}
+                                    onChange={(e) =>
+                                      handleRadioChange(index, e.target.value)
+                                    } // Add an onChange handler
+                                    checked={answers[index] === option}
+                                    required
+                                  />
+                                ))}
+                              </Form.Group>
+                            )}
+                            {question.type === "Boolean" && (
+                              <Form.Group
+                                className={`input ${styles.input}`}
+                                required>
+                                <Form.Check
+                                  type='radio'
+                                  name={`question-${index}`}
+                                  label='True'
+                                  value='true'
+                                  onChange={() =>
+                                    handleRadioChange(index, "true")
+                                  }
+                                  checked={answers[index] === "true"}
+                                  inline
+                                  required
+                                />
+                                <Form.Check
+                                  type='radio'
+                                  name={`question-${index}`}
+                                  label='False'
+                                  value='false'
+                                  checked={answers[index] === "false"}
+                                  onChange={() =>
+                                    handleRadioChange(index, "false")
+                                  }
+                                  inline
+                                />
+                              </Form.Group>
+                            )}
+                            {question.type === "Number" && (
+                              <Form.Group className={`input ${styles.input}`}>
+                                <Form.Control
+                                  type='Number'
+                                  name={`question-${index}`}
+                                  className={`form-control ${styles.numberInput}`}
+                                  value={answers[index] || ""}
+                                  onChange={(e) =>
+                                    handleRadioChange(index, e.target.value)
+                                  }
+                                  required
+                                />
+                              </Form.Group>
+                            )}
+                          </div>
+                        ))}
+                      </div>
+                    ) : (
+                      <Loader />
+                    )}
+                  </Col>
+                </Row>
+                <Row className={`${styles.submitButtonRow}`}>
+                  {!loader ? (
+                    <Col
+                      xs={12}
+                      className={`text-end ${styles.submitButtonCol}`}>
+                      {submit && (
+                        <Button
+                          className={`btn btn-primary ${styles.submitButton}`}
+                          variant='primary'
+                          type='submit'>
+                          Submit
+                        </Button>
+                      )}
+                    </Col>
+                  ) : (
+                    <Loader />
+                  )}
+                </Row>
+              </Form>
+            </>
+          ) : (
+            <>
+              <Row
+                className='d-flex justify-content-center align-items-center'
+                style={{ height: "100vh" }}>
+                <Col className='text-center'>
+                  You have successfully completed. <Link to='/'> Go Home</Link>
+                </Col>
+              </Row>
+            </>
+          )}
         </>
       ) : (
-        <>
-          <Row
-            className='d-flex justify-content-center align-items-center'
-            style={{ height: "100vh" }}>
-            <Col className='text-center'>
-              You have successfully completed. <Link to='/'> Go Home</Link>
-            </Col>
-          </Row>
-        </>
+        <Row
+          className='d-flex justify-content-center align-items-center'
+          style={{ height: "100vh" }}>
+          <Col className='text-center'>
+            Level has not started yet. Please wait for some time after the admin
+            starts the game. You can enter the game once it begins.
+          </Col>
+        </Row>
       )}
     </div>
   );

@@ -1,8 +1,13 @@
 import React, { useEffect, useState } from "react";
 import CryptoJS from "crypto-js";
-import { fetchGroupDetails } from "../components/services/airtable";
+import {
+  fetchGroupDetails,
+  startGame,
+  getLevelStatus,
+  startLevel,
+} from "../components/services/airtable";
 import { Container, Row, Form, Col, Button } from "react-bootstrap";
-import styles from "../styles/page/ViewRoom.module.scss";
+import styles from "../styles/page/ViewRoom.module.scss"; // Import your SCSS module styles
 import { useLocation } from "react-router-dom";
 import { Link } from "react-router-dom";
 import Loader from "./Loader";
@@ -12,13 +17,14 @@ const ViewRoom = () => {
   const [decryptedData, setDecryptedData] = useState(null);
   const location = useLocation();
   const [levels, setLevels] = useState([]);
+  const [data, setData] = useState([{}]);
   const [name, setName] = useState("");
   const [roomNumber, setRoomNumber] = useState("");
   const [loader, setLoader] = useState(false);
   const [activeGame, setActiveGame] = useState(true);
 
   const [total, setTotal] = useState(0);
-  const navigate = useNavigate(); // Initialize the navigate function
+  const navigate = useNavigate();
 
   const fetchData = async (RoomNumber, GameID) => {
     try {
@@ -30,23 +36,32 @@ const ViewRoom = () => {
           RoomNumber,
         }),
       );
+      try {
+        const [res, levelRes] = await Promise.all([
+          fetchGroupDetails(formData),
+          getLevelStatus(formData),
+        ]);
 
-      const res = await fetchGroupDetails(formData);
-      setLoader(false);
+        setLoader(false);
 
-      if (res.success && res.Data) {
-        setTotal(res.Data.totalLevels);
-        const levels = res.Data.Levels;
-        setName(res.Data.Name);
-        setLevels(levels);
-      } else {
-        console.log("No Active Games");
-        setActiveGame(false);
+        if (res.success && res.Data) {
+          setTotal(res.Data.totalLevels);
+          setData(levelRes.data);
+          const levels = res.Data.Levels;
+          setName(res.Data.Name);
+          setLevels(levels);
+        } else {
+          console.log("No Active Games");
+          setActiveGame(false);
+        }
+      } catch (error) {
+        console.error("An error occurred:", error);
       }
     } catch (error) {
       console.error("Error fetching data:", error);
     }
   };
+
   const handleClick = (data) => {
     const groupName = data.groupName;
     const roomNumber = decryptedData.roomNumber;
@@ -64,22 +79,20 @@ const ViewRoom = () => {
     navigate(`/score?data=${encodeURIComponent(updatedEncryptedData)}`);
   };
 
-  // const getchAndUpdateScore = async (groupName, roomNumber, gameID) => {
-  //   try {
-  //     const formData = new FormData();
-  //     formData.append(
-  //       "data",
-  //       JSON.stringify({
-  //         groupName,
-  //         roomNumber,
-  //         gameID,
-  //       }),
-  //     );
-  //     await fetchScore(formData);
-  //   } catch (err) {
-  //     console.log(err);
-  //   }
-  // };
+  const start = async (level) => {
+    const formData = new FormData();
+    const roomNumber = decryptedData.roomNumber;
+    const gameID = decryptedData.GameID;
+    formData.append(
+      "data",
+      JSON.stringify({
+        gameID,
+        roomNumber,
+        level,
+      }),
+    );
+    await startLevel(formData);
+  };
 
   useEffect(() => {
     setLoader(true);
@@ -93,24 +106,23 @@ const ViewRoom = () => {
       fetchData(decryptedData.roomNumber, decryptedData.GameID);
     }
   }, []);
+
   return (
     <>
       {activeGame ? (
-        <Container className={styles.viewRoom_container}>
-          <Row>
-            <Col className={styles.viewRoom_container__GamePageTitle}>
-              <h3>GamePage</h3>
+        <Container className={`${styles.viewRoom__container} mt-4`}>
+          <Row className='mt-5'>
+            <Col className={styles.viewRoom__container__GamePageTitle}>
+              Game page
             </Col>
           </Row>
-          <Row className={`mt-4 ${styles.gameInfo}`}>
-            <Col md={8}>
-              <h4>Game Name</h4>
+          <Row className={`mt-4 p-0 mb-4 ${styles.gameInfo}`}>
+            <Col md={8} style={{ marginLeft: "2vw" }}>
+              Game name
             </Col>
-            <Col>
-              <h4 style={{ marginLeft: "35px" }}>Room Number</h4>
-            </Col>
+            <Col>Room Number</Col>
           </Row>
-          <Row>
+          <Row className='m-0 p-0'>
             <Col
               md={8}
               className={`d-flex flex-column align-items-left justify-content-center ${styles.gameInfoName}`}>
@@ -124,9 +136,9 @@ const ViewRoom = () => {
 
           <>
             {!loader ? (
-              <Row>
-                <Col>
-                  <div className={styles.gameList}>
+              <Row className={`${styles.customRow} p-0 m-0`}>
+                <div className={styles.gameList}>
+                  <Col>
                     <div className={styles.gameList__headline}>
                       <h2 className={styles.gameList__title}>Group</h2>
                       {Array.from({ length: total }, (_, index) => (
@@ -135,7 +147,38 @@ const ViewRoom = () => {
                         </h2>
                       ))}
                     </div>
-                    <div className={styles.gameList__scrollable}>
+                  </Col>
+                  <Col>
+                    {/* this buttons are not alligned propperly. under the group is must empty the it will allign propperly below the header  */}
+                    <div className={styles.gameButtons}>
+                      <div className={styles.gameListButton}>
+                        <h2></h2>
+                        {Array.from({ length: total }, (_, index) => {
+                          const buttonData = data
+                            ? data.find((item) => item.Level === index + 1)
+                            : null;
+                          const buttonText =
+                            buttonData && buttonData.Status === "Started"
+                              ? buttonData.Status
+                              : "start";
+
+                          return (
+                            <button
+                              key={index}
+                              disabled={buttonText === "Started"}
+                              className={styles.startButton}
+                              onClick={() => {
+                                start(index + 1);
+                              }}>
+                              {buttonText}
+                            </button>
+                          );
+                        })}
+                      </div>
+                    </div>
+                  </Col>
+                  <div className={styles.gameList__scrollable}>
+                    <Col>
                       <ul className={styles.gameList__scrollable__items}>
                         {levels.map((level, index) => {
                           const array = Array(total).fill("");
@@ -172,9 +215,9 @@ const ViewRoom = () => {
                           );
                         })}
                       </ul>
-                    </div>
+                    </Col>
                   </div>
-                </Col>
+                </div>
               </Row>
             ) : (
               <Loader />

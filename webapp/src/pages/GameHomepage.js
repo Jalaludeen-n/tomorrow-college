@@ -20,6 +20,7 @@ import Loader from "../pages/Loader";
 
 const GameHomepage = () => {
   const location = useLocation();
+  const [started, setStarted] = useState(false);
 
   const navigate = useNavigate(); // Initialize the navigate function
   const api_url = process.env.REACT_APP_API_URL;
@@ -208,15 +209,15 @@ const GameHomepage = () => {
 
       <div
         className={`bottom-section d-flex flex-column ${styles.bottomSection}`}>
-        <Row className={`p-2 mt3 ${styles.paddingTop} flex-grow-1`}>
-          <Col xs={5} className='flex-grow-1'>
+        <Row className={`p-2 ${styles.paddingTop} mr-0`}>
+          <Col xs={5}>
             {!loader ? (
               <Players state={state} updateRole={updateRole} />
             ) : (
               <Loader />
             )}
           </Col>
-          <Col xs={7} className='flex-grow-3'>
+          <Col xs={7} className='p-0'>
             {!loader ? (
               <GameDescription
                 pdfData={state.gameInstructions}
@@ -227,10 +228,10 @@ const GameHomepage = () => {
             )}
           </Col>
         </Row>
-        <Row className={`mt-1 text-end ${styles.mt5}`}>
-          <Col>
-            <button className='btn btn-primary' onClick={handleStartClick}>
-              Start
+        <Row className={`mt-1 text-end ${styles.mt5} mr-0`}>
+          <Col className=''>
+            <button className={styles.startButton} onClick={handleStartClick}>
+              Start The Game
             </button>
           </Col>
         </Row>
