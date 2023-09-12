@@ -42,7 +42,7 @@ const Level = () => {
         await checkIfLevelStarted(decryptedData);
       }
 
-      // setLoader(false);
+      setLoader(false);
     } catch (error) {
       handleError(error);
     }
@@ -200,7 +200,7 @@ const Level = () => {
 
       // await storeAnsweres(formData);
 
-      // setLoader(false);
+      setLoader(false);
 
       // Update the URL with the new level
       // const updatedEncryptedData = CryptoJS.AES.encrypt(
@@ -237,7 +237,7 @@ const Level = () => {
     if (decryptedData.NumberOfRounds >= level) {
       navigate(`/level?data=${encodeURIComponent(updatedEncryptedData)}`);
     }
-    // setLoader(false);
+    setLoader(false);
   };
 
   const handleRadioChange = (questionIndex, selectedValue) => {
