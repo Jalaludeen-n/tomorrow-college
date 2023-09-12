@@ -8,7 +8,7 @@ function AddRole({ roleInputs, handleAddRoleClick, handleInputChange, roles }) {
   return (
     <>
       {roleInputs.map((input, index) => (
-        <Row key={index}>
+        <Row key={index} className='pb-2'>
           <Col md={3}>
             <Form.Control
               key={index}

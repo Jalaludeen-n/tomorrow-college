@@ -42,7 +42,7 @@
   height: 0;
   border-left: 25px solid transparent;
   border-right: 25px solid transparent;
-  border-bottom: 50px solid #ceb502;
+  border-bottom: 50px solid #D90368;
   position: relative;
   -webkit-animation: 3s triforce linear infinite 2s both;
   animation: 3s triforce linear infinite 2s both;
@@ -70,30 +70,30 @@
 
 @-webkit-keyframes triforce {
   0% {
-    border-bottom-color: rgb(206, 181, 2);
+    border-bottom-color:#D90368;
   }
   40% {
     border-bottom-color: rgba(206, 181, 2, 0);
   }
   80% {
-    border-bottom-color: rgb(206, 181, 2);
+    border-bottom-color:#D90368;
   }
   100% {
-    border-bottom-color: rgb(206, 181, 2);
+    border-bottom-color:#D90368;
   }
 }
 
 @keyframes triforce {
   0% {
-    border-bottom-color: rgb(206, 181, 2);
+    border-bottom-color: #D90368;
   }
   40% {
     border-bottom-color: rgba(206, 181, 2, 0);
   }
   80% {
-    border-bottom-color: rgb(206, 181, 2);
+    border-bottom-color: #D90368;
   }
   100% {
-    border-bottom-color: rgb(206, 181, 2);
+    border-bottom-color: #D90368;
   }
 }

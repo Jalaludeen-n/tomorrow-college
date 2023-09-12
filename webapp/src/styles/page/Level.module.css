@@ -25,6 +25,7 @@
   font-style: normal;
   font-weight: 300;
   line-height: normal;
+  height: 63vh;
 }
 .leftSection {
   padding: 10px;
@@ -50,6 +51,19 @@
 .submitButton {
   /* // Add any additional styles for the submit button here */
   margin-top: auto;
+  color: #fff;
+  font-family: Open Sans;
+  font-size: 21px;
+  font-style: normal;
+  font-weight: 700;
+  line-height: normal;
+  letter-spacing: 0.42px;
+  text-transform: uppercase;
+  width: 146px;
+  height: 7vh;
+  flex-shrink: 0;
+  border-radius: 25px;
+  background-color: #d90368;
 }
 
 .questionsContainer {

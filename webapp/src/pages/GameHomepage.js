@@ -29,7 +29,10 @@ const GameHomepage = () => {
     initialStateForGameDetails,
   );
   const [loader, setLoader] = useState(false);
-  const [decryptedData, setDecryptedData] = useState({});
+  const initialDecryptedData = JSON.parse(
+    localStorage.getItem("homePagedecryptedData") || "{}",
+  );
+  const [decryptedData, setDecryptedData] = useState(initialDecryptedData);
 
   const fetchParticipants = async (email, roomNumber, groupNumber) => {
     try {
@@ -78,6 +81,7 @@ const GameHomepage = () => {
       const decryptedData = JSON.parse(bytes.toString(CryptoJS.enc.Utf8));
       setLoader(true);
       setDecryptedData(decryptedData);
+      localStorage.setItem("homePagedecryptedData", decryptedData);
       dispatch({ type: "SET_GAME_NAME", payload: decryptedData.GameName });
       dispatch({ type: "SET_GROUP_NAME", payload: decryptedData.groupNumber });
       dispatch({
