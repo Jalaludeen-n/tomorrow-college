@@ -26,21 +26,25 @@ const GameHomepage = () => {
   const api_url = process.env.REACT_APP_API_URL;
   const [state, dispatch] = useReducer(
     newGameDetailsReducer,
-    initialStateForGameDetails,
+    getInitialStateFromLocalStorage(),
   );
-  const [loader, setLoader] = useState(false);
-  const initialDecryptedData = JSON.parse(
-    localStorage.getItem("homePagedecryptedData") || "{}",
-  );
-  const [decryptedData, setDecryptedData] = useState(initialDecryptedData);
 
-  const fetchParticipants = async (email, roomNumber, groupNumber) => {
+  function getInitialStateFromLocalStorage() {
+    const storedState = localStorage.getItem("gameHomepageState");
+    return storedState ? JSON.parse(storedState) : initialStateForGameDetails;
+  }
+
+  const [loader, setLoader] = useState(false);
+
+  const [decryptedData, setDecryptedData] = useState({});
+
+  const fetchParticipants = async (email, roomNumber, groupName) => {
     try {
       const formData = new FormData();
       formData.append(
         "data",
         JSON.stringify({
-          groupName: groupNumber,
+          groupName: groupName,
           email: email,
           roomNumber: roomNumber,
         }),
@@ -72,6 +76,7 @@ const GameHomepage = () => {
       level: 1,
     });
     const encryptedData = CryptoJS.AES.encrypt(data, "secret_key").toString();
+    localStorage.setItem("gameHomepageState", JSON.stringify(state));
     navigate(`/level?data=${encodeURIComponent(encryptedData)}`);
   };
 
@@ -83,13 +88,12 @@ const GameHomepage = () => {
       setDecryptedData(decryptedData);
       localStorage.setItem("homePagedecryptedData", decryptedData);
       dispatch({ type: "SET_GAME_NAME", payload: decryptedData.GameName });
-      dispatch({ type: "SET_GROUP_NAME", payload: decryptedData.groupNumber });
+      dispatch({ type: "SET_GROUP_NAME", payload: decryptedData.groupName });
       dispatch({
         type: "SET_NUM_ROUNDS",
         payload: decryptedData.NumberOfRounds,
       });
       const gameInstruction = localStorage.getItem("gameInstruction");
-      // localStorage.setItem("gameInstruction", gameInstruction);
       dispatch({ type: "SET_GAME_INSTRUCTIONS", payload: gameInstruction });
       dispatch({ type: "SET_NAME", payload: decryptedData.name });
       dispatch({ type: "SET_EMAIL", payload: decryptedData.email });
@@ -131,7 +135,7 @@ const GameHomepage = () => {
 
   const fetchParticipantsAndSet = async (data) => {
     try {
-      await fetchParticipants(data.email, data.roomNumber, data.groupNumber);
+      await fetchParticipants(data.email, data.roomNumber, data.groupName);
     } catch (error) {
       handleError(error);
     }
@@ -197,10 +201,24 @@ const GameHomepage = () => {
   useEffect(() => {
     const searchParams = new URLSearchParams(location.search);
     const encryptedData = searchParams.get("data");
-    if (encryptedData) {
-      decryptAndFetchData(encryptedData);
+
+    if (encryptedData === null) {
+      setStarted(true);
+    } else {
+      const localStorageData = localStorage.getItem("gameHomepageState");
+      const fetchData = async () => {
+        if (encryptedData && !localStorageData) {
+          await decryptAndFetchData(encryptedData);
+        } else if (localStorageData) {
+          const parsedData = JSON.parse(localStorageData);
+          await fetchParticipantsAndSet(parsedData);
+          const decryptedData = localStorage.getItem("homePagedecryptedData");
+          setDecryptedData(decryptedData);
+        }
+      };
+      fetchData();
     }
-  }, []);
+  }, [location]);
 
   return (
     <>
@@ -232,13 +250,15 @@ const GameHomepage = () => {
             )}
           </Col>
         </Row>
-        <Row className={`mt-1 text-end ${styles.mt5} mr-0`}>
-          <Col className=''>
-            <button className={styles.startButton} onClick={handleStartClick}>
-              Start The Game
-            </button>
-          </Col>
-        </Row>
+        {!started && (
+          <Row className={`mt-1 text-end ${styles.mt5} mr-0`}>
+            <Col className=''>
+              <button className={styles.startButton} onClick={handleStartClick}>
+                Start The Game
+              </button>
+            </Col>
+          </Row>
+        )}
       </div>
     </>
   );

@@ -37,6 +37,7 @@ const Level = () => {
       setDecryptedData(decryptedData);
       setLoader(true);
       if (started) {
+        console.log("workn");
         await fetchLevelDetailsAndSet(decryptedData);
       } else {
         await checkIfLevelStarted(decryptedData);
@@ -59,7 +60,7 @@ const Level = () => {
         JSON.stringify({
           email: data.email,
           roomNumber: data.roomNumber,
-          groupName: data.groupNumber,
+          groupName: data.groupName,
           name: data.name,
           gameID: data.GameID,
           role: data.role,
@@ -84,7 +85,7 @@ const Level = () => {
         JSON.stringify({
           email: data.email,
           roomNumber: data.roomNumber,
-          groupName: data.groupNumber,
+          groupName: data.groupName,
           name: data.name,
           gameID: data.GameID,
           role: data.role,
@@ -93,6 +94,7 @@ const Level = () => {
           scoreVisibilityForPlayers: data.ScoreVisibilityForPlayers,
           resultsSubbmision: data.ResultsSubbmision,
           sheetID: data.GoogleSheetID,
+          numberOfRounds: data.NumberOfRounds,
         }),
       );
 
@@ -154,20 +156,18 @@ const Level = () => {
         JSON.stringify({
           RoomNumber: decryptedData.roomNumber,
           GameID: decryptedData.GameID,
+          Level: decryptedData.level,
         }),
       );
       const res = await checkLevelStatus(formData);
-      const data = res.data;
+      const started = res.levelStatus;
 
-      const currentLevel = 1;
-      const isLevelStarted = data.some((obj) => obj.Level === currentLevel);
-
-      if (isLevelStarted) {
+      if (started) {
         setStarted(true);
       } else {
-        console.log(`Level ${currentLevel} is not present in the array.`);
+        console.log(`Not started`);
       }
-      setFirstLoader(true);
+      setFirstLoader(false);
     } catch (err) {
       console.log(err);
     }
@@ -175,7 +175,7 @@ const Level = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (decryptedData.NumberOfRounds >= decryptedData.level) {
-      // setLoader(true);
+      setLoader(true);
       const newLevel = decryptedData.level + 1;
       const scoreVisibilityForPlayers = decryptedData.scoreVisibilityForPlayers;
       const resultsSubbmision = decryptedData.resultsSubbmision;
@@ -186,7 +186,7 @@ const Level = () => {
         JSON.stringify({
           email: decryptedData.email,
           roomNumber: decryptedData.roomNumber,
-          groupName: decryptedData.groupNumber,
+          groupName: decryptedData.groupName,
           name: decryptedData.name,
           gameID: decryptedData.GameID,
           role: decryptedData.role,
@@ -198,15 +198,14 @@ const Level = () => {
         }),
       );
 
-      // await storeAnsweres(formData);
+      const res = await storeAnsweres(formData);
 
       setLoader(false);
 
-      // Update the URL with the new level
       // const updatedEncryptedData = CryptoJS.AES.encrypt(
       //   JSON.stringify({
       //     ...decryptedData,
-      //     level: newLevel,
+      //     level: res.level,
       //     submit: submit,
       //     scoreVisibilityForPlayers,
       //     resultsSubbmision,
@@ -216,6 +215,8 @@ const Level = () => {
       // ).toString();
       // setAnswers([]);
       // setQustions([]);
+      // setStarted(false);
+
       // if (decryptedData.NumberOfRounds >= decryptedData.level) {
       //   navigate(`/level?data=${encodeURIComponent(updatedEncryptedData)}`);
       // }

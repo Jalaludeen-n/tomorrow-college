@@ -14,11 +14,11 @@ const EnterGameForm = () => {
   const [email, setEmail] = useState("");
   const [name, setName] = useState("");
   const [roomNumber, setRoomNumber] = useState("");
-  const [groupNumber, setGroupNumber] = useState("");
+  const [groupName, setGroupName] = useState("");
   const [showEmailAlert, setShowEmailAlert] = useState(false);
   const [showNameAlert, setShowNameAlert] = useState(false);
   const [showRoomNumberAlert, setShowRoomNumberAlert] = useState(false);
-  const [showGroupNumberAlert, setShowGroupNumberAlert] = useState(false);
+  const [showGroupNameAlert, setShowGroupNameAlert] = useState(false);
   const [loader, setLoader] = useState(false);
 
   const handleEmailChange = (event) => {
@@ -35,10 +35,10 @@ const EnterGameForm = () => {
     setShowRoomNumberAlert(false);
   };
 
-  const handleGroupNumberChange = (event) => {
+  const handleGroupNameChange = (event) => {
     const newValue = event.target.value.replace(/\s+/g, "").toLowerCase();
-    setGroupNumber(newValue);
-    setShowGroupNumberAlert(false);
+    setGroupName(newValue);
+    setShowGroupNameAlert(false);
   };
 
   const handleSubmit = async (event) => {
@@ -67,7 +67,7 @@ const EnterGameForm = () => {
         JSON.stringify({
           email,
           roomNumber,
-          groupNumber,
+          groupName,
           name,
           RolesAutoSelection,
           ResultsSubbmision,
@@ -97,7 +97,7 @@ const EnterGameForm = () => {
       JSON.stringify({
         roomNumber: roomNumber,
         email: email,
-        group: groupNumber,
+        group: groupName,
         name: name,
       }),
     );
@@ -160,18 +160,18 @@ const EnterGameForm = () => {
                       <p className='alert'>Please enter the room number.</p>
                     )}
                   </Form.Group>
-                  <Form.Group controlId='formGroupNumber' className='mt-3'>
+                  <Form.Group controlId='formGroupName' className='mt-3'>
                     <Form.Label className={styles["form-text"]}>
                       Group Name:
                     </Form.Label>
                     <Form.Control
                       type='text'
-                      value={groupNumber}
-                      onChange={handleGroupNumberChange}
+                      value={groupName}
+                      onChange={handleGroupNameChange}
                       pattern='^[a-z]{3,}$'
                       required
                     />
-                    {showGroupNumberAlert && (
+                    {showGroupNameAlert && (
                       <p className='alert'>
                         Please enter a valid group number.
                       </p>

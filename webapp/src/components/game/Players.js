@@ -40,24 +40,26 @@ const Players = ({ state, updateRole }) => {
                   )}
                 </div>
               </li>
-              {state.participants
-                .filter((participant) => participant.length > 0) // Filter out empty arrays
-                .map((data, index) => (
-                  <li
-                    key={index}
-                    className={`${styles.gameListScrollableItem} ${
-                      index % 2 === 0 ? styles.evenItem : styles.oddItem
-                    }`}>
-                    <div
-                      className={`${styles.gameListScrollableItemAttribute}`}>
-                      {index + 2}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{data.Name}
-                    </div>
-                    <div
-                      className={`${styles.gameListScrollableItemAttributeRole}`}>
-                      {data.Role}
-                    </div>
-                  </li>
-                ))}
+              {state.participants.map(
+                (data, index) =>
+                  data.Name && (
+                    <li
+                      key={index}
+                      className={`${styles.gameListScrollableItem} ${
+                        index % 2 === 0 ? styles.evenItem : styles.oddItem
+                      }`}>
+                      <div
+                        className={`${styles.gameListScrollableItemAttribute}`}>
+                        {index + 2}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                        {data.Name}
+                      </div>
+                      <div
+                        className={`${styles.gameListScrollableItemAttributeRole}`}>
+                        {data.Role}
+                      </div>
+                    </li>
+                  ),
+              )}
             </ul>
           </div>
         </div>
