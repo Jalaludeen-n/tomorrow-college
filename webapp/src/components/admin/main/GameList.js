@@ -54,9 +54,11 @@ const GameList = ({
                   {isPage ? (
                     <>
                       {!showPopup ? (
-                        <button onClick={() => startGame(game.GameID)}>
-                          Start
-                        </button>
+                        <div
+                          className='listStartButton'
+                          onClick={() => startGame(game.GameID)}>
+                          Use this template
+                        </div>
                       ) : (
                         <div className='popup'>
                           <p>
@@ -64,7 +66,9 @@ const GameList = ({
                             room number to join the game.
                           </p>
                           <p>Room number: {randomNumber}</p>
-                          <button onClick={handleClosePopup}>Copy</button>
+                          <button className="copyButton" onClick={handleClosePopup}>
+                            GO BACK TO HOMEPAGE
+                          </button>
                         </div>
                       )}
                     </>

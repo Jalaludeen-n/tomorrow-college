@@ -132,7 +132,7 @@ const Score = () => {
                 <nav
                   className={`navbar navbar-expand-lg navbar-light bg-light ${style.levelHeader}`}>
                   <ul className={`navbar-nav w-100 justify-content-between `}>
-                    {Array.from({ length: 4 }, (_, index) => (
+                    {Array.from({ length: total }, (_, index) => (
                       <li className={`nav-item ml-2 `} key={index}>
                         <a
                           className='nav-link'

@@ -3,6 +3,41 @@
 .test-game {
   color: #000;
 }
+.listStartButton {
+  display: flex;
+  width: 145px;
+  height: 35px;
+  flex-direction: column;
+  justify-content: center;
+  flex-shrink: 0;
+  color: #2a2d31;
+  text-align: center;
+  font-family: Open Sans;
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 300;
+  line-height: 22.882px; /* 163.445% */
+  width: 163px;
+  height: 35px;
+  border-radius: 24px;
+  border: 1px solid #000;
+  cursor: pointer;
+}
+.copyButton {
+  width: 271px;
+  height: 60px;
+  flex-shrink: 0;
+  border-radius: 20px;
+  background: #d90368;
+  color: #fff;
+  font-family: Open Sans;
+  font-size: 16.8px;
+  font-style: normal;
+  font-weight: 700;
+  line-height: normal;
+  letter-spacing: 0.336px;
+  text-transform: uppercase;
+}
 
 .app-container {
   padding: 20px;

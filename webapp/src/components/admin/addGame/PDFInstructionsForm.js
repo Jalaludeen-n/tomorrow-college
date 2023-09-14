@@ -154,7 +154,7 @@ const PDFInstructionsForm = ({
         <Col className={styles.sectionTitle}>Roles duplicate</Col>
       </Row>
       <Row>
-        <Col className={styles.label}>
+        <Col className={`${styles.label} mb-3`}>
           Selected roles can be duplicate if number of players is greater than
           role number
         </Col>

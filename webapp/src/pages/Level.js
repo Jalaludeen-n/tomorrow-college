@@ -28,16 +28,16 @@ const Level = () => {
   const [answers, setAnswers] = useState([]);
   const [submit, setSubmit] = useState(true);
   const [started, setStarted] = useState(false);
-  const [firstLoader, setFirstLoader] = useState(false);
+  const [firstLoader, setFirstLoader] = useState(true);
 
   const decryptAndFetchData = async (encryptedData) => {
     try {
       const bytes = CryptoJS.AES.decrypt(encryptedData, "secret_key");
       const decryptedData = JSON.parse(bytes.toString(CryptoJS.enc.Utf8));
       setDecryptedData(decryptedData);
+
       setLoader(true);
       if (started) {
-        console.log("workn");
         await fetchLevelDetailsAndSet(decryptedData);
       } else {
         await checkIfLevelStarted(decryptedData);
@@ -160,10 +160,12 @@ const Level = () => {
         }),
       );
       const res = await checkLevelStatus(formData);
-      const started = res.levelStatus;
+      const data = res.levelStatus;
+      const started = data.some((obj) => obj.Level === decryptedData.level);
 
       if (started) {
         setStarted(true);
+        await fetchLevelDetailsAndSet(decryptedData);
       } else {
         console.log(`Not started`);
       }
@@ -176,11 +178,7 @@ const Level = () => {
     e.preventDefault();
     if (decryptedData.NumberOfRounds >= decryptedData.level) {
       setLoader(true);
-      const newLevel = decryptedData.level + 1;
-      const scoreVisibilityForPlayers = decryptedData.scoreVisibilityForPlayers;
-      const resultsSubbmision = decryptedData.resultsSubbmision;
       const formData = new FormData();
-      const sheetID = decryptedData.sheetID;
       formData.append(
         "data",
         JSON.stringify({
@@ -195,6 +193,7 @@ const Level = () => {
           scoreVisibilityForPlayers: decryptedData.ScoreVisibilityForPlayers,
           resultsSubbmision: decryptedData.ResultsSubbmision,
           sheetID: decryptedData.GoogleSheetID,
+          answers: answers,
         }),
       );
 
@@ -202,27 +201,22 @@ const Level = () => {
 
       setLoader(false);
 
-      // const updatedEncryptedData = CryptoJS.AES.encrypt(
-      //   JSON.stringify({
-      //     ...decryptedData,
-      //     level: res.level,
-      //     submit: submit,
-      //     scoreVisibilityForPlayers,
-      //     resultsSubbmision,
-      //     sheetID,
-      //   }),
-      //   "secret_key",
-      // ).toString();
-      // setAnswers([]);
-      // setQustions([]);
-      // setStarted(false);
+      const updatedEncryptedData = CryptoJS.AES.encrypt(
+        JSON.stringify({
+          ...decryptedData,
+          level: res.level,
+          submit: submit,
+        }),
+        "secret_key",
+      ).toString();
+      setAnswers([]);
+      setQustions([]);
+      setStarted(false);
 
-      // if (decryptedData.NumberOfRounds >= decryptedData.level) {
-      //   navigate(`/level?data=${encodeURIComponent(updatedEncryptedData)}`);
-      // }
+      if (decryptedData.NumberOfRounds >= decryptedData.level) {
+        navigate(`/level?data=${encodeURIComponent(updatedEncryptedData)}`);
+      }
     }
-
-    // localStorage.setItem("answers", JSON.stringify(answers));
   };
   const updateLevel = (decryptedData, level) => {
     const updatedEncryptedData = CryptoJS.AES.encrypt(
@@ -249,7 +243,7 @@ const Level = () => {
 
   return (
     <div className={`app-container ${styles.levelPage}`}>
-      {firstLoader ? (
+      {!firstLoader ? (
         <>
           {started ? (
             <>

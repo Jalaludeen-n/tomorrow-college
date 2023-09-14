@@ -17,7 +17,7 @@ const ViewRoom = () => {
   const [decryptedData, setDecryptedData] = useState(null);
   const location = useLocation();
   const [levels, setLevels] = useState([]);
-  const [data, setData] = useState([{}]);
+  const [data, setData] = useState([]);
   const [name, setName] = useState("");
   const [roomNumber, setRoomNumber] = useState("");
   const [loader, setLoader] = useState(false);
@@ -46,7 +46,8 @@ const ViewRoom = () => {
 
         if (res.success && res.Data) {
           setTotal(res.Data.totalLevels);
-          setData(levelRes.data);
+          const levelData = levelRes.levelStatus;
+          setData(levelData);
           const levels = res.Data.Levels;
           setName(res.Data.Name);
           setLevels(levels);
@@ -152,11 +153,14 @@ const ViewRoom = () => {
                     {/* this buttons are not alligned propperly. under the group is must empty the it will allign propperly below the header  */}
                     <div className={styles.gameButtons}>
                       <div className={styles.gameListButton}>
-                        <h2></h2>
+                        <div>&nbsp;&nbsp;&nbsp;&nbsp;</div>
                         {Array.from({ length: total }, (_, index) => {
                           const buttonData = data
                             ? data.find((item) => item.Level === index + 1)
                             : null;
+
+                          console.log(data);
+                          console.log("_+");
                           const buttonText =
                             buttonData && buttonData.Status === "Started"
                               ? buttonData.Status
