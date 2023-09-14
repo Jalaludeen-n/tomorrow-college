@@ -6,53 +6,64 @@ import styles from "../styles/page/ViewRoom.module.scss";
 import style from "../styles/page/Score.module.scss";
 import { useLocation } from "react-router-dom";
 import Loader from "./Loader";
-import IframeButton from "./Iframe";
+import Arrow from "../icons/Arrow.svg";
 
 const Score = () => {
   const [decryptedData, setDecryptedData] = useState(null);
   const location = useLocation();
-  const [levels, setLevels] = useState([]);
-  const [name, setName] = useState("");
-  const [roomNumber, setRoomNumber] = useState("");
+  const [selectedMemberIndex, setSelectedMemberIndex] = useState(0);
   const [loader, setLoader] = useState(false);
-  const [activeGame, setActiveGame] = useState(true);
+  const [scoreLoader, setScoreLoader] = useState(false);
   const [total, setTotal] = useState(0);
   const [groupMembers, setGroupMembers] = useState([{}]);
   const [data, setData] = useState([{}]);
-  const [selectedLevel, setSelectedLevel] = useState(0);
+  const [pdf, setPdf] = useState(null);
   const [sheetID, setSheetID] = useState("");
-  const [participantEmail, setParticipantEmail] = useState("");
+  const [selectedLevel, setSelectedLevel] = useState(1);
+
+  const [type, setType] = useState("");
+
+  const goBack = () => {
+    window.history.back();
+  };
 
   const getScore = async (level) => {
     try {
-      console.log("dsds");
+      setScoreLoader(true);
       const gameID = decryptedData.gameID;
       const roomNumber = decryptedData.roomNumber;
       const groupName = decryptedData.groupName;
       const formData = new FormData();
+      const email = groupMembers[selectedMemberIndex].ParticipantEmail;
+
       formData.append(
         "data",
         JSON.stringify({
           gameID,
           roomNumber,
           groupName,
-          email: participantEmail,
+          email: email,
           level,
         }),
       );
 
       const res = await fetchScore(formData);
-      setData(res.data);
-      console.log(res.data);
+      setScoreLoader(false);
+
+      setType(res.type);
+      if (res.type === "number") {
+        setData(res.data);
+      } else {
+        setPdf(res.data);
+      }
       setSheetID(res.sheetID);
     } catch (error) {
       console.error("Error fetching data:", error);
     }
   };
-  const storeMember = async (member) => {
+  const storeMember = async (index) => {
     try {
-      const email = member.ParticipantEmail;
-      setParticipantEmail(email);
+      setSelectedMemberIndex(index);
     } catch (error) {
       console.error("Error fetching data:", error);
     }
@@ -69,7 +80,7 @@ const Score = () => {
           groupName,
         }),
       );
-
+      await getScore(selectedLevel);
       const res = await fetchMember(formData);
       setGroupMembers(res.data);
       setLoader(false);
@@ -85,7 +96,6 @@ const Score = () => {
     if (encryptedData) {
       const bytes = CryptoJS.AES.decrypt(encryptedData, "secret_key");
       const decryptedData = JSON.parse(bytes.toString(CryptoJS.enc.Utf8));
-      console.log(decryptedData);
       setDecryptedData(decryptedData);
       const total = decryptedData.total;
       setTotal(total);
@@ -97,15 +107,23 @@ const Score = () => {
     }
   }, []);
   return (
-    <Container className={styles.viewRoom_container}>
+    <Container className={styles.viewRoom__container}>
       <Row>
-        <Col className={styles.viewRoom_container__GamePageTitle}>
-          <h3>group Page</h3>
+        <Col className={styles.viewRoom__container__GamePageTitle}>
+          <img
+            src={Arrow}
+            alt='arrow '
+            className='arrow'
+            onClick={goBack}
+            style={{ cursor: "pointer" }}
+          />
+
+          <div className='title'>Group page</div>
         </Col>
       </Row>
       <Row className={`mt-4 ${styles.gameInfo}`}>
         <Col md={8}>
-          <h4>groupName Name</h4>
+          <div className='mb-2'>Group name</div>
         </Col>
       </Row>
       <Row>
@@ -120,17 +138,42 @@ const Score = () => {
           <Row>
             <Col md={4}>
               <div className={styles.gameList}>
-                <div className={styles.gameList__headline}>Group members</div>
-                <ul className={`list-unstyled ${style.memberList}`}>
+                <div
+                  className={`${styles.gameList__headline} align-items-center`}>
+                  Group members
+                </div>
+                <Row className={`list-unstyled ${style.memberList} p-0 m-0 `}>
                   {groupMembers.map((member, index) => (
-                    <li
+                    <Row
                       key={index}
-                      className={style.member}
-                      onClick={(e) => storeMember(member)}>
-                      {index + 1}. {member.Name}
-                    </li>
+                      className={` p-0 m-3  ${
+                        selectedMemberIndex === index
+                          ? `${styles.fontWeightBold}`
+                          : ""
+                      }`}
+                      style={{ cursor: "pointer" }}
+                      onClick={(e) => storeMember(index)}>
+                      <Col
+                        md={1}
+                        className={`text-center p-0 m-0  ${
+                          selectedMemberIndex === index
+                            ? `${styles.fontWeightBold}`
+                            : ""
+                        }`}>
+                        {index + 1}
+                      </Col>
+                      <Col
+                        md={11}
+                        className={`text-left p-0 m-0  ${
+                          selectedMemberIndex === index
+                            ? `${styles.fontWeightBold}`
+                            : ""
+                        }`}>
+                        {member.Name}
+                      </Col>
+                    </Row>
                   ))}
-                </ul>
+                </Row>
               </div>
             </Col>
             <Col>
@@ -138,40 +181,63 @@ const Score = () => {
                 <div className={styles.gameList__headline}>
                   Group submission
                 </div>
-                <nav
-                  className={`navbar navbar-expand-lg navbar-light bg-light p-4 ${style.levelHeader}`}>
-                  <ul className={`navbar-nav w-100 justify-content-between `}>
-                    {Array.from({ length: total }, (_, index) => (
-                      <li className={`nav-item ml-2 `} key={index}>
-                        <a
-                          className='nav-link'
-                          href='#'
-                          onClick={() => getScore(index + 1)} // Set the selected level when clicked
-                        >
-                          Level {index + 1}
-                        </a>
-                      </li>
-                    ))}
-                  </ul>
-                </nav>
+                <Row className={` p-4 ${style.levelHeader} m-0`}>
+                  {Array.from({ length: total }, (_, index) => (
+                    <Col
+                      key={index}
+                      style={{
+                        cursor: "pointer",
+                        fontWeight:
+                          selectedLevel === index + 1 ? "bold" : "normal",
+                      }}
+                      onClick={() => {
+                        setSelectedLevel(index + 1);
+                        getScore(index + 1);
+                      }}>
+                      Level {index + 1}
+                    </Col>
+                  ))}
+                </Row>
 
-                <div className='vh-20 d-flex justify-content-center align-items-center'>
-                  {data ? (
+                <Row className=' d-flex justify-content-center align-items-center'>
+                  {!scoreLoader ? (
                     <div>
                       {data.type === "number" ? (
-                        <div>Score: {data.numberValue}</div>
+                        <Col
+                          className='d-flex align-items-center justify-content-center'
+                          style={{
+                            width: "100%",
+                            height: "50vh",
+                          }}>
+                          Score: {data}
+                        </Col>
                       ) : (
-                        <div>
-                          <IframeButton
-                            iframeURL={`https://docs.google.com/spreadsheets/d/${sheetID}/view#gid=`}
+                        <Col>
+                          <iframe
+                            className={`${styles.description}`}
+                            src={`data:application/pdf;base64,${pdf}`}
+                            title='PDF'
+                            style={{
+                              width: "100%",
+                              height: "50vh",
+                              border: "none",
+                              zoom: "100%",
+                            }}
                           />
-                        </div>
+                        </Col>
                       )}
                     </div>
                   ) : (
-                    <div className=''>Select a level to view details</div>
+                    <Col
+                      className='d-flex align-items-center justify-content-center'
+                      style={{
+                        width: "100%",
+                        height: "50vh",
+                      }}>
+                      submission in progress...
+                    </Col>
                   )}
-                </div>
+                </Row>
               </div>
             </Col>
           </Row>

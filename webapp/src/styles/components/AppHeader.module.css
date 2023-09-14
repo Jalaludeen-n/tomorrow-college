@@ -12,10 +12,14 @@
   max-width: 100px;
   height: auto;
 }
+.icon-container {
+  padding-left: 5%;
+}
 
 .button-container {
   display: flex;
   gap: 20px;
+  margin-right: 5%;
 }
 
 .header-link {

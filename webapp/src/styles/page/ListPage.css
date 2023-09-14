@@ -1,18 +1,22 @@
 .list-container {
   display: flex;
   flex-direction: column;
-  align-items: center;
-  padding: 20px;
+  padding: 5%;
 }
 
 .title {
   font-size: 24px;
   font-weight: bold;
   margin-bottom: 20px;
+  display: flex;
+  flex-direction: column;
 }
 
 .games-list {
   width: 100%;
+}
+.arrow {
+  padding: 12px 0px;
 }
 
 /* .game-item {

@@ -1,14 +1,15 @@
 // EnterGameForm.module.scss
 @import url("../../colors.css");
 
-.top-section {
-  border-radius: 8px;
-  background: #d90368;
-  background-color: var(--primary-color);
+.topSection {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 20px;
+  margin-bottom: 20px;
+  border-radius: 15px;
+  background-color: var(--primary-color);
+  font-family: "Open Sans", Arial, sans-serif;
+  padding: 30px;
   color: var(--white);
 
   &__message-container {
@@ -20,14 +21,22 @@
   }
 
   &__message-container__welcome-message {
-    font-size: 18px;
+    font-size: 35px;
     font-weight: bold;
+    padding: 2% 35px;
+    color: #fff;
+    font-family: "Open Sans";
+    font-size: 35px;
+    font-style: normal;
+    font-weight: 700;
+    line-height: normal;
   }
 
   &__message-container__date {
+    font-family: "Open Sans", Arial, sans-serif;
     color: var(--white);
-    margin-top: 12px;
-    font-size: 16px;
+    font-size: 18px;
+    padding-left: 35px;
   }
 
   &__top-buttons {

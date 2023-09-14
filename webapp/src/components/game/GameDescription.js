@@ -1,6 +1,7 @@
 import styles from "../../styles/page/GameDetails.module.scss";
+import { Document, Page } from "react-pdf";
 
-const GameDescription = ({ pdfData, header }) => {
+const GameDescription = ({ pdfData, header, height }) => {
   return (
     <div className={`${styles.pdfContainer}`}>
       <div className={`${styles.descriptionHeadline}`}>
@@ -12,9 +13,10 @@ const GameDescription = ({ pdfData, header }) => {
         title='PDF'
         style={{
           width: "100%",
-          height: "58vh",
+          height: height,
           border: "none",
-          zoom: "100%",
+          zoom: "10%",
+          frameBorder: "0",
         }}
       />
     </div>

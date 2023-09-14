@@ -27,7 +27,7 @@ const PDFInstructionsForm = ({
       {storedState.individualInstructions ? (
         <>
           {storedState.roleValues.map((value, index) => (
-            <Row key={index}>
+            <Row key={index} className='mb-3'>
               <Col
                 md={1}
                 className='d-flex align-items-end justify-content-center'>
@@ -98,16 +98,16 @@ const PDFInstructionsForm = ({
         </>
       ) : (
         <>
-          <Row>
+          <Row className='mb-3'>
             <Col className={styles.sectionTitle}>Instruction</Col>
           </Row>
-          <Row>
+          <Row className='mb-3'>
             <Col className={styles.label}>
               Add an instruction for all the levels and roles. This instruction
               will be displayed to the players for all the rounds.
             </Col>
           </Row>
-          <Row>
+          <Row className='mb-5'>
             <div
               className={`input-group ${styles.inputGroup}`}
               style={{
@@ -150,16 +150,16 @@ const PDFInstructionsForm = ({
         </>
       )}
 
-      <Row>
+      <Row className='mb-1'>
         <Col className={styles.sectionTitle}>Roles duplicate</Col>
       </Row>
-      <Row>
+      <Row className='mb-3'>
         <Col className={`${styles.label} mb-3`}>
           Selected roles can be duplicate if number of players is greater than
           role number
         </Col>
       </Row>
-      <Row>
+      <Row className='mb-3'>
         {storedState.roleValues.map((value, index) => (
           <Col md={3} key={index}>
             <Form.Group controlId='checkbox4'>

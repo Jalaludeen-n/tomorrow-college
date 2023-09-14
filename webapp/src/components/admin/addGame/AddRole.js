@@ -23,7 +23,11 @@ function AddRole({ roleInputs, handleAddRoleClick, handleInputChange, roles }) {
           {index === roleInputs.length - 1 && (
             <Col md={3} className='d-flex align-items-end'>
               <Button
-                style={{ backgroundColor: "white", color: "black" }}
+                style={{
+                  backgroundColor: "white",
+                  color: "black",
+                  border: "1px solid #000",
+                }}
                 onClick={handleAddRoleClick}>
                 Add another role
                 <FontAwesomeIcon

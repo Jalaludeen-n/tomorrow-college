@@ -7,7 +7,7 @@ const Players = ({ state, updateRole }) => {
     updateRole(value);
   };
   return (
-    <Row>
+    <Row className='p-0'>
       <Col>
         <div className={`${styles.playerList}`}>
           <div className={`${styles.playerListHeadline}`}>

@@ -187,7 +187,7 @@ const Create = () => {
             </Row>
             <Row className={`justify-content-center ${styles.sectionTitle}`}>
               {!isNext ? (
-                <h3>Basic Information</h3>
+                <div className=''>Basic Information</div>
               ) : (
                 <div
                   style={{

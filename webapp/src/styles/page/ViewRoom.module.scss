@@ -7,11 +7,16 @@
   font-weight: 400;
   line-height: normal;
 }
-
+.margin {
+  margin-right: 2%;
+}
+.fontWeightBold {
+  font-weight: bold;
+}
 .viewRoom {
   background-color: #000;
   &__container {
-    padding: 12px;
+    padding: 5%;
 
     &__GamePageTitle {
       color: #000;
@@ -20,7 +25,6 @@
       font-style: normal;
       font-weight: 700;
       line-height: normal;
-      margin-left: 2vw;
     }
   }
 }
@@ -50,7 +54,7 @@
   height: 100px;
   flex-shrink: 0;
   color: #000;
-  font-family: Proxima Nova;
+  font-family: "Open Sans", Arial, sans-serif;
   font-size: 26px;
   font-style: normal;
   font-weight: 400;
@@ -63,7 +67,7 @@
   border-radius: 18px;
   background: #f8ebf0;
   color: #000;
-  font-family: Proxima Nova;
+  font-family: "Open Sans", Arial, sans-serif;
   font-size: 26px;
   font-style: normal;
   font-weight: 400;
@@ -72,17 +76,16 @@
 .gameListButton {
   font-weight: bold;
 
-  font-family: Proxima Nova;
+  font-family: "Open Sans", Arial, sans-serif;
   font-size: 21px;
   font-style: normal;
   font-weight: 600;
   line-height: 22.882px; /* 108.964% */
   color: black;
-  padding: 10px 28px;
+  padding: 12px 0px;
   display: flex;
   justify-content: space-between;
   border-radius: 15px 15px 0px 0px;
-  margin-right: 1vw;
   margin-top: 2vh;
 }
 
@@ -98,14 +101,14 @@
   &__headline {
     font-weight: bold;
 
-    font-family: Proxima Nova;
+    font-family: "Open Sans", Arial, sans-serif;
     font-size: 21px;
     font-style: normal;
     font-weight: 600;
     line-height: 22.882px; /* 108.964% */
     color: var(--white);
     background-color: var(--primary-color);
-    padding: 10px 28px;
+    padding: 20px 28px;
     display: flex;
     justify-content: space-between;
     border-radius: 15px 15px 0px 0px;
@@ -129,8 +132,8 @@
         display: flex;
         justify-content: space-between;
         align-items: center;
-        margin-right: 1vw;
         margin-top: 2vh;
+        cursor: pointer;
 
         &__attribute {
           text-align: center;
@@ -142,4 +145,16 @@
       }
     }
   }
+}
+.gameListAttribute {
+  color: #2a2d31;
+  font-family: Open Sans;
+  font-size: 17px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 22.882px; /* 134.602% */
+  padding: 12px 0px;
+}
+.marginLeft {
+  margin-left: 12px;
 }

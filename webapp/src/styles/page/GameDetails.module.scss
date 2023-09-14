@@ -5,25 +5,31 @@
 .headerContainer {
   height: 18vh;
 }
+.homeContainer {
+  padding: 5%;
+}
 
 .app-container {
   margin: 4px 4px 12px 30px;
 }
 .startButton {
-  width: 266px;
-  height: 75px;
-  flex-shrink: 0;
-  border-radius: 15px;
-  background-color: #d90368;
+  /* // Add any additional styles for the submit button here */
+  margin-top: auto;
   color: #fff;
   font-family: Open Sans;
-  font-size: 1vw;
+  font-size: 21px;
   font-style: normal;
   font-weight: 700;
   line-height: normal;
   letter-spacing: 0.42px;
   text-transform: uppercase;
-  position: sticky;
+  width: 160px;
+  height: 65px;
+  flex-shrink: 0;
+  border-radius: 25px;
+  background-color: #d90368;
+  letter-spacing: 0.42px;
+  text-transform: uppercase;
 }
 
 .header-link {
@@ -41,8 +47,8 @@
   color: #0056b3; /* Change link color on hover */
 }
 
-.icon-container {
-  /* Styles for your icon container */
+.iconContainer {
+  padding-left: 5%;
 }
 
 .button-container {
@@ -50,7 +56,6 @@
 }
 
 .bottomSection {
-  height: 65vh;
   overflow: auto; /* Use auto to hide scrollbars when not needed */
 }
 
@@ -112,7 +117,6 @@
 .playerList {
   border-radius: 11px 11px 0px 0px;
   border: 1px solid #d90368;
-  height: 67vh;
   overflow: none; /* Use auto to hide scrollbars when not needed */
 }
 

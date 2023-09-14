@@ -3,23 +3,19 @@ import styles from "../../styles/components/game/Header.module.scss"; // Use the
 import { Container, Row, Form, Col, Button } from "react-bootstrap";
 
 const EnterGameForm = ({ gameName, groupName, numberOfRounds }) => {
-  //   const { values, handleChange, handleSubmit, validateField, errors } =
-  //     useForm();
-
   return (
-    <Row
-      className={`pt-4 m-2 ${styles["top-section"]} align-items-center justify-content-between`}>
-      <Col className={styles["top-section__message-container"]}>
+    <Row className={` ${styles["topSection"]} `}>
+      <Col className={styles["topSection__message-container"]}>
         <div
-          className={`${styles["top-section__message-container__welcome-message"]} mb-2`}>
+          className={`${styles["topSection__message-container__welcome-message"]} mb-2`}>
           Welcome to {gameName}
         </div>
-        <div className={`${styles["top-section__message-container__date"]}`}>
+        <div className={`${styles["topSection__message-container__date"]}`}>
           {groupName}
         </div>
       </Col>
       <Col
-        className={`${styles["top-section__top-buttons"]} d-flex flex-column align-items-end justify-content-end `}>
+        className={`${styles["topSection__top-buttons"]} d-flex flex-column align-items-end justify-content-end `}>
         <div
           className={`${styles["combined-button"]} ${styles["combined-button-text"]}`}>
           <div className={styles["combined-button__number"]}>

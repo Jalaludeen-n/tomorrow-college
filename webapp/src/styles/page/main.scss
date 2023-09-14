@@ -40,7 +40,7 @@
 }
 
 .app-container {
-  padding: 20px;
+  padding: 5%;
   display: flex;
   flex-direction: column;
   overflow: hidden;
@@ -51,10 +51,9 @@
   justify-content: space-between;
   align-items: center;
   margin-bottom: 20px;
-  border-radius: 8px;
+  border-radius: 15px;
   background-color: var(--primary-color);
-  height: 180px;
-  font-family: Poppins;
+  font-family: "Open Sans", Arial, sans-serif;
   padding: 30px;
   color: var(--white);
 
@@ -64,14 +63,15 @@
     align-items: flex-start;
 
     &__welcome-message {
-      font-size: 24px;
+      font-size: 35px;
       font-weight: bold;
-      padding: 8% 0px;
+      padding: 2% 35px;
     }
 
     &__date {
       font-size: 18px;
       text-align: center;
+      padding-left: 35px;
     }
   }
 
@@ -117,15 +117,18 @@
   display: flex;
   flex-grow: 1;
   justify-content: space-between;
+  margin-top: 2%;
 
   &__left {
     &__title {
       color: #000;
-      font-family: Open Sans;
+      font-family: "Open Sans", Arial, sans-serif;
+
       font-size: 24px;
       font-style: normal;
       font-weight: 700;
       line-height: normal;
+      margin-bottom: 2%;
     }
     flex: 1;
     display: flex;
@@ -136,6 +139,8 @@
     &__title {
       color: #000;
       font-family: Open Sans;
+      margin-bottom: 2%;
+
       font-size: 24px;
       font-style: normal;
       font-weight: 700;
@@ -158,14 +163,14 @@
   &__headline {
     font-weight: bold;
 
-    font-family: Proxima Nova;
+    font-family: "Open Sans", Arial, sans-serif;
     font-size: 21px;
     font-style: normal;
     font-weight: 600;
-    line-height: 22.882px; /* 108.964% */
+    line-height: 2; /* 108.964% */
     color: var(--white);
     background-color: var(--primary-color);
-    padding: 10px 28px;
+    padding: 2% 40px;
     display: flex;
     justify-content: space-between;
     border-radius: 15px 15px 0px 0px;
@@ -177,26 +182,33 @@
   }
 
   &__scrollable {
-    overflow-y: auto;
-    max-height: 50vh;
-    padding: 10px;
+    padding: 2% 40px;
+    color: #2a2d31;
+    font-family: Open Sans;
+    font-size: 18.757px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 25.248px; /* 134.602% */
+
+    // overflow-y: auto;
+    // max-height: 50vh;
 
     &__items {
-      list-style: none;
-      padding: 0;
-      margin: 0;
+      // list-style: none;
+      // padding: 0;
+      // margin: 0;
 
       &__item {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        padding: 16px 32px 8px 38px;
+        // display: flex;
+        // justify-content: space-between;
+        // align-items: center;
+        // padding: 16px 32px 8px 38px;
 
         &__attribute {
-          text-align: center;
+          // text-align: center;
+          // padding: auto;
           &__clickable {
             cursor: pointer;
-            text-align: center;
           }
         }
       }

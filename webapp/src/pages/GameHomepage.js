@@ -221,46 +221,49 @@ const GameHomepage = () => {
   }, [location]);
 
   return (
-    <>
-      <Header
-        gameName={state.gameName}
-        groupName={state.groupName}
-        numberOfRounds={state.rounds}
-        className={`${styles.headerContainer}`}
-      />
+    <div className={styles.homeContainer}>
+      <div className={styles.bottomSectionContainer}>
+        <Header
+          gameName={state.gameName}
+          groupName={state.groupName}
+          numberOfRounds={state.rounds}
+          className={`${styles.headerContainer}`}
+        />
 
-      <div
-        className={`bottom-section d-flex flex-column ${styles.bottomSection}`}>
-        <Row className={`p-2 ${styles.paddingTop} mr-0`}>
-          <Col xs={5}>
-            {!loader ? (
-              <Players state={state} updateRole={updateRole} />
-            ) : (
-              <Loader />
-            )}
-          </Col>
-          <Col xs={7} className='p-0'>
-            {!loader ? (
-              <GameDescription
-                pdfData={state.gameInstructions}
-                header={"Gameplay description"}
-              />
-            ) : (
-              <Loader />
-            )}
-          </Col>
-        </Row>
-        {!started && (
-          <Row className={`mt-1 text-end ${styles.mt5} mr-0`}>
-            <Col className=''>
-              <button className={styles.startButton} onClick={handleStartClick}>
-                Start The Game
-              </button>
+        <div
+          className={`bottom-section d-flex flex-column ${styles.bottomSection}`}>
+          <Row className={`${styles.paddingTop} mr-0 p-0`}>
+            <Col xs={5} className=' m-0'>
+              {!loader ? (
+                <Players state={state} updateRole={updateRole} />
+              ) : (
+                <Loader />
+              )}
+            </Col>
+            <Col xs={7} className='p-0'>
+              {!loader ? (
+                <GameDescription
+                  pdfData={state.gameInstructions}
+                  header={"Gameplay description"}
+                  height={"40vh"}
+                />
+              ) : (
+                <Loader />
+              )}
             </Col>
           </Row>
-        )}
+        </div>
       </div>
-    </>
+      {!started && (
+        <Row className={`mt-1 text-end ${styles.mt5} mr-0`}>
+          <Col className=''>
+            <button className={styles.startButton} onClick={handleStartClick}>
+              Start The Game
+            </button>
+          </Col>
+        </Row>
+      )}
+    </div>
   );
 };
 

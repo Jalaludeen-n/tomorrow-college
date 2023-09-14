@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import "./../../../styles/page/main.scss";
 import CryptoJS from "crypto-js";
 import { useNavigate } from "react-router-dom";
+import { Col, Row } from "react-bootstrap";
 
 const GameList = ({
   games,
@@ -25,32 +26,41 @@ const GameList = ({
   };
   return (
     <div className='game-list'>
-      <div className='game-list__headline'>
-        <h2 className='game-list__title'>Game name</h2>
-        <h2 className='game-list__title'>Date</h2>
-        <h2 className='game-list__title'>{isPage ? "" : "Players"}</h2>
-      </div>
+      <Row className='game-list__headline m-0'>
+        <Col className='game-list__title'>Game name</Col>
+        <Col className='game-list__title'>{isPage ? "Created on" : "Date"}</Col>
+
+        <Col className='game-list__title'>
+          {isPage ? "No of rounds" : "Players"}
+        </Col>
+        {isPage && <Col />}
+      </Row>
 
       <div className='game-list__scrollable'>
-        <ul className='game-list__scrollable__items'>
+        <div className='game-list__scrollable__items'>
           {games &&
             games.map((game, index) => (
-              <li
+              <Row
                 key={index}
-                className='game-list__scrollable__items__item'
+                className='game-list__scrollable__items__item m-0'
                 onClick={() => !isPage && isView(game.RoomNumber, game.GameID)}>
-                <div
+                <Col
                   className={
                     isPage
                       ? "game-list__scrollable__items__item__attribute"
                       : "game-list__scrollable__items__item__attribute__clickable"
                   }>
                   {isPage ? game.GameName : game.RoomNumber}
-                </div>
-                <div className='game-list__scrollable__items__item__attribute'>
+                </Col>
+                <Col className='game-list__scrollable__items__item__attribute m-0 p-0'>
                   {game.Date}
-                </div>
-                <div className='game-list__scrollable__items__item__attribute'>
+                </Col>
+                {isPage && (
+                  <Col className='game-list__scrollable__items__item__attribute ml-5'>
+                    {game.NumberOfRounds}
+                  </Col>
+                )}
+                <Col className='game-list__scrollable__items__item__attribute'>
                   {isPage ? (
                     <>
                       {!showPopup ? (
@@ -66,7 +76,9 @@ const GameList = ({
                             room number to join the game.
                           </p>
                           <p>Room number: {randomNumber}</p>
-                          <button className="copyButton" onClick={handleClosePopup}>
+                          <button
+                            className='copyButton'
+                            onClick={handleClosePopup}>
                             GO BACK TO HOMEPAGE
                           </button>
                         </div>
@@ -75,10 +87,10 @@ const GameList = ({
                   ) : (
                     game.Players
                   )}
-                </div>
-              </li>
+                </Col>
+              </Row>
             ))}
-        </ul>
+        </div>
       </div>
       <style jsx>{`
         .popup {

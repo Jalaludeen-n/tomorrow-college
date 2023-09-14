@@ -3,7 +3,9 @@ import "./../styles/page/ListPage.css";
 import { fetchGameData, startGame } from "../components/services/airtable";
 import GameList from "../components/admin/main/GameList";
 import { generateRoomID } from "../components/helper/utils";
+import { Link } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
+import Arrow from "../icons/Arrow.svg";
 import Loader from "./Loader";
 const List = () => {
   const [games, setGames] = useState([]); // State to store fetched game data
@@ -62,7 +64,12 @@ const List = () => {
     <>
       {!loader ? (
         <div className='list-container'>
-          <div className='title'>List of Games</div>
+          <div className='title ml-3'>
+            <Link to='/'>
+              <img src={Arrow} alt='arrow ' className='arrow'></img>
+            </Link>
+            All games
+          </div>
           {games.length === 0 ? (
             <div>No active games</div>
           ) : (

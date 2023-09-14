@@ -98,16 +98,12 @@ const Level = () => {
         }),
       );
 
-      if (data.NumberOfRounds >= data.level) {
-        const res = await fetchLevelDetails(formData);
+      const res = await fetchLevelDetails(formData);
 
-        if (res.success) {
-          setQustions(res.data.qustions);
-          setSubmit(res.data.submit);
-          setPdfData(res.data.instruction);
-        }
-      } else {
-        await completed(decryptedData);
+      if (res.success) {
+        setQustions(res.data.qustions);
+        setSubmit(res.data.submit);
+        setPdfData(res.data.instruction);
       }
     } catch (error) {
       handleError(error);
@@ -249,130 +245,151 @@ const Level = () => {
             <>
               {started ? (
                 <>
-                  <Row className='mt-4 mb-4'>
-                    <Col className={`${styles.rightSection}`}>
-                      <div className={`${styles.welcomeText}`}>
-                        Welcome to Round {decryptedData.level}
-                      </div>
-                    </Col>
-                  </Row>
-                  <Form onSubmit={handleSubmit}>
-                    <Row className={` ${styles.paddingTop} flex-grow-1`}>
-                      <Col xs={5} className='flex-grow-1'>
-                        {!loader ? (
-                          <GameDescription
-                            pdfData={pdfData}
-                            header={"Round scenario"}
-                          />
-                        ) : (
-                          <Loader />
-                        )}
-                      </Col>
-                      <Col
-                        xs={6}
-                        className={`d-flex flex-column ${styles.rightSide}`}>
-                        {!loader ? (
-                          <div className={`${styles.questionsContainer}`}>
-                            {questions.map((question, index) => (
-                              <div
-                                key={index}
-                                className={`question ${styles.question}`}>
-                                <p>{question.question}</p>
-                                {question.type === "Multiple-Choice" && (
-                                  <Form.Group
-                                    className={`options ${styles.options}`}
-                                    aria-required>
-                                    {question.choices.map(
-                                      (option, optionIndex) => (
+                  {decryptedData.NumberOfRounds >= decryptedData.level ? (
+                    <>
+                      <Row className=''>
+                        <Col className={`${styles.rightSection}`}>
+                          <div className={`${styles.welcomeText}`}>
+                            Welcome to Round {decryptedData.level}
+                          </div>
+                        </Col>
+                      </Row>
+                      <Form onSubmit={handleSubmit}>
+                        <Row className={` ${styles.paddingTop} flex-grow-1`}>
+                          <Col xs={5} className='flex-grow-1'>
+                            {!loader ? (
+                              <GameDescription
+                                pdfData={pdfData}
+                                header={"Round scenario"}
+                                height={"60vh"}
+                              />
+                            ) : (
+                              <Loader />
+                            )}
+                          </Col>
+                          <Col
+                            xs={6}
+                            className={`d-flex flex-column ${styles.rightSide}`}>
+                            {!loader ? (
+                              <div className={`${styles.questionsContainer}`}>
+                                {questions.map((question, index) => (
+                                  <div
+                                    key={index}
+                                    className={`question ${styles.question}`}>
+                                    <p>{question.question}</p>
+                                    {question.type === "Multiple-Choice" && (
+                                      <Form.Group
+                                        className={`options ${styles.options}`}
+                                        aria-required>
+                                        {question.choices.map(
+                                          (option, optionIndex) => (
+                                            <Form.Check
+                                              key={optionIndex}
+                                              type='radio'
+                                              name={`question-${index}`}
+                                              label={option}
+                                              value={option}
+                                              onChange={(e) =>
+                                                handleRadioChange(
+                                                  index,
+                                                  e.target.value,
+                                                )
+                                              } // Add an onChange handler
+                                              checked={
+                                                answers[index] === option
+                                              }
+                                              required
+                                            />
+                                          ),
+                                        )}
+                                      </Form.Group>
+                                    )}
+                                    {question.type === "Boolean" && (
+                                      <Form.Group
+                                        className={`input ${styles.input}`}
+                                        required>
                                         <Form.Check
-                                          key={optionIndex}
                                           type='radio'
                                           name={`question-${index}`}
-                                          label={option}
-                                          value={option}
+                                          label='True'
+                                          value='true'
+                                          onChange={() =>
+                                            handleRadioChange(index, "true")
+                                          }
+                                          checked={answers[index] === "true"}
+                                          inline
+                                          required
+                                        />
+                                        <Form.Check
+                                          type='radio'
+                                          name={`question-${index}`}
+                                          label='False'
+                                          value='false'
+                                          checked={answers[index] === "false"}
+                                          onChange={() =>
+                                            handleRadioChange(index, "false")
+                                          }
+                                          inline
+                                        />
+                                      </Form.Group>
+                                    )}
+                                    {question.type === "Number" && (
+                                      <Form.Group
+                                        className={`input ${styles.input}`}>
+                                        <Form.Control
+                                          type='Number'
+                                          name={`question-${index}`}
+                                          className={`form-control ${styles.numberInput}`}
+                                          value={answers[index] || ""}
                                           onChange={(e) =>
                                             handleRadioChange(
                                               index,
                                               e.target.value,
                                             )
-                                          } // Add an onChange handler
-                                          checked={answers[index] === option}
+                                          }
                                           required
                                         />
-                                      ),
+                                      </Form.Group>
                                     )}
-                                  </Form.Group>
-                                )}
-                                {question.type === "Boolean" && (
-                                  <Form.Group
-                                    className={`input ${styles.input}`}
-                                    required>
-                                    <Form.Check
-                                      type='radio'
-                                      name={`question-${index}`}
-                                      label='True'
-                                      value='true'
-                                      onChange={() =>
-                                        handleRadioChange(index, "true")
-                                      }
-                                      checked={answers[index] === "true"}
-                                      inline
-                                      required
-                                    />
-                                    <Form.Check
-                                      type='radio'
-                                      name={`question-${index}`}
-                                      label='False'
-                                      value='false'
-                                      checked={answers[index] === "false"}
-                                      onChange={() =>
-                                        handleRadioChange(index, "false")
-                                      }
-                                      inline
-                                    />
-                                  </Form.Group>
-                                )}
-                                {question.type === "Number" && (
-                                  <Form.Group
-                                    className={`input ${styles.input}`}>
-                                    <Form.Control
-                                      type='Number'
-                                      name={`question-${index}`}
-                                      className={`form-control ${styles.numberInput}`}
-                                      value={answers[index] || ""}
-                                      onChange={(e) =>
-                                        handleRadioChange(index, e.target.value)
-                                      }
-                                      required
-                                    />
-                                  </Form.Group>
-                                )}
+                                  </div>
+                                ))}
                               </div>
-                            ))}
-                          </div>
-                        ) : (
-                          <Loader />
-                        )}
-                      </Col>
-                    </Row>
-                    <Row className={`${styles.submitButtonRow}`}>
-                      {!loader ? (
-                        <Col
-                          xs={12}
-                          className={`text-end ${styles.submitButtonCol}`}>
-                          {submit && (
-                            <button
-                              className={`${styles.submitButton}`}
-                              type='submit'>
-                              Submit
-                            </button>
+                            ) : (
+                              <Loader />
+                            )}
+                          </Col>
+                        </Row>
+                        <Row className={`${styles.submitButtonRow}`}>
+                          {!loader ? (
+                            <Col
+                              xs={12}
+                              className={`text-end ${styles.submitButtonCol}`}>
+                              {submit && (
+                                <button
+                                  className={`${styles.submitButton}`}
+                                  type='submit'>
+                                  Submit
+                                </button>
+                              )}
+                            </Col>
+                          ) : (
+                            <Loader />
                           )}
+                        </Row>
+                      </Form>
+                    </>
+                  ) : (
+                    <>
+                      <Row
+                        className='d-flex justify-content-center align-items-center'
+                        style={{ height: "100vh" }}>
+                        <Col className='text-center'>
+                          You have successfully completed.{" "}
+                          <Link to='/'> Go Home</Link>
                         </Col>
-                      ) : (
-                        <Loader />
-                      )}
-                    </Row>
-                  </Form>
+                      </Row>
+                    </>
+                  )}
                 </>
               ) : (
                 <Row

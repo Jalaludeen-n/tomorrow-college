@@ -113,7 +113,7 @@ const EnterGameForm = () => {
             <Col className={styles["top-left-form"]}>
               <div className='d-flex flex-column'>
                 <div className='text-center'>
-                  <h1 className='form-heading'>Join Game</h1>
+                  <div className={styles.formHeading}>Join Game</div>
                 </div>
                 <Form onSubmit={handleSubmit} className='pt-3 text-left'>
                   <Form.Group controlId='formEmail' className='mt-2'>

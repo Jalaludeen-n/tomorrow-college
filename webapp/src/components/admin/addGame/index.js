@@ -149,6 +149,7 @@ const Index = ({
             <Form.Check
               type='checkbox'
               label='Allow for auto selection role'
+              className={styles.checkBox}
               checked={state.allowAutoSelection}
               onChange={() =>
                 handleCheckboxChange(
