@@ -21,10 +21,11 @@ const Score = () => {
   const [data, setData] = useState([{}]);
   const [selectedLevel, setSelectedLevel] = useState(0);
   const [sheetID, setSheetID] = useState("");
+  const [participantEmail, setParticipantEmail] = useState("");
 
-  const getScore = async (member) => {
+  const getScore = async (level) => {
     try {
-      const email = member.ParticipantEmail;
+      console.log("dsds");
       const gameID = decryptedData.gameID;
       const roomNumber = decryptedData.roomNumber;
       const groupName = decryptedData.groupName;
@@ -35,13 +36,22 @@ const Score = () => {
           gameID,
           roomNumber,
           groupName,
-          email,
+          email: participantEmail,
+          level,
         }),
       );
 
       const res = await fetchScore(formData);
       setData(res.data);
       setSheetID(res.sheetID);
+    } catch (error) {
+      console.error("Error fetching data:", error);
+    }
+  };
+  const storeMember = async (member) => {
+    try {
+      const email = member.ParticipantEmail;
+      setParticipantEmail(email);
     } catch (error) {
       console.error("Error fetching data:", error);
     }
@@ -115,7 +125,7 @@ const Score = () => {
                     <li
                       key={index}
                       className={style.member}
-                      onClick={(e) => getScore(member)}>
+                      onClick={(e) => storeMember(member)}>
                       {index + 1}. {member.Name}
                     </li>
                   ))}
@@ -135,7 +145,7 @@ const Score = () => {
                         <a
                           className='nav-link'
                           href='#'
-                          onClick={() => setSelectedLevel(index + 1)} // Set the selected level when clicked
+                          onClick={() => getScore(index + 1)} // Set the selected level when clicked
                         >
                           Level {index + 1}
                         </a>

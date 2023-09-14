@@ -243,11 +243,11 @@ const Level = () => {
 
   return (
     <div className={`app-container ${styles.levelPage}`}>
-      {!firstLoader ? (
+      {decryptedData.NumberOfRounds >= decryptedData.level ? (
         <>
-          {started ? (
+          {!firstLoader ? (
             <>
-              {decryptedData.NumberOfRounds >= decryptedData.level ? (
+              {started ? (
                 <>
                   <Row className='mt-4 mb-4'>
                     <Col className={`${styles.rightSection}`}>
@@ -375,31 +375,31 @@ const Level = () => {
                   </Form>
                 </>
               ) : (
-                <>
-                  <Row
-                    className='d-flex justify-content-center align-items-center'
-                    style={{ height: "100vh" }}>
-                    <Col className='text-center'>
-                      You have successfully completed.{" "}
-                      <Link to='/'> Go Home</Link>
-                    </Col>
-                  </Row>
-                </>
+                <Row
+                  className='d-flex justify-content-center align-items-center'
+                  style={{ height: "100vh" }}>
+                  <Col className='text-center'>
+                    Level has not started yet. Please wait for some time after
+                    the admin starts the game. You can enter the game once it
+                    begins.
+                  </Col>
+                </Row>
               )}
             </>
           ) : (
-            <Row
-              className='d-flex justify-content-center align-items-center'
-              style={{ height: "100vh" }}>
-              <Col className='text-center'>
-                Level has not started yet. Please wait for some time after the
-                admin starts the game. You can enter the game once it begins.
-              </Col>
-            </Row>
+            <Loader />
           )}
         </>
       ) : (
-        <Loader />
+        <>
+          <Row
+            className='d-flex justify-content-center align-items-center'
+            style={{ height: "100vh" }}>
+            <Col className='text-center'>
+              You have successfully completed. <Link to='/'> Go Home</Link>
+            </Col>
+          </Row>
+        </>
       )}
     </div>
   );
