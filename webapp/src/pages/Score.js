@@ -43,6 +43,7 @@ const Score = () => {
 
       const res = await fetchScore(formData);
       setData(res.data);
+      console.log(res.data);
       setSheetID(res.sheetID);
     } catch (error) {
       console.error("Error fetching data:", error);
@@ -138,7 +139,7 @@ const Score = () => {
                   Group submission
                 </div>
                 <nav
-                  className={`navbar navbar-expand-lg navbar-light bg-light ${style.levelHeader}`}>
+                  className={`navbar navbar-expand-lg navbar-light bg-light p-4 ${style.levelHeader}`}>
                   <ul className={`navbar-nav w-100 justify-content-between `}>
                     {Array.from({ length: total }, (_, index) => (
                       <li className={`nav-item ml-2 `} key={index}>
@@ -155,16 +156,14 @@ const Score = () => {
                 </nav>
 
                 <div className='vh-20 d-flex justify-content-center align-items-center'>
-                  {selectedLevel !== 0 && data[`Level ${selectedLevel}`] ? (
+                  {data ? (
                     <div>
-                      {data[`Level ${selectedLevel}`].type === "number" ? (
-                        <div>Score: {data[`Level ${selectedLevel}`].score}</div>
+                      {data.type === "number" ? (
+                        <div>Score: {data.numberValue}</div>
                       ) : (
                         <div>
                           <IframeButton
-                            iframeURL={`https://docs.google.com/spreadsheets/d/${sheetID}/view#gid=${
-                              data[`Level ${selectedLevel}`].id
-                            }`}
+                            iframeURL={`https://docs.google.com/spreadsheets/d/${sheetID}/view#gid=`}
                           />
                         </div>
                       )}
