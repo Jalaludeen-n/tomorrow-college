@@ -24,7 +24,6 @@ const Score = () => {
 
   const getScore = async (member) => {
     try {
-      console.log(member.ParticipantEmail);
       const email = member.ParticipantEmail;
       const gameID = decryptedData.gameID;
       const roomNumber = decryptedData.roomNumber;
@@ -43,7 +42,6 @@ const Score = () => {
       const res = await fetchScore(formData);
       setData(res.data);
       setSheetID(res.sheetID);
-      console.log(res.sheetID);
     } catch (error) {
       console.error("Error fetching data:", error);
     }
