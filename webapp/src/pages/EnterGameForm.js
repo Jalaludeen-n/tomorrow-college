@@ -43,7 +43,7 @@ const EnterGameForm = () => {
 
   const handleSubmit = async (event) => {
     event.preventDefault();
-
+    localStorage.clear();
     setLoader(true);
     const data = formatDataForAirtable();
     const res = await joinGame(data);

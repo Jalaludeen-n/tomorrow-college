@@ -19,22 +19,49 @@ import Loader from "./Loader";
 const Level = () => {
   const api_url = process.env.REACT_APP_API_URL;
   const navigate = useNavigate(); // Initialize the navigate function
-  const [pdfData, setPdfData] = useState(null);
+  const [pdfData, setPdfData] = useState(getPDFFromLocalStorage());
   const [isSubmitted, setIssubmitted] = useState(false);
   const location = useLocation();
-  const [decryptedData, setDecryptedData] = useState({});
+  const [decryptedData, setDecryptedData] = useState(
+    getDecryptedDataFromLocalStorage(),
+  );
   const [loader, setLoader] = useState(false);
-  const [questions, setQustions] = useState([]);
-  const [answers, setAnswers] = useState([]);
-  const [submit, setSubmit] = useState(true);
+  const [questions, setQustions] = useState(getQstionsFromLocalStorage);
+  const [answers, setAnswers] = useState(getAnsFromLocalStorage());
+  const [submit, setSubmit] = useState(getSubmitFromLocalStorage());
   const [started, setStarted] = useState(false);
   const [firstLoader, setFirstLoader] = useState(true);
+
+  function getDecryptedDataFromLocalStorage() {
+    const decryptedData = localStorage.getItem("levelpageDecryptedData");
+    return decryptedData ? JSON.parse(decryptedData) : {};
+  }
+  function getQstionsFromLocalStorage() {
+    const questions = localStorage.getItem("levelpageqstns");
+    return questions ? JSON.parse(questions) : [];
+  }
+  function getAnsFromLocalStorage() {
+    const answers = localStorage.getItem("levelpageans");
+    return answers ? JSON.parse(answers) : [];
+  }
+  function getSubmitFromLocalStorage() {
+    const submit = localStorage.getItem("submit");
+    return submit ? JSON.parse(submit) : true;
+  }
+  function getPDFFromLocalStorage() {
+    const pdf = localStorage.getItem("levelPDF");
+    return pdf ? pdf : null;
+  }
 
   const decryptAndFetchData = async (encryptedData) => {
     try {
       const bytes = CryptoJS.AES.decrypt(encryptedData, "secret_key");
       const decryptedData = JSON.parse(bytes.toString(CryptoJS.enc.Utf8));
       setDecryptedData(decryptedData);
+      localStorage.setItem(
+        "levelpageDecryptedData",
+        JSON.stringify(decryptedData),
+      );
 
       setLoader(true);
       if (started) {
@@ -102,8 +129,14 @@ const Level = () => {
 
       if (res.success) {
         setQustions(res.data.qustions);
+        localStorage.setItem(
+          "levelpageqstns",
+          JSON.stringify(res.data.qustions),
+        );
+        localStorage.setItem("submit", JSON.stringify(res.data.submit));
         setSubmit(res.data.submit);
         setPdfData(res.data.instruction);
+        localStorage.setItem("levelPDF", res.data.instruction);
       }
     } catch (error) {
       handleError(error);
@@ -126,6 +159,9 @@ const Level = () => {
         updateLevel(encryptedData, data);
       }
     });
+    socket.on("start", (data) => {
+      setStarted(true);
+    });
 
     socket.on("disconnect", () => {
       console.log("Disconnected from WebSocket server");
@@ -141,6 +177,15 @@ const Level = () => {
     const encryptedData = searchParams.get("data");
     if (encryptedData) {
       decryptAndFetchData(encryptedData);
+    } else {
+      setPdfData(getPDFFromLocalStorage());
+      setDecryptedData(getDecryptedDataFromLocalStorage());
+
+      setQustions(getQstionsFromLocalStorage);
+      setAnswers(getAnsFromLocalStorage());
+      setSubmit(getSubmitFromLocalStorage());
+      setStarted(localStorage.getItem("started"));
+      setFirstLoader(false);
     }
   }, [location, started, firstLoader]);
 
@@ -161,6 +206,8 @@ const Level = () => {
 
       if (started) {
         setStarted(true);
+        localStorage.setItem("started", true);
+
         await fetchLevelDetailsAndSet(decryptedData);
       } else {
         console.log(`Not started`);
@@ -172,6 +219,12 @@ const Level = () => {
   };
   const handleSubmit = async (e) => {
     e.preventDefault();
+    localStorage.removeItem("started");
+    localStorage.removeItem("levelpageans");
+    localStorage.removeItem("levelpageDecryptedData");
+    localStorage.removeItem("levelpageqstns");
+    localStorage.removeItem("submit");
+    localStorage.removeItem("levelPDF");
     if (decryptedData.NumberOfRounds >= decryptedData.level) {
       setLoader(true);
       const formData = new FormData();
@@ -195,8 +248,6 @@ const Level = () => {
 
       const res = await storeAnsweres(formData);
 
-      setLoader(false);
-
       const updatedEncryptedData = CryptoJS.AES.encrypt(
         JSON.stringify({
           ...decryptedData,
@@ -209,9 +260,7 @@ const Level = () => {
       setQustions([]);
       setStarted(false);
 
-      if (decryptedData.NumberOfRounds >= decryptedData.level) {
-        navigate(`/level?data=${encodeURIComponent(updatedEncryptedData)}`);
-      }
+      navigate(`/level?data=${encodeURIComponent(updatedEncryptedData)}`);
     }
   };
   const updateLevel = (decryptedData, level) => {
@@ -235,6 +284,7 @@ const Level = () => {
     const newAnswers = [...answers];
     newAnswers[questionIndex] = selectedValue;
     setAnswers(newAnswers);
+    localStorage.setItem("levelpageans", JSON.stringify(newAnswers));
   };
 
   return (

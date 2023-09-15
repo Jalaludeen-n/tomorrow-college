@@ -51,17 +51,21 @@ const GameHomepage = () => {
       );
 
       const res = await fetchRolesAndParticipants(formData);
+      console.log("___________");
+      console.log(res.data);
 
       if (res && !res.data.roleAutoAssigned) {
         dispatch({ type: "SET_ROLES", payload: res.data.roles });
       }
 
       if (res && res.data.filteredparticipants.length) {
+        console.log("working");
         dispatch({
           type: "SET_PARTICIPANTS",
           payload: res.data.filteredparticipants,
         });
       }
+      localStorage.setItem("gameHomepageState", JSON.stringify(state));
     } catch (error) {
       handleError(error);
     }
@@ -86,7 +90,10 @@ const GameHomepage = () => {
       const decryptedData = JSON.parse(bytes.toString(CryptoJS.enc.Utf8));
       setLoader(true);
       setDecryptedData(decryptedData);
-      localStorage.setItem("homePagedecryptedData", decryptedData);
+      localStorage.setItem(
+        "homePagedecryptedData",
+        JSON.stringify(decryptedData),
+      );
       dispatch({ type: "SET_GAME_NAME", payload: decryptedData.GameName });
       dispatch({ type: "SET_GROUP_NAME", payload: decryptedData.groupName });
       dispatch({
@@ -204,6 +211,14 @@ const GameHomepage = () => {
 
     if (encryptedData === null) {
       setStarted(true);
+      const localStorageData = localStorage.getItem("gameHomepageState");
+      const fetchData = async () => {
+        const parsedData = JSON.parse(localStorageData);
+        await fetchParticipantsAndSet(parsedData);
+        const decryptedData = localStorage.getItem("homePagedecryptedData");
+        setDecryptedData(JSON.parse(decryptedData));
+      };
+      fetchData();
     } else {
       const localStorageData = localStorage.getItem("gameHomepageState");
       const fetchData = async () => {
@@ -213,7 +228,7 @@ const GameHomepage = () => {
           const parsedData = JSON.parse(localStorageData);
           await fetchParticipantsAndSet(parsedData);
           const decryptedData = localStorage.getItem("homePagedecryptedData");
-          setDecryptedData(decryptedData);
+          setDecryptedData(JSON.parse(decryptedData));
         }
       };
       fetchData();
