@@ -51,8 +51,6 @@ const GameHomepage = () => {
       );
 
       const res = await fetchRolesAndParticipants(formData);
-      console.log("___________");
-      console.log(res.data);
 
       if (res && !res.data.roleAutoAssigned) {
         dispatch({ type: "SET_ROLES", payload: res.data.roles });
