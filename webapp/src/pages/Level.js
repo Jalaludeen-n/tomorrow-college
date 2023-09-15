@@ -242,6 +242,7 @@ const Level = () => {
           scoreVisibilityForPlayers: decryptedData.ScoreVisibilityForPlayers,
           resultsSubbmision: decryptedData.ResultsSubbmision,
           sheetID: decryptedData.GoogleSheetID,
+          numberOfRounds: decryptedData.NumberOfRounds,
           answers: answers,
         }),
       );
