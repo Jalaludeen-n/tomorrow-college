@@ -202,7 +202,7 @@ const Score = () => {
                 <Row className=' d-flex justify-content-center align-items-center'>
                   {!scoreLoader ? (
                     <div>
-                      {data.type === "number" ? (
+                      {type === "number" ? (
                         <Col
                           className='d-flex align-items-center justify-content-center'
                           style={{
