@@ -273,8 +273,6 @@ const Level = () => {
       "secret_key",
     ).toString();
     setLoader(true);
-    setAnswers([]);
-    setQustions([]);
     if (decryptedData.NumberOfRounds >= level) {
       navigate(`/level?data=${encodeURIComponent(updatedEncryptedData)}`);
     }
