@@ -118,7 +118,7 @@ const GameHomepage = () => {
       });
       dispatch({
         type: "SET_RESULTS_SUBBMISION",
-        payload: decryptedData.ResultsSubbmision,
+        payload: decryptedData.ResultsSubmission,
       });
 
       await fetchParticipantsAndSet(decryptedData);

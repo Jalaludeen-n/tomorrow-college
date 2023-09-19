@@ -50,7 +50,7 @@ const EnterGameForm = () => {
     if (res.success) {
       const {
         RolesAutoSelection,
-        ResultsSubbmision,
+        ResultsSubmission,
         GoogleSheetID,
         GameName,
         NumberOfRounds,
@@ -70,7 +70,7 @@ const EnterGameForm = () => {
           groupName,
           name,
           RolesAutoSelection,
-          ResultsSubbmision,
+          ResultsSubmission,
           GameName,
           NumberOfRounds,
           ScoreVisibilityForPlayers,

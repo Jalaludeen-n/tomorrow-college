@@ -79,7 +79,7 @@ export const initialStateForGameDetails = {
   role: "",
   roomNumber: "",
   gameID: "",
-  resultsSubbmision: "",
+  resultsSubmission: "",
   scoreVisibilityForPlayers: "",
   participants: [{}],
 };
@@ -111,7 +111,7 @@ export const newGameDetailsReducer = (state, action) => {
     case "SET_PARTICIPANTS":
       return { ...state, participants: action.payload };
     case "SET_RESULTS_SUBBMISION":
-      return { ...state, resultsSubbmision: action.payload };
+      return { ...state, resultsSubmission: action.payload };
     case "SET_SCORE_VISIBILITY_FOR_PLAYERS":
       return { ...state, scoreVisibilityForPlayers: action.payload };
 

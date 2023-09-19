@@ -56,7 +56,7 @@ const Create = () => {
         GameName: state.gameName,
         NumberOfRounds: state.rounds,
         GoogleSheet: state.excel,
-        ResultsSubbmision: state.result,
+        resultsSubmission: state.result,
         ScoreVisibility: state.scoreVisibility,
         RoleSelection: state.allowAutoSelection,
         IndividualInstructions: state.individualInstructions,

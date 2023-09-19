@@ -14,7 +14,7 @@ const Index = ({
   handleAddRoleClick,
   
 }) => {
-  const { resultsSubbmision, scoreVisibilityForPlayers } = optionsData;
+  const { resultsSubmission, scoreVisibilityForPlayers } = optionsData;
 
   return (
     <Container className={styles.container}>
@@ -106,7 +106,7 @@ const Index = ({
                   onChange={(e) => handleDropdownChange(e, "SET_RESULT")}
                   aria-describedby='inputGroupSelectAddon'>
                   <option value=''>Choose</option>
-                  {resultsSubbmision.map((option) => (
+                  {resultsSubmission.map((option) => (
                     <option key={option.value} value={option.value}>
                       {option.label}
                     </option>
