@@ -9,6 +9,26 @@
 .form-control {
   width: 100%;
 }
+
+.RoleHeadline {
+  color: #000;
+  font-family: Open Sans;
+  font-size: 16px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 24px; /* 150% */
+  margin-bottom: 12px;
+}
+.AddRoleHeadline {
+  color: #000;
+  font-family: Open Sans;
+  font-size: 16px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 24px; /* 150% */
+  margin-bottom: 6px;
+  margin-left: 10px;
+}
 .custom-dropdown {
   display: flex;
   flex-direction: column;
@@ -96,7 +116,6 @@
   font-size: 16px;
   font-style: normal;
   font-weight: 400;
-  margin: 12px 0px 30px 12px;
 }
 .checkBox {
   // background-color: #d90368;
