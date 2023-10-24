@@ -1,6 +1,7 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useContext } from "react";
 import CryptoJS from "crypto-js";
 import Arrow from "../icons/Arrow.svg";
+import { AdminAuthContext } from "../components/auth/AdminAuth";
 import {
   fetchGroupDetails,
   startGame,
@@ -15,6 +16,7 @@ import Loader from "./Loader";
 import { useNavigate } from "react-router-dom";
 
 const ViewRoom = () => {
+  const { isLoggedIn } = useContext(AdminAuthContext);
   const [decryptedData, setDecryptedData] = useState(null);
   const location = useLocation();
   const [levels, setLevels] = useState([]);
@@ -94,15 +96,19 @@ const ViewRoom = () => {
   };
 
   useEffect(() => {
-    setLoader(true);
-    const searchParams = new URLSearchParams(location.search);
-    const encryptedData = searchParams.get("data");
-    if (encryptedData) {
-      const bytes = CryptoJS.AES.decrypt(encryptedData, "secret_key");
-      const decryptedData = JSON.parse(bytes.toString(CryptoJS.enc.Utf8));
-      setDecryptedData(decryptedData);
-      setRoomNumber(decryptedData.roomNumber);
-      fetchData(decryptedData.roomNumber, decryptedData.GameID);
+    if (!isLoggedIn) {
+      navigate("/admin");
+    } else {
+      setLoader(true);
+      const searchParams = new URLSearchParams(location.search);
+      const encryptedData = searchParams.get("data");
+      if (encryptedData) {
+        const bytes = CryptoJS.AES.decrypt(encryptedData, "secret_key");
+        const decryptedData = JSON.parse(bytes.toString(CryptoJS.enc.Utf8));
+        setDecryptedData(decryptedData);
+        setRoomNumber(decryptedData.roomNumber);
+        fetchData(decryptedData.roomNumber, decryptedData.GameID);
+      }
     }
   }, []);
 

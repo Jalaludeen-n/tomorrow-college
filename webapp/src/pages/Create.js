@@ -1,4 +1,4 @@
-import React, { useState, useReducer, useEffect } from "react";
+import React, { useState, useReducer, useEffect, useContext } from "react";
 import styles from "./../styles/page/Create.module.scss";
 import { Container, Row, Form, Col, Button } from "react-bootstrap";
 import FormOne from "../components/admin/addGame";
@@ -7,8 +7,9 @@ import { initialState, newGameReducer } from "../components/helper/reducer";
 import { sendGameData } from "../components/services/airtable";
 import { useNavigate } from "react-router-dom";
 import Loader from "../pages/Loader";
-
+import { AdminAuthContext } from "../components/auth/AdminAuth";
 const Create = () => {
+  const { isLoggedIn } = useContext(AdminAuthContext);
   const navigate = useNavigate(); // Initialize the navigate function
   const [state, dispatch] = useReducer(newGameReducer, initialState);
   const [dublicateValue, setDublicateValue] = useState(false);
@@ -176,6 +177,11 @@ const Create = () => {
       setDublicateValue(true);
     }
   };
+  useEffect(() => {
+    if (!isLoggedIn) {
+      navigate("/admin");
+    }
+  }, []);
 
   return (
     <>
@@ -194,6 +200,7 @@ const Create = () => {
                     display: !state.individualInstructions ? "none" : "flex",
                   }}>
                   <Col md={3}>Game roles</Col>
+                  <Col md={3}>Role briefing</Col>
                   <Col>Instructions</Col>
                 </div>
               )}

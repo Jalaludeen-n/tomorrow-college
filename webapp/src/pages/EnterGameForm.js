@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
 import { Container, Row, Col, Button, Form } from "react-bootstrap";
 import styles from "./../styles/components/user/EnterGameForm.module.css";
 import { joinGame } from "../components/services/airtable";
@@ -7,8 +7,11 @@ import Loader from "./Loader";
 import { useLocation } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
 import AppHeader from "../components/AppHeader";
+import { AuthContext } from "../components/auth/UserAuth";
 
 const EnterGameForm = () => {
+  const { login } = useContext(AuthContext);
+
   const navigate = useNavigate();
   const location = useLocation();
   const [email, setEmail] = useState("");
@@ -82,7 +85,7 @@ const EnterGameForm = () => {
         }),
         "secret_key",
       ).toString();
-
+      login();
       navigate(`/home?data=${encodeURIComponent(encryptedData)}`);
     } else {
       alert(res.message);

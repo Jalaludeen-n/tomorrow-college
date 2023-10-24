@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useReducer } from "react";
+import React, { useState, useEffect, useReducer, useContext } from "react";
 import CryptoJS from "crypto-js";
 import { useNavigate } from "react-router-dom";
 import styles from "../styles/page/GameDetails.module.scss";
@@ -17,8 +17,10 @@ import {
   newGameDetailsReducer,
 } from "../components/helper/reducer";
 import Loader from "../pages/Loader";
+import { AuthContext } from "../components/auth/UserAuth";
 
 const GameHomepage = () => {
+  const { isLoggedIn } = useContext(AuthContext);
   const location = useLocation();
   const [started, setStarted] = useState(false);
 
@@ -204,32 +206,36 @@ const GameHomepage = () => {
   }, []);
 
   useEffect(() => {
-    const searchParams = new URLSearchParams(location.search);
-    const encryptedData = searchParams.get("data");
-
-    if (encryptedData === null) {
-      setStarted(true);
-      const localStorageData = localStorage.getItem("gameHomepageState");
-      const fetchData = async () => {
-        const parsedData = JSON.parse(localStorageData);
-        await fetchParticipantsAndSet(parsedData);
-        const decryptedData = localStorage.getItem("homePagedecryptedData");
-        setDecryptedData(JSON.parse(decryptedData));
-      };
-      fetchData();
+    if (!isLoggedIn) {
+      navigate("/admin");
     } else {
-      const localStorageData = localStorage.getItem("gameHomepageState");
-      const fetchData = async () => {
-        if (encryptedData && !localStorageData) {
-          await decryptAndFetchData(encryptedData);
-        } else if (localStorageData) {
+      const searchParams = new URLSearchParams(location.search);
+      const encryptedData = searchParams.get("data");
+
+      if (encryptedData === null) {
+        setStarted(true);
+        const localStorageData = localStorage.getItem("gameHomepageState");
+        const fetchData = async () => {
           const parsedData = JSON.parse(localStorageData);
           await fetchParticipantsAndSet(parsedData);
           const decryptedData = localStorage.getItem("homePagedecryptedData");
           setDecryptedData(JSON.parse(decryptedData));
-        }
-      };
-      fetchData();
+        };
+        fetchData();
+      } else {
+        const localStorageData = localStorage.getItem("gameHomepageState");
+        const fetchData = async () => {
+          if (encryptedData && !localStorageData) {
+            await decryptAndFetchData(encryptedData);
+          } else if (localStorageData) {
+            const parsedData = JSON.parse(localStorageData);
+            await fetchParticipantsAndSet(parsedData);
+            const decryptedData = localStorage.getItem("homePagedecryptedData");
+            setDecryptedData(JSON.parse(decryptedData));
+          }
+        };
+        fetchData();
+      }
     }
   }, [location]);
 

@@ -1,14 +1,16 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useContext } from "react";
 import "./../styles/page/main.scss";
 import Header from "./../components/admin/main/Header";
 import GameList from "../components/admin/main/GameList";
 import { fetchRunningAndPastGames } from "../components/services/airtable";
 import { Link } from "react-router-dom";
-
+import { AdminAuthContext } from "../components/auth/AdminAuth";
+import { useNavigate } from "react-router-dom";
 const Main = () => {
   const [runningGames, setrunningGames] = useState([]);
   const [completedGames, setcompletedGames] = useState([]);
-
+  const { isLoggedIn } = useContext(AdminAuthContext);
+  const navigate = useNavigate();
   const fetchData = async () => {
     try {
       const res = await fetchRunningAndPastGames();
@@ -28,8 +30,13 @@ const Main = () => {
   };
 
   useEffect(() => {
-    fetchData();
+    if (!isLoggedIn) {
+      navigate("/admin");
+    } else {
+      fetchData();
+    }
   }, []);
+
   return (
     <div className='app-container'>
       <Header />
@@ -43,9 +50,6 @@ const Main = () => {
           <GameList games={completedGames} />
         </div>
       </div>
-      <Link to='/joinGame' className='test-game'>
-        Test Game
-      </Link>
     </div>
   );
 };

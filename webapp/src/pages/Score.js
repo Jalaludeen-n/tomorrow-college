@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useContext } from "react";
 import CryptoJS from "crypto-js";
 import { fetchScore, fetchMember } from "../components/services/airtable";
 import { Container, Row, Form, Col, Button } from "react-bootstrap";
@@ -7,8 +7,12 @@ import style from "../styles/page/Score.module.scss";
 import { useLocation } from "react-router-dom";
 import Loader from "./Loader";
 import Arrow from "../icons/Arrow.svg";
+import { AdminAuthContext } from "../components/auth/AdminAuth";
+import { useNavigate } from "react-router-dom";
 
 const Score = () => {
+  const navigate = useNavigate();
+  const { isLoggedIn } = useContext(AdminAuthContext);
   const [decryptedData, setDecryptedData] = useState(null);
   const location = useLocation();
   const [selectedMemberIndex, setSelectedMemberIndex] = useState(0);
@@ -90,20 +94,24 @@ const Score = () => {
   };
 
   useEffect(() => {
-    setLoader(true);
-    const searchParams = new URLSearchParams(location.search);
-    const encryptedData = searchParams.get("data");
-    if (encryptedData) {
-      const bytes = CryptoJS.AES.decrypt(encryptedData, "secret_key");
-      const decryptedData = JSON.parse(bytes.toString(CryptoJS.enc.Utf8));
-      setDecryptedData(decryptedData);
-      const total = decryptedData.total;
-      setTotal(total);
-      fetchData(
-        decryptedData.roomNumber,
-        decryptedData.gameID,
-        decryptedData.groupName,
-      );
+    if (!isLoggedIn) {
+      navigate("/admin");
+    } else {
+      setLoader(true);
+      const searchParams = new URLSearchParams(location.search);
+      const encryptedData = searchParams.get("data");
+      if (encryptedData) {
+        const bytes = CryptoJS.AES.decrypt(encryptedData, "secret_key");
+        const decryptedData = JSON.parse(bytes.toString(CryptoJS.enc.Utf8));
+        setDecryptedData(decryptedData);
+        const total = decryptedData.total;
+        setTotal(total);
+        fetchData(
+          decryptedData.roomNumber,
+          decryptedData.gameID,
+          decryptedData.groupName,
+        );
+      }
     }
   }, []);
   return (
