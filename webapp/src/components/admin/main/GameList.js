@@ -4,14 +4,7 @@ import CryptoJS from "crypto-js";
 import { useNavigate } from "react-router-dom";
 import { Col, Row } from "react-bootstrap";
 
-const GameList = ({
-  games,
-  isPage,
-  handleStartGameClick,
-  showPopup,
-  randomNumber,
-  handleClosePopup,
-}) => {
+const GameList = ({ games, isPage, handleStartGameClick }) => {
   const navigate = useNavigate(); // Initialize the navigate function
 
   const startGame = (id) => {
@@ -42,7 +35,7 @@ const GameList = ({
             games.map((game, index) => (
               <Row
                 key={index}
-                className='game-list__scrollable__items__item m-0'
+                className='game-list__scrollable__items__item '
                 onClick={() => !isPage && isView(game.RoomNumber, game.GameID)}>
                 <Col
                   className={
@@ -52,42 +45,49 @@ const GameList = ({
                   }>
                   {isPage ? game.GameName : game.RoomNumber}
                 </Col>
-                <Col className='game-list__scrollable__items__item__attribute m-0 p-0'>
+                <Col
+                  className={
+                    isPage
+                      ? "game-list__scrollable__items__item__attribute"
+                      : "game-list__scrollable__items__item__attribute__clickable"
+                  }>
                   {game.Date}
                 </Col>
                 {isPage && (
-                  <Col className='game-list__scrollable__items__item__attribute ml-5'>
+                  <Col
+                    className={
+                      isPage
+                        ? "game-list__scrollable__items__item__attribute"
+                        : "game-list__scrollable__items__item__attribute__clickable"
+                    }>
                     {game.NumberOfRounds}
                   </Col>
                 )}
-                <Col className='game-list__scrollable__items__item__attribute'>
-                  {isPage ? (
-                    <>
-                      {!showPopup ? (
-                        <div
-                          className='listStartButton'
-                          onClick={() => startGame(game.GameID)}>
-                          Use this template
-                        </div>
-                      ) : (
-                        <div className='popup'>
-                          <p>
-                            The game has started successfully. Please share this
-                            room number to join the game.
-                          </p>
-                          <p>Room number: {randomNumber}</p>
-                          <button
-                            className='copyButton'
-                            onClick={handleClosePopup}>
-                            GO BACK TO HOMEPAGE
-                          </button>
-                        </div>
-                      )}
-                    </>
-                  ) : (
-                    game.Players
-                  )}
-                </Col>
+                {isPage ? (
+                  <>
+                    <Col
+                      className={
+                        isPage
+                          ? "game-list__scrollable__items__item__attribute"
+                          : "game-list__scrollable__items__item__attribute__clickable"
+                      }>
+                      <div
+                        className='listStartButton'
+                        onClick={() => startGame(game.GameID)}>
+                        Use this template
+                      </div>
+                    </Col>
+                  </>
+                ) : (
+                  <Col
+                    className={
+                      isPage
+                        ? "game-list__scrollable__items__item__attribute"
+                        : "game-list__scrollable__items__item__attribute__clickable"
+                    }>
+                    {game.Players}
+                  </Col>
+                )}
               </Row>
             ))}
         </div>

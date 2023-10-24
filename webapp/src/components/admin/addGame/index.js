@@ -12,7 +12,6 @@ const Index = ({
   roleInputs,
   handleInputChange,
   handleAddRoleClick,
-  
 }) => {
   const { resultsSubmission, scoreVisibilityForPlayers } = optionsData;
 
@@ -141,12 +140,27 @@ const Index = ({
         </Col>
       </Row>
       <Row>
-        <Col className={styles.sectionTitle}>Game roles</Col>
+        <Col md={6} className={styles.sectionTitle}>
+          Roles selection
+        </Col>
+        <Col className={styles.sectionTitle}>Individual instructions</Col>
       </Row>
       <Row className='d-flex align-items-center'>
-        <Col md={3}>
-          <Form.Group controlId='checkbox1' className={styles.checkboxGroup}>
-            <Form.Check
+        <Col md={6}>
+          <div className={styles.RoleHeadline}>
+            Choose the roles should be auto selected or choose by players{" "}
+          </div>
+          <Form.Group
+            controlId='group1'
+            className={styles.checkboxGroup}
+            onChange={() =>
+              handleCheckboxChange(
+                state.allowAutoSelection,
+                "SET_ALLOW_AUTO_SELECTION",
+              )
+            }
+            label='Allow for auto selection role'>
+            {/* <Form.Check
               type='checkbox'
               label='Allow for auto selection role'
               className={styles.checkBox}
@@ -157,10 +171,27 @@ const Index = ({
                   "SET_ALLOW_AUTO_SELECTION",
                 )
               }
+            /> */}
+            <Form.Check
+              inline
+              label='Allow to pick the roles'
+              name='group1'
+              type='radio'
+              className={styles.group}
+            />
+            <Form.Check
+              inline
+              label='Auto select roles'
+              name='group1'
+              type='radio'
+              className={styles.group}
             />
           </Form.Group>
         </Col>
-        <Col className='d-flex align-items-center'>
+        <Col className=''>
+          <div className={styles.RoleHeadline}>
+            Select if roles should have individual instrauctions per each round
+          </div>
           <Form.Group controlId='checkbox2' className={styles.checkboxGroup}>
             <Form.Check
               type='checkbox'
@@ -175,6 +206,9 @@ const Index = ({
             />
           </Form.Group>
         </Col>
+      </Row>
+      <Row>
+        <Col className={styles.sectionTitle}>Game roles</Col>
       </Row>
       <AddRole
         roleInputs={roleInputs}

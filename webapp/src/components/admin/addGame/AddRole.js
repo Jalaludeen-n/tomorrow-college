@@ -3,6 +3,7 @@ import React from "react";
 import { Row, Col, Form, Button, Container } from "react-bootstrap";
 import { faPlus } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import styles from "../../../styles/page/Create.module.scss";
 
 function AddRole({ roleInputs, handleAddRoleClick, handleInputChange, roles }) {
   return (
@@ -10,9 +11,11 @@ function AddRole({ roleInputs, handleAddRoleClick, handleInputChange, roles }) {
       {roleInputs.map((input, index) => (
         <Row key={index} className='pb-2'>
           <Col md={3}>
+            <div className={styles.AddRoleHeadline}>Role name</div>
             <Form.Control
               key={index}
               type='text'
+              label='Role name'
               placeholder='Role name here'
               value={(roles[index] && roles[index].role) || ""}
               onChange={(e) =>

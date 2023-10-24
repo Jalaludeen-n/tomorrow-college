@@ -15,6 +15,7 @@ const Create = () => {
   const [dublicateValue, setDublicateValue] = useState(false);
   const [isNext, setIsNext] = useState(false); // Add state for submit button text
   const [pdf, setPDFIns] = useState([null]);
+  const [rolePdf, setRolePDFIns] = useState([null]);
   const [loader, setLoader] = useState(false);
   const [roleInputs, setRoleInputs] = useState([
     { role: "" }, // Initial state with an empty role
@@ -34,6 +35,19 @@ const Create = () => {
     dispatch({
       type: "SET_DUMMY",
       payload: roleIndex * state.roleValues.length + level,
+    });
+  };
+  const handleRolePDFInstruction = (level, role, file) => {
+    let array = rolePdf;
+    const uniqueFilename = generateUniqueFilename(role, level, ".pdf");
+    const modifiedFile = new File([file], uniqueFilename, {
+      type: "application/pdf",
+    });
+    array[level] = modifiedFile;
+    setRolePDFIns(array);
+    dispatch({
+      type: "SET_DUMMY",
+      payload: level,
     });
   };
 
@@ -159,7 +173,7 @@ const Create = () => {
     if (isNext) {
       setIsNext(!isNext);
     } else {
-      navigate("/");
+      navigate("/dashboard");
     }
   };
 
@@ -217,11 +231,13 @@ const Create = () => {
               />
             ) : (
               <PDFInstructionsForm
+                handleRolePDFInstruction={handleRolePDFInstruction}
                 handlePDFInstruction={handlePDFInstruction}
                 handleInputChange={handleInputChange}
                 storedState={state}
                 setRole={setRole}
                 pdf={pdf}
+                rolePdf={rolePdf}
                 handleLevelPDF={handleLevelPDF}
               />
             )}

@@ -4,12 +4,14 @@ import UploadIcon from "../../../icons/Vector.svg";
 import styles from "../../../styles/page/Create.module.scss";
 
 const PDFInstructionsForm = ({
+  handleRolePDFInstruction,
   handlePDFInstruction,
   handleInputChange,
   storedState,
   role,
   setRole,
   pdf,
+  rolePdf,
   handleLevelPDF,
 }) => {
   const handleChange = (e) => {
@@ -37,6 +39,42 @@ const PDFInstructionsForm = ({
                 <Form.Label>Role Name</Form.Label>
                 <Form.Control type='text' value={value.role} readOnly />
               </Col>
+              <Col md={2} key={`col-${index}`}>
+                <Form.Label>Role briefing </Form.Label>
+                <div className={`input-group ${styles.inputGroup}`}>
+                  <input
+                    type='text'
+                    className='form-control'
+                    placeholder='Select a PDF file'
+                    value={rolePdf[index]?.name ?? ""}
+                    aria-describedby='inputGroupFileAddon'
+                    readOnly
+                    key={`input-${index}`}
+                  />
+                  <label
+                    className={`btn btn-outline-secondary ${styles.uploadBtn}`}>
+                    <img
+                      src={UploadIcon}
+                      alt='Upload Icon'
+                      width='16'
+                      height='16'
+                    />
+                    <input
+                      type='file'
+                      accept='.pdf'
+                      onChange={(e) =>
+                        handleRolePDFInstruction(
+                          index,
+                          value.role,
+                          e.target.files[0],
+                        )
+                      }
+                      style={{ display: "none" }}
+                    />
+                  </label>
+                </div>
+              </Col>
+
               {Array.from(
                 { length: parseInt(storedState.rounds) },
                 (_, roundIndex) => (
@@ -48,6 +86,51 @@ const PDFInstructionsForm = ({
                           index * storedState.roleValues.length + roundIndex
                         }`}></Col>
                     )}
+                    {/* {roundIndex == 0 && (
+                      <Col md={2} key={`col-${roundIndex}`}>
+                        <Form.Label>Role briefing </Form.Label>
+                        <div className={`input-group ${styles.inputGroup}`}>
+                          <input
+                            type='text'
+                            className='form-control'
+                            placeholder='Select a PDF file'
+                            value={
+                              rolePdf[
+                                index * storedState.roleValues.length +
+                                  roundIndex
+                              ]?.name ?? ""
+                            }
+                            aria-describedby='inputGroupFileAddon'
+                            readOnly
+                            key={`input-${
+                              index * storedState.roleValues.length + roundIndex
+                            }`}
+                          />
+                          <label
+                            className={`btn btn-outline-secondary ${styles.uploadBtn}`}>
+                            <img
+                              src={UploadIcon}
+                              alt='Upload Icon'
+                              width='16'
+                              height='16'
+                            />
+                            <input
+                              type='file'
+                              accept='.pdf'
+                              onChange={(e) =>
+                                handleRolePDFInstruction(
+                                  roundIndex + 1,
+                                  value.role,
+                                  e.target.files[0],
+                                  index,
+                                )
+                              }
+                              style={{ display: "none" }}
+                            />
+                          </label>
+                        </div>
+                      </Col>
+                    )} */}
                     <Col md={2} key={`col-${roundIndex}`}>
                       <Form.Label>Round {roundIndex + 1}</Form.Label>
                       <div className={`input-group ${styles.inputGroup}`}>

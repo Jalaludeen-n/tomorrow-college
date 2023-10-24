@@ -45,7 +45,7 @@ const List = () => {
   };
 
   const close = () => {
-    navigate("/");
+    navigate("/dashboard");
   };
 
   const formatDataForAirtable = (Id, Number) => {
