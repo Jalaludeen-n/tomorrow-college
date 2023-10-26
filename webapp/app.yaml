@@ -1,0 +1,12 @@
+runtime: nodejs20
+env: standard
+# service: frontend
+instance_class: F4
+
+handlers:
+  - url: /.*
+    script: auto
+
+env_variables:
+  REACT_APP_API_URL: "https://tommorrow.onrender.com"
+  REACT_APP_ENV: "production"
