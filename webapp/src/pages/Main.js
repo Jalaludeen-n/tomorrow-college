@@ -14,16 +14,18 @@ const Main = () => {
   const fetchData = async () => {
     try {
       const res = await fetchRunningAndPastGames();
-      const allGames = res.data;
-      const runningGames = allGames.filter(
-        (game) => game.Status === "Running" || game.Status === "Started",
-      );
-      setrunningGames(runningGames);
+      if (res) {
+        const allGames = res.data;
+        const runningGames = allGames.filter(
+          (game) => game.Status === "Running" || game.Status === "Started",
+        );
+        setrunningGames(runningGames);
 
-      const completedGames = allGames.filter(
-        (game) => game.Status === "Completed",
-      );
-      setcompletedGames(completedGames);
+        const completedGames = allGames.filter(
+          (game) => game.Status === "Completed",
+        );
+        setcompletedGames(completedGames);
+      }
     } catch (error) {
       console.error("Error fetching data:", error);
     }
