@@ -14,7 +14,6 @@
     "crypto-js": "^4.1.1",
     "history": "^5.3.0",
     "react": "^18.2.0",
-    "react-axios": "^2.0.6",
     "react-bootstrap": "^2.8.0",
     "react-dom": "^18.2.0",
     "react-pdf": "^7.3.3",
@@ -26,9 +25,10 @@
     "web-vitals": "^2.1.4"
   },
   "scripts": {
-    "start": "rimraf node_modules/.cache && react-scripts start",
+    "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
+    "deploy": "gcloud app deploy",
     "eject": "react-scripts eject",
     "start:prod": "cp .env.production .env && cat .env && npm start",
     "build:prod": "cp .env.production .env && npm run build"
