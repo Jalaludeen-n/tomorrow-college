@@ -119,7 +119,7 @@ const ViewRoom = () => {
           <Row className='mb-4'>
             <Col className={styles.viewRoom__container__GamePageTitle}>
               <div className='title ml-3'>
-                <Link to='/'>
+                <Link to='/dashboard'>
                   <img src={Arrow} alt='arrow ' className='arrow'></img>
                 </Link>
                 Game page
@@ -236,7 +236,7 @@ const ViewRoom = () => {
             className='d-flex justify-content-center align-items-center'
             style={{ height: "100vh" }}>
             <Col className='text-center'>
-              No Active games <Link to='/'> Go Home</Link>
+              No Active games <Link to='/dashboard'> Go Home</Link>
             </Col>
           </Row>
         </>

@@ -72,7 +72,7 @@ const List = () => {
       {!loader ? (
         <div className='list-container'>
           <div className='title ml-3'>
-            <Link to='/'>
+            <Link to='/dashboard'>
               <img src={Arrow} alt='arrow ' className='arrow'></img>
             </Link>
             All games
