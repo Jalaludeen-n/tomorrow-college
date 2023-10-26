@@ -153,31 +153,17 @@ const Index = ({
           <Form.Group
             controlId='group1'
             className={styles.checkboxGroup}
-            onChange={() =>
-              handleCheckboxChange(
-                state.allowAutoSelection,
-                "SET_ALLOW_AUTO_SELECTION",
-              )
-            }
             label='Allow for auto selection role'>
-            {/* <Form.Check
-              type='checkbox'
-              label='Allow for auto selection role'
-              className={styles.checkBox}
-              checked={state.allowAutoSelection}
-              onChange={() =>
-                handleCheckboxChange(
-                  state.allowAutoSelection,
-                  "SET_ALLOW_AUTO_SELECTION",
-                )
-              }
-            /> */}
             <Form.Check
               inline
               label='Allow to pick the roles'
               name='group1'
               type='radio'
               className={styles.group}
+              checked={state.allowAutoSelection === true}
+              onChange={() =>
+                handleCheckboxChange(false, "SET_ALLOW_AUTO_SELECTION")
+              }
             />
             <Form.Check
               inline
@@ -185,6 +171,10 @@ const Index = ({
               name='group1'
               type='radio'
               className={styles.group}
+              checked={state.allowAutoSelection === false}
+              onChange={() =>
+                handleCheckboxChange(true, "SET_ALLOW_AUTO_SELECTION")
+              }
             />
           </Form.Group>
         </Col>
