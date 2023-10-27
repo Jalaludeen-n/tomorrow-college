@@ -5,7 +5,7 @@ import { useNavigate } from "react-router-dom";
 import { Col, Row } from "react-bootstrap";
 
 const GameList = ({ games, isPage, handleStartGameClick }) => {
-  const navigate = useNavigate(); // Initialize the navigate function
+  const navigate = useNavigate(); 
 
   const startGame = (id) => {
     handleStartGameClick(id);

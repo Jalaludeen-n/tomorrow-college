@@ -206,36 +206,32 @@ const GameHomepage = () => {
   }, []);
 
   useEffect(() => {
-    if (!isLoggedIn) {
-      navigate("/admin");
-    } else {
-      const searchParams = new URLSearchParams(location.search);
-      const encryptedData = searchParams.get("data");
+    const searchParams = new URLSearchParams(location.search);
+    const encryptedData = searchParams.get("data");
 
-      if (encryptedData === null) {
-        setStarted(true);
-        const localStorageData = localStorage.getItem("gameHomepageState");
-        const fetchData = async () => {
+    if (encryptedData === null) {
+      setStarted(true);
+      const localStorageData = localStorage.getItem("gameHomepageState");
+      const fetchData = async () => {
+        const parsedData = JSON.parse(localStorageData);
+        await fetchParticipantsAndSet(parsedData);
+        const decryptedData = localStorage.getItem("homePagedecryptedData");
+        setDecryptedData(JSON.parse(decryptedData));
+      };
+      fetchData();
+    } else {
+      const localStorageData = localStorage.getItem("gameHomepageState");
+      const fetchData = async () => {
+        if (encryptedData && !localStorageData) {
+          await decryptAndFetchData(encryptedData);
+        } else if (localStorageData) {
           const parsedData = JSON.parse(localStorageData);
           await fetchParticipantsAndSet(parsedData);
           const decryptedData = localStorage.getItem("homePagedecryptedData");
           setDecryptedData(JSON.parse(decryptedData));
-        };
-        fetchData();
-      } else {
-        const localStorageData = localStorage.getItem("gameHomepageState");
-        const fetchData = async () => {
-          if (encryptedData && !localStorageData) {
-            await decryptAndFetchData(encryptedData);
-          } else if (localStorageData) {
-            const parsedData = JSON.parse(localStorageData);
-            await fetchParticipantsAndSet(parsedData);
-            const decryptedData = localStorage.getItem("homePagedecryptedData");
-            setDecryptedData(JSON.parse(decryptedData));
-          }
-        };
-        fetchData();
-      }
+        }
+      };
+      fetchData();
     }
   }, [location]);
 
