@@ -25,6 +25,7 @@ const ViewRoom = () => {
   const [roomNumber, setRoomNumber] = useState("");
   const [loader, setLoader] = useState(false);
   const [activeGame, setActiveGame] = useState(true);
+  const [buttonText, setButtonText] = useState([]);
 
   const [total, setTotal] = useState(0);
   const navigate = useNavigate();
@@ -46,9 +47,9 @@ const ViewRoom = () => {
       ]);
 
       setLoader(false);
-
       if (res.success && res.Data) {
         setTotal(res.Data.totalLevels);
+        setButtonText(Array(res.Data.totalLevels).fill("start"));
         const levelData = levelRes.levelStatus;
         setData(levelData);
         const levels = res.Data.Levels;
@@ -81,6 +82,11 @@ const ViewRoom = () => {
   };
 
   const start = async (level) => {
+    if (buttonText[level - 1] !== "Started") {
+      const newText = [...buttonText];
+      newText[level - 1] = "Started";
+      setButtonText(newText);
+    }
     const formData = new FormData();
     const roomNumber = decryptedData.roomNumber;
     const gameID = decryptedData.GameID;
@@ -162,25 +168,18 @@ const ViewRoom = () => {
                       <div className={styles.gameListButton}>
                         <Col className={styles.marginLeft}>Round Status</Col>
                         {Array.from({ length: total }, (_, index) => {
-                          const buttonData = data
-                            ? data.find((item) => item.Level === index + 1)
-                            : null;
-
-                          const buttonText =
-                            buttonData && buttonData.Status === "Started"
-                              ? buttonData.Status
-                              : "start";
-
+                          const foundItem = data.find(
+                            (item) => item.Level === index + 1,
+                          );
                           return (
-                            <Col>
+                            <Col key={index}>
                               <button
-                                key={index}
-                                disabled={buttonText === "Started"}
+                                disabled={buttonText[index] === "Started"}
                                 className={styles.startButton}
-                                onClick={() => {
-                                  start(index + 1);
-                                }}>
-                                {buttonText}
+                                onClick={() => start(index + 1)}>
+                                {foundItem && foundItem.Status
+                                  ? foundItem.Status
+                                  : buttonText[index]}
                               </button>
                             </Col>
                           );
