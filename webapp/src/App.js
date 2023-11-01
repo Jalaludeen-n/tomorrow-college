@@ -10,22 +10,24 @@ import Level from "./pages/Level";
 import ViewRoom from "./pages/ViewRoom.js";
 import WithHeader from "./pages/WithHeader.js";
 import Leaderboard from "./pages/Leaderboard";
-import GameHomepage from "./pages/GameHomepage";
+import Homepage from "./pages/Homepage";
 import Score from "./pages/Score";
 import Login from "./pages/Login";
 import { UserAuth } from "./components/auth/UserAuth";
 import { AdminAuthProvider } from "./components/auth/AdminAuth";
+import Layout from "./components/Layout";
+const HeaderedHomepage = WithHeader(Homepage);
 
+// const WithLayout = Layout(Homepage);
 const HeaderedLeaderboard = WithHeader(Leaderboard);
 const HeaderedLevel = WithHeader(Level);
-const HeaderedGameHomepage = WithHeader(GameHomepage);
 
 function App() {
   return (
     <BrowserRouter>
       <UserAuth>
         <Routes>
-          <Route path='/home' element={<HeaderedGameHomepage />} />
+          <Route path='/home' element={<HeaderedHomepage />} />
           <Route path='/level' element={<HeaderedLevel />} />
           <Route path='/' element={<EnterGameForm />} />
         </Routes>

@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useReducer, useContext } from "react";
+import Layout from "../components/Layout";
 import CryptoJS from "crypto-js";
 import { useNavigate } from "react-router-dom";
 import styles from "../styles/page/GameDetails.module.scss";
@@ -16,10 +17,12 @@ import {
   initialStateForGameDetails,
   newGameDetailsReducer,
 } from "../components/helper/reducer";
-import Loader from "../pages/Loader";
+import Loader from "./Loader";
 import { AuthContext } from "../components/auth/UserAuth";
+import { getDataFromURL } from "../components/helper/utils";
+import NavbarLeft from "../components/NavbarLeft";
 
-const GameHomepage = () => {
+const Homepage = () => {
   const { isLoggedIn } = useContext(AuthContext);
   const location = useLocation();
   const [started, setStarted] = useState(false);
@@ -28,13 +31,8 @@ const GameHomepage = () => {
   const api_url = process.env.REACT_APP_API_URL;
   const [state, dispatch] = useReducer(
     newGameDetailsReducer,
-    getInitialStateFromLocalStorage(),
+    initialStateForGameDetails,
   );
-
-  function getInitialStateFromLocalStorage() {
-    const storedState = localStorage.getItem("gameHomepageState");
-    return storedState ? JSON.parse(storedState) : initialStateForGameDetails;
-  }
 
   const [loader, setLoader] = useState(false);
 
@@ -65,7 +63,6 @@ const GameHomepage = () => {
           payload: res.data.filteredparticipants,
         });
       }
-      localStorage.setItem("gameHomepageState", JSON.stringify(state));
     } catch (error) {
       handleError(error);
     }
@@ -80,7 +77,6 @@ const GameHomepage = () => {
       level: 1,
     });
     const encryptedData = CryptoJS.AES.encrypt(data, "secret_key").toString();
-    localStorage.setItem("gameHomepageState", JSON.stringify(state));
     navigate(`/level?data=${encodeURIComponent(encryptedData)}`);
   };
 
@@ -206,80 +202,62 @@ const GameHomepage = () => {
   }, []);
 
   useEffect(() => {
-    const searchParams = new URLSearchParams(location.search);
-    const encryptedData = searchParams.get("data");
+    const encryptedData = getDataFromURL(location);
 
-    if (encryptedData === null) {
-      setStarted(true);
-      const localStorageData = localStorage.getItem("gameHomepageState");
-      const fetchData = async () => {
-        const parsedData = JSON.parse(localStorageData);
-        await fetchParticipantsAndSet(parsedData);
-        const decryptedData = localStorage.getItem("homePagedecryptedData");
-        setDecryptedData(JSON.parse(decryptedData));
-      };
-      fetchData();
-    } else {
-      const localStorageData = localStorage.getItem("gameHomepageState");
-      const fetchData = async () => {
-        if (encryptedData && !localStorageData) {
-          await decryptAndFetchData(encryptedData);
-        } else if (localStorageData) {
-          const parsedData = JSON.parse(localStorageData);
-          await fetchParticipantsAndSet(parsedData);
-          const decryptedData = localStorage.getItem("homePagedecryptedData");
-          setDecryptedData(JSON.parse(decryptedData));
-        }
-      };
-      fetchData();
-    }
+    setStarted(true);
+    const fetchData = async () => {
+      console.log(encryptedData);
+      await fetchParticipantsAndSet(encryptedData);
+    };
+    fetchData();
   }, [location]);
 
   return (
-    <div className={styles.homeContainer}>
-      <div className={styles.bottomSectionContainer}>
-        <Header
-          gameName={state.gameName}
-          groupName={state.groupName}
-          numberOfRounds={state.rounds}
-          className={`${styles.headerContainer}`}
-        />
+    <Layout LeftNavbar={NavbarLeft}>
+      <div className={styles.homeContainer}>
+        <div className={styles.bottomSectionContainer}>
+          {/* <Header
+            gameName={state.gameName}
+            groupName={state.groupName}
+            numberOfRounds={state.rounds}
+            className={`${styles.headerContainer}`}
+          /> */}
 
-        <div
-          className={`bottom-section d-flex flex-column ${styles.bottomSection}`}>
-          <Row className={`${styles.paddingTop} mr-0 p-0`}>
-            <Col xs={5} className=' m-0'>
-              {!loader ? (
-                <Players state={state} updateRole={updateRole} />
-              ) : (
-                <Loader />
-              )}
-            </Col>
-            <Col xs={7} className='p-0'>
-              {!loader ? (
-                <GameDescription
-                  pdfData={state.gameInstructions}
-                  header={"Gameplay description"}
-                  height={"40vh"}
-                />
-              ) : (
-                <Loader />
-              )}
+          <div>
+            <Row className={` m-0 p-0`}>
+              {/* <Col xs={5} className=' m-0'>
+                {!loader ? (
+                  <Players state={state} updateRole={updateRole} />
+                ) : (
+                  <Loader />
+                )}
+              </Col> */}
+              <Col xs={7} className='p-0'>
+                {!loader ? (
+                  <GameDescription
+                    pdfData={state.gameInstructions}
+                    header={"Gameplay description"}
+                    height={"40vh"}
+                  />
+                ) : (
+                  <Loader />
+                )}
+              </Col>
+            </Row>
+          </div>
+        </div>
+        {!started && (
+          <Row className={`mt-1 text-end ${styles.mt5} mr-0`}>
+            <Col className=''>
+              <button className={styles.startButton} onClick={handleStartClick}>
+                Start The Game
+              </button>
             </Col>
           </Row>
-        </div>
+        )}
       </div>
-      {!started && (
-        <Row className={`mt-1 text-end ${styles.mt5} mr-0`}>
-          <Col className=''>
-            <button className={styles.startButton} onClick={handleStartClick}>
-              Start The Game
-            </button>
-          </Col>
-        </Row>
-      )}
-    </div>
+    </Layout>
   );
 };
 
-export default GameHomepage;
+export default Homepage;

@@ -1,4 +1,3 @@
-// utils.js
 export const generateSampleGameData = (count) => {
   const sampleGameData = [];
 
@@ -22,3 +21,8 @@ export const generateRoomID = () => {
   }
   return id;
 };
+
+export function getDataFromURL(location) {
+  const searchParams = new URLSearchParams(location.search);
+  return searchParams.get("data");
+}

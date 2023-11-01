@@ -1,0 +1,45 @@
+.container {
+  background-color: #d9e4e9;
+}
+.custom-width-5 {
+  width: 5% !important;
+}
+
+// .closed {
+//   height: 100vh !important;
+// }
+.closed {
+  flex: 1; /* Make the .closed element take up remaining space */
+  overflow: auto; /* Add scrollbars if needed */
+  height: calc(100vh - 50px);
+}
+.vertical_text {
+  writing-mode: vertical-rl;
+  transform: rotate(180deg);
+  transform-origin: center;
+}
+.navText {
+  color: #2a2d31;
+  text-align: center;
+  font-family: Open Sans;
+  font-size: 28px;
+  font-style: normal;
+  font-weight: 700;
+  line-height: normal;
+}
+
+.flex_wrap {
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.flex_centered {
+  justify-content: center;
+  align-items: center;
+}
+
+.flex_bottom_center {
+  justify-content: flex-end;
+  align-items: center;
+}
