@@ -1,3 +1,5 @@
+import CryptoJS from "crypto-js";
+
 export const generateSampleGameData = (count) => {
   const sampleGameData = [];
 
@@ -25,4 +27,45 @@ export const generateRoomID = () => {
 export function getDataFromURL(location) {
   const searchParams = new URLSearchParams(location.search);
   return searchParams.get("data");
+}
+export const decryptData = (encryptedData, secretKey) => {
+  try {
+    const bytes = CryptoJS.AES.decrypt(encryptedData, secretKey);
+    const decryptedData = JSON.parse(bytes.toString(CryptoJS.enc.Utf8));
+    return decryptedData;
+  } catch (error) {
+    console.error("Decryption error:", error);
+    return null;
+  }
+};
+
+export const encryptData = (data, encryptionKey) => {
+  try {
+    const encryptedData = CryptoJS.AES.encrypt(
+      JSON.stringify(data),
+      encryptionKey,
+    ).toString();
+    return encryptedData;
+  } catch (error) {
+    console.error("Encryption failed:", error);
+    throw new Error("Encryption failed");
+  }
+};
+export function setLocalStorageItem(key, data) {
+  try {
+    localStorage.setItem(key, data);
+  } catch (e) {
+    console.error("Error storing data in localStorage:", e);
+  }
+}
+export function getLocalStorageItem(key) {
+  try {
+    const data = localStorage.getItem(key);
+    if (data !== null) {
+      return data;
+    }
+  } catch (e) {
+    console.error("Error retrieving data from localStorage:", e);
+  }
+  return false;
 }
