@@ -10,7 +10,7 @@ import Level from "./pages/Level";
 import ViewRoom from "./pages/ViewRoom.js";
 import WithHeader from "./pages/WithHeader.js";
 import Leaderboard from "./pages/Leaderboard";
-import Homepage from "./pages/Homepage";
+import Homepage from "./pages/HomePage/index";
 import Score from "./pages/Score";
 import Login from "./pages/Login";
 import { UserAuth } from "./components/auth/UserAuth";

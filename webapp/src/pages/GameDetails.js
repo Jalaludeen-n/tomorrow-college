@@ -3,7 +3,7 @@ import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import styles from "../styles/page/GameDetails.module.scss";
 import { Switch } from "react-router-dom";
 import AppHeader from "../components/AppHeader";
-import Homepage from "./Homepage";
+import Homepage from "./HomePage/index";
 import Leaderboard from "./Leaderboard";
 import Level from "./Level";
 
