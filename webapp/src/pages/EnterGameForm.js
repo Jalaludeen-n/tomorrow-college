@@ -8,6 +8,7 @@ import { useLocation } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
 import AppHeader from "../components/AppHeader";
 import { AuthContext } from "../components/auth/UserAuth";
+import { encryptData, setLocalStorageItem } from "../components/helper/utils";
 
 const EnterGameForm = () => {
   const { login } = useContext(AuthContext);
@@ -51,40 +52,15 @@ const EnterGameForm = () => {
     const data = formatDataForAirtable();
     const res = await joinGame(data);
     if (res.success) {
-      const {
-        RolesAutoSelection,
-        ResultsSubmission,
-        GoogleSheetID,
-        GameName,
-        NumberOfRounds,
-        ScoreVisibilityForPlayers,
-        Date,
-        GameID,
-        roleAutoAssigned,
-        gameInstruction,
-        role,
-      } = res.data;
-
-      localStorage.setItem("gameInstruction", gameInstruction);
-      const encryptedData = CryptoJS.AES.encrypt(
-        JSON.stringify({
-          email,
-          roomNumber,
-          groupName,
-          name,
-          RolesAutoSelection,
-          ResultsSubmission,
-          GameName,
-          NumberOfRounds,
-          ScoreVisibilityForPlayers,
-          Date,
-          GameID,
-          GoogleSheetID,
-          roleAutoAssigned,
-          role,
-        }),
-        "secret_key",
-      ).toString();
+      const { gameData, gameInstruction } = formatGameData(
+        res,
+        email,
+        roomNumber,
+        groupName,
+        name,
+      );
+      setLocalStorageItem("gameInstruction", gameInstruction);
+      const encryptedData = encryptData(gameData, "secret_key");
       login();
       navigate(`/home?data=${encodeURIComponent(encryptedData)}`);
     } else {
@@ -105,6 +81,45 @@ const EnterGameForm = () => {
       }),
     );
     return formData;
+  };
+  const formatGameData = (res, email, roomNumber, groupName, name) => {
+    if (res.success) {
+      const {
+        RolesAutoSelection,
+        ResultsSubmission,
+        GoogleSheetID,
+        GameName,
+        NumberOfRounds,
+        ScoreVisibilityForPlayers,
+        Date,
+        GameID,
+        roleAutoAssigned,
+        gameInstruction,
+        role,
+      } = res.data;
+
+      const gameData = {
+        email,
+        roomNumber,
+        groupName,
+        name,
+        RolesAutoSelection,
+        ResultsSubmission,
+        GameName,
+        NumberOfRounds,
+        ScoreVisibilityForPlayers,
+        Date,
+        GameID,
+        GoogleSheetID,
+        roleAutoAssigned,
+        role,
+      };
+
+      return { gameData, gameInstruction };
+    } else {
+      // Handle the case when res.success is false
+      throw new Error("Failed to format game data");
+    }
   };
 
   return (
