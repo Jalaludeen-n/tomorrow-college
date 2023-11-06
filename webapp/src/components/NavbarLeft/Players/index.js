@@ -4,10 +4,11 @@ import { Container, Row, Form, Col, Button } from "react-bootstrap";
 import { decryptData, getDataFromURL } from "../../helper/utils";
 import { useLocation } from "react-router-dom";
 import { fetchRolesAndParticipants } from "../../services/airtable";
+import Loader from "../../../pages/Loader";
 
 const Players = ({ name }) => {
   const names = ["Alice", "Bob", "Charlie", "David", "Eve"];
-
+  const [loader, setLoader] = useState(true);
   const location = useLocation();
   const [data, setData] = useState({});
   const [players, setPlayers] = useState([]);
@@ -25,9 +26,7 @@ const Players = ({ name }) => {
       );
 
       const res = await fetchRolesAndParticipants(formData);
-      console.log(res.data.filteredparticipants);
-      console.log("+_+++++++");
-
+      setLoader(false);
       if (res && res.data.filteredparticipants.length) {
         setPlayers(res.data.filteredparticipants);
       }
@@ -52,22 +51,28 @@ const Players = ({ name }) => {
   }, []);
 
   return (
-    <div className={styles.GameDetails}>
-      <Row className={styles.PlayerHeader}>
-        <Col md={1}></Col>
-        <Col>Players</Col>
-        <Col>Role</Col>
-      </Row>
-      {players.map((player, index) => (
-        <Row key={index} className={styles.PlayerRow}>
-          <Col md={1} className={styles.PlayerNumber}>
-            {index + 1}
-          </Col>
-          <Col className={styles.PlayerName}>{player.Name}</Col>
-          <Col className={styles.PlayerRole}>{player.Role}</Col>
-        </Row>
-      ))}
-    </div>
+    <>
+      {loader ? (
+        <Loader />
+      ) : (
+        <div className={styles.GameDetails}>
+          <Row className={styles.PlayerHeader}>
+            <Col md={1}></Col>
+            <Col>Players</Col>
+            <Col>Role</Col>
+          </Row>
+          {players.map((player, index) => (
+            <Row key={index} className={styles.PlayerRow}>
+              <Col md={1} className={styles.PlayerNumber}>
+                {index + 1}
+              </Col>
+              <Col className={styles.PlayerName}>{player.Name}</Col>
+              <Col className={styles.PlayerRole}>{player.Role}</Col>
+            </Row>
+          ))}
+        </div>
+      )}
+    </>
   );
 };
 
