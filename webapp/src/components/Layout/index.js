@@ -1,6 +1,5 @@
 import React, { useState } from "react";
 import { Container, Row, Form, Col, Button } from "react-bootstrap";
-import ToggleButton from "../ToggleButton";
 import Closed from "../NavbarLeft/Closed";
 import style from "../../styles/components/Layout.module.scss";
 
