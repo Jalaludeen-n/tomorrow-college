@@ -198,11 +198,11 @@ const Homepage = () => {
             )}
           </div>
         </div>
-        {!started && (
+        {!loader && (
           <Row className={`mt-1 text-end ${styles.mt5} mr-0`}>
             <Col className=''>
               <button className={styles.startButton} onClick={handleStartClick}>
-                Start The Game
+                Start THE ROUND
               </button>
             </Col>
           </Row>
