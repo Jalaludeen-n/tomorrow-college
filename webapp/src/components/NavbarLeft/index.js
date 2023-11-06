@@ -5,15 +5,16 @@ import Close from "../../icons/Close.svg";
 import { Container, Row, Form, Col, Button } from "react-bootstrap";
 import GameDetails from "./GameDetails";
 import Players from "./Players";
+import style from "../../styles/components/navbar/Left.module.scss";
 
 const NavbarLeft = ({ onClick }) => {
   return (
-    <Row>
+    <Row className={`${style.container} r-0 p-0`}>
       <Row>
         <Col
           xs={4}
           md={2}
-          className='d-flex justify-content-end align-items-center'>
+          className={`d-flex justify-content-end align-items-center`}>
           <img
             onClick={onClick}
             className={`img-fluid`}
