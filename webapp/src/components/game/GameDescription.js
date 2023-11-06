@@ -14,9 +14,6 @@ const GameDescription = ({ pdfData, header }) => {
         style={{
           width: "100%",
           height: "71vh",
-          border: "none",
-          zoom: "10%",
-          frameBorder: "0",
         }}
       />
     </div>

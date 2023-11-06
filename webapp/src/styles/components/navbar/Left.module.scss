@@ -5,6 +5,10 @@
   padding: 12px;
   margin: 12px;
 }
+.PlayerList {
+  max-height: 30vh;
+  overflow-y: auto;
+}
 .welcomeName {
   color: #fff;
   font-family: Open Sans;
