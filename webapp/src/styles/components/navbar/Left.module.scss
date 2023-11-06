@@ -1,0 +1,99 @@
+.welcome_container {
+  border-radius: 8px;
+  background: #d90368;
+  // height: 20vh;
+  padding: 12px;
+  margin: 12px;
+}
+.welcomeName {
+  color: #fff;
+  font-family: Open Sans;
+  font-size: 24px;
+  font-style: normal;
+  font-weight: 700;
+  line-height: normal;
+  padding: 14px;
+}
+.welcomeDate {
+  color: #fff;
+  font-family: Open Sans;
+  font-size: 20px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: normal;
+  padding: 14px;
+}
+
+.GameDetails {
+  background: #fff;
+  border: 1px solid #d90368; /* Added border style */
+  border-radius: 15px 15px 15px 15px;
+  margin: 12px !important;
+}
+
+.GameDetailsHeader {
+  border-radius: 15px 15px 0px 0px;
+  border: 1.5px solid #d90368;
+  background: #d90368;
+  color: #fff;
+  font-family: Open Sans;
+  font-size: 18px;
+  font-style: normal;
+  font-weight: 700;
+  line-height: 22.882px;
+  padding: 14px;
+}
+
+.DetailsList {
+  list-style-type: disc; /* Add bullet points */
+  padding: 0; /* Remove default list padding */
+  margin: 0;
+}
+
+.DetailsRow {
+  display: flex;
+  justify-content: space-between;
+  border-bottom: 1.5px solid #d90368;
+  margin-left: 0;
+  margin-right: 0;
+  // height: 8vh;
+  padding: 12px;
+}
+
+.DetailsRow:last-child {
+  border-bottom: none;
+}
+
+.LeftColumn {
+  color: #2a2d31;
+  font-family: Open Sans;
+  font-size: 16px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: normal;
+}
+.RightColumn {
+  color: #2a2d31;
+  text-align: right;
+  font-family: Open Sans;
+  font-size: 16px;
+  font-style: normal;
+  font-weight: 600;
+  line-height: normal;
+}
+.PlayerRow {
+  padding: 14px;
+}
+.PlayerHeader {
+  border-radius: 15px 15px 0px 0px;
+  border: 1.5px solid #d90368;
+  background: #d90368;
+  color: #fff;
+  font-family: Open Sans;
+  font-size: 18px;
+  font-style: normal;
+  font-weight: 700;
+  line-height: 22.882px;
+  padding: 14px;
+  margin-left: 12px;
+}

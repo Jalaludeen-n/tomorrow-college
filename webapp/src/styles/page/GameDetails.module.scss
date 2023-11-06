@@ -86,32 +86,28 @@
 
 /* GameDetails.module.scss */
 .pdfContainer {
-  border: 1px solid #d90368;
-  border-radius: 10px 10px 0px 0px;
-  padding: 0px;
+  // border: 1px solid #d90368;
+  // border-radius: 10px 10px 0px 0px;
+  // padding: 0px;
 }
 
 .descriptionHeadline {
-  align-self: stretch;
+  display: flex;
+  align-items: center;
   background: #d90368;
-  border: 1px solid #d90368;
-  border-radius: 10px 10px 0px 0px;
+  height: 73px;
+  flex-shrink: 0;
 }
+
 .descriptionTitle {
   color: #fff;
+  margin-left: 12px;
   font-family: Open Sans;
   font-size: 21px;
   font-style: normal;
   font-weight: 700;
-  line-height: 22.882px; /* 108.964% */
-  margin-left: 20px;
-  height: 8vh;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  align-self: stretch;
-  background: #d90368;
-  border-radius: 10px 10px 0px 0px;
+  line-height: 30.882px;
+  width: 479px;
 }
 
 .playerList {

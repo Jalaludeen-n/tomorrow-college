@@ -19,7 +19,7 @@ import {
 } from "../components/helper/reducer";
 import Loader from "./Loader";
 import { AuthContext } from "../components/auth/UserAuth";
-import { getDataFromURL } from "../components/helper/utils";
+import { decryptData, getDataFromURL } from "../components/helper/utils";
 import NavbarLeft from "../components/NavbarLeft";
 
 const Homepage = () => {
@@ -27,7 +27,7 @@ const Homepage = () => {
   const location = useLocation();
   const [started, setStarted] = useState(false);
 
-  const navigate = useNavigate(); // Initialize the navigate function
+  const navigate = useNavigate();
   const api_url = process.env.REACT_APP_API_URL;
   const [state, dispatch] = useReducer(
     newGameDetailsReducer,
@@ -57,7 +57,6 @@ const Homepage = () => {
       }
 
       if (res && res.data.filteredparticipants.length) {
-        console.log("working");
         dispatch({
           type: "SET_PARTICIPANTS",
           payload: res.data.filteredparticipants,
@@ -80,16 +79,11 @@ const Homepage = () => {
     navigate(`/level?data=${encodeURIComponent(encryptedData)}`);
   };
 
-  const decryptAndFetchData = async (encryptedData) => {
+  const decryptAndFetchData = async (decryptedData) => {
     try {
-      const bytes = CryptoJS.AES.decrypt(encryptedData, "secret_key");
-      const decryptedData = JSON.parse(bytes.toString(CryptoJS.enc.Utf8));
       setLoader(true);
       setDecryptedData(decryptedData);
-      localStorage.setItem(
-        "homePagedecryptedData",
-        JSON.stringify(decryptedData),
-      );
+
       dispatch({ type: "SET_GAME_NAME", payload: decryptedData.GameName });
       dispatch({ type: "SET_GROUP_NAME", payload: decryptedData.groupName });
       dispatch({
@@ -128,8 +122,8 @@ const Homepage = () => {
   };
   const decryptAndFetchRole = async (encryptedData) => {
     try {
-      const bytes = CryptoJS.AES.decrypt(encryptedData, "secret_key");
-      const decryptedData = JSON.parse(bytes.toString(CryptoJS.enc.Utf8));
+      const key = "secret_key";
+      const decryptedData = decryptData(encryptedData, key);
       await fetchParticipantsAndSet(decryptedData);
     } catch (error) {
       handleError(error);
@@ -138,6 +132,8 @@ const Homepage = () => {
 
   const fetchParticipantsAndSet = async (data) => {
     try {
+      const gameInstruction = localStorage.getItem("gameInstruction");
+      dispatch({ type: "SET_GAME_INSTRUCTIONS", payload: gameInstruction });
       await fetchParticipants(data.email, data.roomNumber, data.groupName);
     } catch (error) {
       handleError(error);
@@ -203,11 +199,11 @@ const Homepage = () => {
 
   useEffect(() => {
     const encryptedData = getDataFromURL(location);
-
+    const key = "secret_key";
+    const data = decryptData(encryptedData, key);
     setStarted(true);
     const fetchData = async () => {
-      console.log(encryptedData);
-      await fetchParticipantsAndSet(encryptedData);
+      await fetchParticipantsAndSet(data);
     };
     fetchData();
   }, [location]);
@@ -224,26 +220,26 @@ const Homepage = () => {
           /> */}
 
           <div>
-            <Row className={` m-0 p-0`}>
-              {/* <Col xs={5} className=' m-0'>
+            {/* <Row className={` m-0 p-0`}> */}
+            {/* <Col xs={5} className=' m-0'>
                 {!loader ? (
                   <Players state={state} updateRole={updateRole} />
                 ) : (
                   <Loader />
                 )}
               </Col> */}
-              <Col xs={7} className='p-0'>
-                {!loader ? (
-                  <GameDescription
-                    pdfData={state.gameInstructions}
-                    header={"Gameplay description"}
-                    height={"40vh"}
-                  />
-                ) : (
-                  <Loader />
-                )}
-              </Col>
-            </Row>
+            {/* <Col className='p-0'> */}
+            {!loader ? (
+              <GameDescription
+                pdfData={state.gameInstructions}
+                header={"Game Introduction"}
+                height={"40vh"}
+              />
+            ) : (
+              <Loader />
+            )}
+            {/* </Col> */}
+            {/* </Row> */}
           </div>
         </div>
         {!started && (
