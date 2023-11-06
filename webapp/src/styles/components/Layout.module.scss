@@ -1,5 +1,8 @@
 .container {
   background-color: #d9e4e9;
+  height: calc(100vh - 8vh);
+  border-radius: 0px 0px 40px 0px;
+  border-bottom: 1px solid rgba(201, 201, 201, 0.2);
 }
 .custom-width-5 {
   width: 5% !important;

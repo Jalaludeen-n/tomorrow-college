@@ -13,21 +13,17 @@
   margin: 4px 4px 12px 30px;
 }
 .startButton {
-  /* // Add any additional styles for the submit button here */
-  margin-top: auto;
+  width: 266px;
+  height: 75px;
+  flex-shrink: 0;
+  border-radius: 15px;
+  background: #d90368;
   color: #fff;
   font-family: Open Sans;
   font-size: 21px;
   font-style: normal;
   font-weight: 700;
   line-height: normal;
-  letter-spacing: 0.42px;
-  text-transform: uppercase;
-  width: 160px;
-  height: 65px;
-  flex-shrink: 0;
-  border-radius: 25px;
-  background-color: #d90368;
   letter-spacing: 0.42px;
   text-transform: uppercase;
 }
