@@ -16,7 +16,9 @@ import Login from "./pages/Login";
 import { UserAuth } from "./components/auth/UserAuth";
 import { AdminAuthProvider } from "./components/auth/AdminAuth";
 import Layout from "./components/Layout";
+import Roles from "./pages/Roles.js";
 const HeaderedHomepage = WithHeader(Homepage);
+const HeaderedRolepage = WithHeader(Roles);
 
 // const WithLayout = Layout(Homepage);
 const HeaderedLeaderboard = WithHeader(Leaderboard);
@@ -25,13 +27,12 @@ const HeaderedLevel = WithHeader(Level);
 function App() {
   return (
     <BrowserRouter>
-      <UserAuth>
-        <Routes>
-          <Route path='/home' element={<HeaderedHomepage />} />
-          <Route path='/level' element={<HeaderedLevel />} />
-          <Route path='/' element={<EnterGameForm />} />
-        </Routes>
-      </UserAuth>
+      <Routes>
+        <Route path='/roles' element={<HeaderedRolepage />} />
+        <Route path='/home' element={<HeaderedHomepage />} />
+        <Route path='/level' element={<HeaderedLevel />} />
+        <Route path='/' element={<EnterGameForm />} />
+      </Routes>
       <AdminAuthProvider>
         <Routes>
           <Route path='/admin' element={<Login />} />

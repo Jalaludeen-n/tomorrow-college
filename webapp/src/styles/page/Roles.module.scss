@@ -1,0 +1,55 @@
+.centeredContainer {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 50vh;
+}
+
+.rolesContainer {
+  background: #fff;
+  border: 1px solid #d90368;
+  border-radius: 15px;
+  width: 35vw;
+}
+.RolesHeader {
+  border-radius: 15px 15px 0px 0px;
+  border: 1.5px solid #d90368;
+  background: #d90368;
+  color: #fff;
+  font-family: Open Sans;
+  font-size: 18px;
+  font-style: normal;
+  font-weight: 700;
+  line-height: 22.882px;
+  padding: 14px;
+  margin: 0 !important;
+}
+.RolesList {
+  max-height: 40vh;
+  overflow-x: hidden;
+  overflow-y: scroll;
+}
+
+.RolesRow {
+  padding: 14px;
+}
+.startButtonContainer {
+  position: absolute;
+  bottom: 25px;
+  right: 25px;
+}
+.startButton {
+  width: 266px;
+  height: 75px;
+  flex-shrink: 0;
+  border-radius: 15px;
+  background: #d90368;
+  color: #fff;
+  font-family: Open Sans;
+  font-size: 21px;
+  font-style: normal;
+  font-weight: 700;
+  line-height: normal;
+  letter-spacing: 0.42px;
+  text-transform: uppercase;
+}

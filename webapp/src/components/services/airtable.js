@@ -44,6 +44,22 @@ export const fetchRunningAndPastGames = async () => {
     console.error("Error fetching game details:", error);
   }
 };
+export const fetchRemainingRoles = async (data) => {
+  try {
+    const response = await axios.get(`${api_url}/game/roles`, {
+      params: data, // Add query parameters here
+      responseType: "json",
+    });
+    if (response.status === 200) {
+      return response.data;
+    } else {
+      console.error("Unexpected response:", response);
+      return null; // Return null on error
+    }
+  } catch (error) {
+    console.error("Error fetching game details:", error);
+  }
+};
 
 export const fetchMember = async (data) => {
   try {
