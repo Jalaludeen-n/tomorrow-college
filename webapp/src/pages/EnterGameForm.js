@@ -7,11 +7,10 @@ import Loader from "./Loader";
 import { useLocation } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
 import AppHeader from "../components/AppHeader";
-import { AuthContext } from "../components/auth/UserAuth";
 import { encryptData, setLocalStorageItem } from "../components/helper/utils";
 
 const EnterGameForm = () => {
-  const { login } = useContext(AuthContext);
+  // const { login } = useContext(AuthContext);
 
   const navigate = useNavigate();
   const location = useLocation();
@@ -61,7 +60,7 @@ const EnterGameForm = () => {
       );
       setLocalStorageItem("gameInstruction", gameInstruction);
       const encryptedData = encryptData(gameData, "secret_key");
-      login();
+      // login();
       navigate(`/home?data=${encodeURIComponent(encryptedData)}`);
     } else {
       alert(res.message);
