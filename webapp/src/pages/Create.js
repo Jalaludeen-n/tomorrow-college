@@ -12,10 +12,11 @@ const Create = () => {
   const { isLoggedIn } = useContext(AdminAuthContext);
   const navigate = useNavigate(); // Initialize the navigate function
   const [state, dispatch] = useReducer(newGameReducer, initialState);
-  const [dublicateValue, setDublicateValue] = useState(false);
+  const [duplicateValue, setDuplicateValue] = useState(false);
   const [isNext, setIsNext] = useState(false); // Add state for submit button text
   const [pdf, setPDFIns] = useState([null]);
   const [rolePdf, setRolePDFIns] = useState([null]);
+  const [levelPdf, setLevelPDF] = useState([null]);
   const [loader, setLoader] = useState(false);
   const [roleInputs, setRoleInputs] = useState([
     { role: "" }, // Initial state with an empty role
@@ -39,7 +40,7 @@ const Create = () => {
   };
   const handleRolePDFInstruction = (level, role, file) => {
     let array = rolePdf;
-    const uniqueFilename = generateUniqueFilename(role, level, ".pdf");
+    const uniqueFilename = generateUniqueRoleFilename(role, level, ".pdf");
     const modifiedFile = new File([file], uniqueFilename, {
       type: "application/pdf",
     });
@@ -53,6 +54,9 @@ const Create = () => {
 
   const generateUniqueFilename = (role, pdfIndex, extension) => {
     return `${state.gameName}_${role}_Level${pdfIndex}${extension}`;
+  };
+  const generateUniqueRoleFilename = (role, pdfIndex, extension) => {
+    return `Role_${state.gameName}_${role}${extension}`;
   };
 
   const handleDropdownChange = (e, actionType) => {
@@ -83,6 +87,12 @@ const Create = () => {
     pdf.forEach((pdf) => {
       formData.append("pdf", pdf);
     });
+    rolePdf.forEach((pdf) => {
+      formData.append("pdf", pdf);
+    });
+    levelPdf.forEach((pdf) => {
+      formData.append("pdf", pdf);
+    });
     formData.append("pdf", state.gameInstructions);
     formData.append("pdf", state.levelInstruction);
 
@@ -97,17 +107,17 @@ const Create = () => {
       payload: !value,
     });
   };
-  const handleLevelPDF = (file, actionType) => {
-    const modifiedFile = new File(
-      [file],
-      `${state.gameName}_LevelInstruction.pdf`,
-      {
-        type: "application/pdf",
-      },
-    );
+  const handleLevelPDF = (level, file) => {
+    let array = pdf;
+    const name = `${state.gameName}_Level${level}.pdf`;
+    const modifiedFile = new File([file], name, {
+      type: "application/pdf",
+    });
+    array[level - 1] = modifiedFile;
+    setLevelPDF(array);
     dispatch({
-      type: actionType,
-      payload: modifiedFile,
+      type: "SET_DUMMY",
+      payload: state.roleValues.length + level,
     });
   };
   const handlePDFChange = (file, actionType) => {
@@ -124,10 +134,10 @@ const Create = () => {
     });
   };
 
-  const handleInputChange = (index, role, dublicate, submit) => {
+  const handleInputChange = (index, role, duplicate, submit) => {
     dispatch({
       type: "SET_ROLE_VALUES",
-      payload: { index, role, dublicate, submit },
+      payload: { index, role, duplicate, submit },
     });
   };
   const next = async (event) => {
@@ -135,9 +145,9 @@ const Create = () => {
     if (isNext) {
       const formattedData = formatDataForAirtable();
       try {
-        setLoader(true);
+        // setLoader(true);
         await sendGameData(formattedData);
-        navigate("/list");
+        // navigate("/list");
       } catch (error) {
         console.error("Error sending data to Airtable:", error);
       }
@@ -186,9 +196,9 @@ const Create = () => {
     ) {
       const newRoleInputs = [...roleInputs, { role: "" }];
       setRoleInputs(newRoleInputs);
-      setDublicateValue(false);
+      setDuplicateValue(false);
     } else {
-      setDublicateValue(true);
+      setDuplicateValue(true);
     }
   };
   useEffect(() => {
@@ -209,14 +219,17 @@ const Create = () => {
               {!isNext ? (
                 <div className=''>Basic Information</div>
               ) : (
-                <div
-                  style={{
-                    display: !state.individualInstructions ? "none" : "flex",
-                  }}>
+                <Row>
                   <Col md={3}>Game roles</Col>
-                  <Col md={3}>Role briefing</Col>
-                  <Col>Instructions</Col>
-                </div>
+                  <Col>Role briefing</Col>
+                  <Col
+                    md={7}
+                    style={{
+                      display: !state.individualInstructions && "none",
+                    }}>
+                    Instructions
+                  </Col>
+                </Row>
               )}
             </Row>
             {!isNext ? (
@@ -238,6 +251,7 @@ const Create = () => {
                 setRole={setRole}
                 pdf={pdf}
                 rolePdf={rolePdf}
+                levelPdf={levelPdf}
                 handleLevelPDF={handleLevelPDF}
               />
             )}

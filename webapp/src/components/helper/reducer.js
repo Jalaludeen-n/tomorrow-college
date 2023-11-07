@@ -11,7 +11,7 @@ export const initialState = {
   dummy: "",
   allowAutoSelection: false,
   individualInstructions: false,
-  roleValues: [{ role: "", dublicate: false, submit: false }],
+  roleValues: [{ role: "", dulicate: false, submit: false }],
   pdfInstructions: [{}],
 };
 
@@ -44,16 +44,16 @@ export const newGameReducer = (state, action) => {
     case "SET_INDIVIDUAL_INSTRUCTIONS":
       return { ...state, individualInstructions: action.payload };
     case "SET_ROLE_VALUES":
-      const { index, role, dublicate, submit } = action.payload;
+      const { index, role, duplicate, submit } = action.payload;
       const updatedRoleValues = [...state.roleValues];
       if (index >= 0 && index < updatedRoleValues.length) {
         updatedRoleValues[index] = {
           role: role,
-          dublicate: dublicate,
+          duplicate: duplicate,
           submit: submit,
         };
       } else {
-        updatedRoleValues.push({ role, dublicate, submit });
+        updatedRoleValues.push({ role, duplicate, submit });
       }
       return {
         ...state,
