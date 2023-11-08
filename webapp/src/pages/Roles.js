@@ -13,6 +13,7 @@ import {
   selectRole,
 } from "../components/services/airtable";
 import Loader from "./Loader";
+import { getLevelStatus } from "../components/services/level";
 
 const Roles = ({ name }) => {
   const navigate = useNavigate();
@@ -47,9 +48,18 @@ const Roles = ({ name }) => {
     }
   };
 
-  const handleStartClick = () => {
-    const encryptedData = encryptData(data, "secret_key");
-    navigate(`/level?data=${encodeURIComponent(encryptedData)}`);
+  const handleStartClick = async () => {
+    console.log(data);
+    const d = {
+      GameID: data.GameID,
+      roomNumber: data.RoomNumber,
+      level: 0,
+    };
+    
+    const res = await getLevelStatus(d);
+    console.log(res);
+    // const encryptedData = encryptData(data, "secret_key");
+    // navigate(`/level?data=${encodeURIComponent(encryptedData)}`);
   };
 
   const fetchParticipants = async (email, roomNumber, groupName) => {
