@@ -94,7 +94,6 @@ const Homepage = () => {
               <GameDescription
                 pdfData={state.gameInstructions}
                 header={"Game Introduction"}
-                height={"40vh"}
               />
             ) : (
               <Loader />
