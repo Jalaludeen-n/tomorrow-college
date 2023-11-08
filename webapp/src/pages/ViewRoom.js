@@ -2,12 +2,9 @@ import React, { useEffect, useState, useContext } from "react";
 import CryptoJS from "crypto-js";
 import Arrow from "../icons/Arrow.svg";
 import { AdminAuthContext } from "../components/auth/AdminAuth";
-import {
-  fetchGroupDetails,
-  startGame,
-  getLevelStatus,
-  startLevel,
-} from "../components/services/airtable";
+import { fetchGroupDetails, startGame } from "../components/services/airtable";
+import { getLevelStatus, startLevel } from "../components/services/level";
+
 import { Container, Row, Form, Col, Button } from "react-bootstrap";
 import styles from "../styles/page/ViewRoom.module.scss"; // Import your SCSS module styles
 import { useLocation } from "react-router-dom";
@@ -32,19 +29,16 @@ const ViewRoom = () => {
 
   const fetchData = async (RoomNumber, GameID) => {
     try {
-      const formData = new FormData();
-      formData.append(
-        "data",
-        JSON.stringify({
-          GameID,
-          RoomNumber,
-        }),
-      );
-
+      const formData = {
+        GameID,
+        RoomNumber,
+      };
       const [res, levelRes] = await Promise.all([
         fetchGroupDetails(formData),
         getLevelStatus(formData),
       ]);
+      console.log(res);
+      console.log(levelRes);
 
       setLoader(false);
       if (res.success && res.Data) {
@@ -98,6 +92,7 @@ const ViewRoom = () => {
         level,
       }),
     );
+
     await startLevel(formData);
   };
 
