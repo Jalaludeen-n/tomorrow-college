@@ -1,24 +1,24 @@
 import React from "react";
 import Open from "../../icons/Open.svg";
-// import Close from "../icons/Close.svg";
+import Close from "../../icons/Close.svg";
 import style from "../../styles/components/Layout.module.scss";
 
-const Closed = ({ onClick }) => {
+const Closed = ({ onClick, text, right }) => {
   return (
     <div className={style.closed}>
       <div class={`${style.flex_bottom_center} ${style.text_center}`}>
         <img
           onClick={onClick}
-          className={`align-self-start ${style.closeButton} img-fluid`}
-          src={Open}
+          className={`align-self-start ${style.closeButton}`}
+          src={right ? Close : Open}
           alt='Back Icon'
           width='50'
-          height='20'
+          height='100'
         />
       </div>
       <div
         className={` ${style.vertical_text} ${style.navText} ${style.flex_centered} ${style.text_center}`}>
-        Game details
+        {text}
       </div>
     </div>
   );
