@@ -1,6 +1,28 @@
 .app-container {
   padding: 20px;
 }
+.activeHeader {
+  background: #d90368 !important;
+}
+.levelHeaders {
+  border: 1px solid #d90368;
+  background: #d9e4e9;
+  height: 73px;
+  flex-shrink: 0;
+  margin: 0 !important;
+  color: #0b0b0b;
+  text-align: center;
+  font-family: Open Sans;
+  font-size: 21px;
+  font-style: normal;
+  font-weight: 600;
+  line-height: 22.882px;
+  cursor: pointer;
+}
+.header {
+  border-left: 1px solid #d90368;
+  border-right: 1px solid #d90368;
+}
 
 .levelPage {
   /* // Add any additional styles for the level page container here */

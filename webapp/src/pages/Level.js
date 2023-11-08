@@ -11,14 +11,21 @@ import {
   fetchLevelDetails,
   storeAnsweres,
   gameCompleted,
-  checkLevelStatus,
+  fetchRolePdf,
 } from "../components/services/airtable";
+import { getLevelStatus } from "../components/services/level";
 import { useLocation } from "react-router-dom";
 import Loader from "./Loader";
+import Layout from "../components/Layout";
+import NavbarLeft from "../components/NavbarLeft";
+import NavbarRight from "../components/NabarRight";
+import { decryptData, getDataFromURL } from "../components/helper/utils";
 
 const Level = () => {
-  
   const api_url = process.env.REACT_APP_API_URL;
+  const [activeComponent, setActiveComponent] = useState("Round1Instruction");
+  const [rolePdf, setRolePdf] = useState(null);
+
   const navigate = useNavigate(); // Initialize the navigate function
   const [pdfData, setPdfData] = useState(getPDFFromLocalStorage());
   const [isSubmitted, setIssubmitted] = useState(false);
@@ -176,32 +183,28 @@ const Level = () => {
   useEffect(() => {
     const searchParams = new URLSearchParams(location.search);
     const encryptedData = searchParams.get("data");
-    if (encryptedData) {
-      decryptAndFetchData(encryptedData);
-    } else {
-      setPdfData(getPDFFromLocalStorage());
-      setDecryptedData(getDecryptedDataFromLocalStorage());
+    // if (encryptedData) {
+    //   decryptAndFetchData(encryptedData);
+    // } else {
+    //   setPdfData(getPDFFromLocalStorage());
+    //   setDecryptedData(getDecryptedDataFromLocalStorage());
 
-      setQustions(getQstionsFromLocalStorage);
-      setAnswers(getAnsFromLocalStorage());
-      setSubmit(getSubmitFromLocalStorage());
-      setStarted(localStorage.getItem("started"));
-      setFirstLoader(false);
-    }
+    //   setQustions(getQstionsFromLocalStorage);
+    //   setAnswers(getAnsFromLocalStorage());
+    //   setSubmit(getSubmitFromLocalStorage());
+    //   setStarted(localStorage.getItem("started"));
+    //   setFirstLoader(false);
+    // }
   }, [location, started, firstLoader]);
 
   const checkIfLevelStarted = async (decryptedData) => {
     try {
-      const formData = new FormData();
-      formData.append(
-        "data",
-        JSON.stringify({
-          RoomNumber: decryptedData.roomNumber,
-          GameID: decryptedData.GameID,
-          Level: decryptedData.level,
-        }),
-      );
-      const res = await checkLevelStatus(formData);
+      const formData = {
+        RoomNumber: decryptedData.roomNumber,
+        GameID: decryptedData.GameID,
+        Level: decryptedData.level,
+      };
+      const res = await getLevelStatus(formData);
       const data = res.levelStatus;
       const started = data.some((obj) => obj.Level === decryptedData.level);
 
@@ -286,189 +289,171 @@ const Level = () => {
     setAnswers(newAnswers);
     localStorage.setItem("levelpageans", JSON.stringify(newAnswers));
   };
+  const handleComponentChange = (component) => {
+    setActiveComponent(component);
+  };
+  const fetchPdf = async (decryptData) => {
+    const data = {
+      GameName: decryptData.GameName,
+      role: decryptData.role,
+    };
+    const res = await fetchRolePdf(data);
+    console.log(res);
+    setRolePdf(res.data);
+  };
+  const fetchInstraction = async (decryptData) => {
+    const data = {
+      GameName: decryptData.GameName,
+      role: decryptData.role,
+    };
+    // const res = await fetchRoundPdf(data);
+    // console.log(res);
+    // setRolePdf(res.data);
+  };
+  useEffect(() => {
+    const encryptedData = getDataFromURL(location);
+    const key = "secret_key";
+    const data = decryptData(encryptedData, key);
+    fetchPdf(data);
+  }, []);
 
   return (
-    <div className={`app-container ${styles.levelPage}`}>
-      {decryptedData.NumberOfRounds >= decryptedData.level ? (
-        <>
-          {!firstLoader ? (
-            <>
-              {started ? (
-                <>
-                  {decryptedData.NumberOfRounds >= decryptedData.level ? (
-                    <>
-                      <Row className=''>
-                        <Col className={`${styles.rightSection}`}>
-                          <div className={`${styles.welcomeText}`}>
-                            Welcome to Round {decryptedData.level}
-                          </div>
-                        </Col>
-                      </Row>
-                      <Form onSubmit={handleSubmit}>
-                        <Row className={` ${styles.paddingTop} flex-grow-1`}>
-                          <Col xs={5} className='flex-grow-1'>
-                            {!loader ? (
-                              <GameDescription
-                                pdfData={pdfData}
-                                header={"Round scenario"}
-                                height={"60vh"}
-                              />
-                            ) : (
-                              <Loader />
-                            )}
-                          </Col>
-                          <Col
-                            xs={6}
-                            className={`d-flex flex-column ${styles.rightSide}`}>
-                            {!loader ? (
-                              <div className={`${styles.questionsContainer}`}>
-                                {questions.map((question, index) => (
-                                  <div
-                                    key={index}
-                                    className={`question ${styles.question}`}>
-                                    <p>{question.question}</p>
-                                    {question.type === "Multiple-Choice" && (
-                                      <Form.Group
-                                        className={`options ${styles.options}`}
-                                        aria-required>
-                                        {question.choices.map(
-                                          (option, optionIndex) => (
-                                            <Form.Check
-                                              key={optionIndex}
-                                              type='radio'
-                                              name={`question-${index}`}
-                                              label={option}
-                                              value={option}
-                                              onChange={(e) =>
-                                                handleRadioChange(
-                                                  index,
-                                                  e.target.value,
-                                                )
-                                              } // Add an onChange handler
-                                              checked={
-                                                answers[index] === option
-                                              }
-                                              required
-                                            />
-                                          ),
-                                        )}
-                                      </Form.Group>
-                                    )}
-                                    {question.type === "Boolean" && (
-                                      <Form.Group
-                                        className={`input ${styles.input}`}
-                                        required>
-                                        <Form.Check
-                                          type='radio'
-                                          name={`question-${index}`}
-                                          label='True'
-                                          value='true'
-                                          onChange={() =>
-                                            handleRadioChange(index, "true")
-                                          }
-                                          checked={answers[index] === "true"}
-                                          inline
-                                          required
-                                        />
-                                        <Form.Check
-                                          type='radio'
-                                          name={`question-${index}`}
-                                          label='False'
-                                          value='false'
-                                          checked={answers[index] === "false"}
-                                          onChange={() =>
-                                            handleRadioChange(index, "false")
-                                          }
-                                          inline
-                                        />
-                                      </Form.Group>
-                                    )}
-                                    {question.type === "Number" && (
-                                      <Form.Group
-                                        className={`input ${styles.input}`}>
-                                        <Form.Control
-                                          type='Number'
-                                          name={`question-${index}`}
-                                          className={`form-control ${styles.numberInput}`}
-                                          value={answers[index] || ""}
-                                          onChange={(e) =>
-                                            handleRadioChange(
-                                              index,
-                                              e.target.value,
-                                            )
-                                          }
-                                          required
-                                        />
-                                      </Form.Group>
-                                    )}
-                                  </div>
-                                ))}
-                              </div>
-                            ) : (
-                              <Loader />
-                            )}
-                          </Col>
-                        </Row>
-                        <Row className={`${styles.submitButtonRow}`}>
-                          {!loader ? (
-                            <Col
-                              xs={12}
-                              className={`text-end ${styles.submitButtonCol}`}>
-                              {submit && (
-                                <button
-                                  className={`${styles.submitButton}`}
-                                  type='submit'>
-                                  Submit
-                                </button>
-                              )}
-                            </Col>
-                          ) : (
-                            <Loader />
-                          )}
-                        </Row>
-                      </Form>
-                    </>
-                  ) : (
-                    <>
-                      <Row
-                        className='d-flex justify-content-center align-items-center'
-                        style={{ height: "100vh" }}>
-                        <Col className='text-center'>
-                          You have successfully completed.{" "}
-                          <Link to='/'> Go Home</Link>
-                        </Col>
-                      </Row>
-                    </>
-                  )}
-                </>
-              ) : (
-                <Row
-                  className='d-flex justify-content-center align-items-center'
-                  style={{ height: "100vh" }}>
-                  <Col className='text-center'>
-                    Level has not started yet. Please wait for some time after
-                    the admin starts the game. You can enter the game once it
-                    begins.
-                  </Col>
-                </Row>
+    <>
+      <Layout
+        className={`app-container ${styles.levelPage}`}
+        LeftNavbar={NavbarLeft}
+        RightNavbar={NavbarRight}>
+        <Row className={styles.levelHeaders}>
+          <Col
+            className={`d-flex align-items-center justify-content-center ${
+              activeComponent === "Round1Instruction" ? styles.activeHeader : ""
+            }`}
+            onClick={() => handleComponentChange("Round1Instruction")}>
+            Round 1 Instruction
+          </Col>
+          <Col
+            className={`d-flex align-items-center justify-content-center ${
+              styles.header
+            } ${activeComponent === "RoleBriefing" ? styles.activeHeader : ""}`}
+            onClick={() => handleComponentChange("RoleBriefing")}>
+            Your Role Briefing
+          </Col>
+          <Col
+            className={`d-flex align-items-center justify-content-center ${
+              activeComponent === "HistoricalDecisions"
+                ? styles.activeHeader
+                : ""
+            }`}
+            onClick={() => handleComponentChange("HistoricalDecisions")}>
+            Historical Decisions
+          </Col>
+        </Row>
+        {activeComponent === "Round1Instruction" && <GameDescription />}
+        {activeComponent === "RoleBriefing" && (
+          <GameDescription pdfData={rolePdf} />
+        )}
+        {activeComponent === "HistoricalDecisions" && <GameDescription />}
+
+        {/* <Form onSubmit={handleSubmit}>
+        <Row className={` ${styles.paddingTop} flex-grow-1`}>
+          <Col xs={5} className='flex-grow-1'>
+            {!loader ? (
+              <GameDescription
+                pdfData={pdfData}
+                header={"Round scenario"}
+                height={"60vh"}
+              />
+            ) : (
+              <Loader />
+            )}
+          </Col>
+          <Col xs={6} className={`d-flex flex-column ${styles.rightSide}`}>
+            {!loader ? (
+              <div className={`${styles.questionsContainer}`}>
+                {questions.map((question, index) => (
+                  <div key={index} className={`question ${styles.question}`}>
+                    <p>{question.question}</p>
+                    {question.type === "Multiple-Choice" && (
+                      <Form.Group
+                        className={`options ${styles.options}`}
+                        aria-required>
+                        {question.choices.map((option, optionIndex) => (
+                          <Form.Check
+                            key={optionIndex}
+                            type='radio'
+                            name={`question-${index}`}
+                            label={option}
+                            value={option}
+                            onChange={(e) =>
+                              handleRadioChange(index, e.target.value)
+                            } // Add an onChange handler
+                            checked={answers[index] === option}
+                            required
+                          />
+                        ))}
+                      </Form.Group>
+                    )}
+                    {question.type === "Boolean" && (
+                      <Form.Group className={`input ${styles.input}`} required>
+                        <Form.Check
+                          type='radio'
+                          name={`question-${index}`}
+                          label='True'
+                          value='true'
+                          onChange={() => handleRadioChange(index, "true")}
+                          checked={answers[index] === "true"}
+                          inline
+                          required
+                        />
+                        <Form.Check
+                          type='radio'
+                          name={`question-${index}`}
+                          label='False'
+                          value='false'
+                          checked={answers[index] === "false"}
+                          onChange={() => handleRadioChange(index, "false")}
+                          inline
+                        />
+                      </Form.Group>
+                    )}
+                    {question.type === "Number" && (
+                      <Form.Group className={`input ${styles.input}`}>
+                        <Form.Control
+                          type='Number'
+                          name={`question-${index}`}
+                          className={`form-control ${styles.numberInput}`}
+                          value={answers[index] || ""}
+                          onChange={(e) =>
+                            handleRadioChange(index, e.target.value)
+                          }
+                          required
+                        />
+                      </Form.Group>
+                    )}
+                  </div>
+                ))}
+              </div>
+            ) : (
+              <Loader />
+            )}
+          </Col>
+        </Row>
+        <Row className={`${styles.submitButtonRow}`}>
+          {!loader ? (
+            <Col xs={12} className={`text-end ${styles.submitButtonCol}`}>
+              {submit && (
+                <button className={`${styles.submitButton}`} type='submit'>
+                  Submit
+                </button>
               )}
-            </>
+            </Col>
           ) : (
             <Loader />
           )}
-        </>
-      ) : (
-        <>
-          <Row
-            className='d-flex justify-content-center align-items-center'
-            style={{ height: "100vh" }}>
-            <Col className='text-center'>
-              You have successfully completed. <Link to='/'> Go Home</Link>
-            </Col>
-          </Row>
-        </>
-      )}
-    </div>
+        </Row>
+      </Form> */}
+      </Layout>
+    </>
   );
 };
 
