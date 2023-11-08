@@ -4,19 +4,58 @@
   border-radius: 0px 0px 40px 0px;
   border-bottom: 1px solid rgba(201, 201, 201, 0.2);
 }
+.leftContainer {
+  background-color: #d9e4e9;
+  height: calc(100vh - 8vh);
+  border-radius: 0px 0px 40px 0px;
+  border-bottom: 1px solid rgba(201, 201, 201, 0.2);
+}
+.rightContainer {
+  background-color: #d9e4e9;
+  height: calc(100vh - 8vh);
+  border-radius: 0px 0px 0px 40px;
+  border-bottom: 1px solid rgba(201, 201, 201, 0.2);
+}
+.custom-vw-width-50 {
+  width: 50vw;
+}
+.customWidth75 {
+  width: 95vw !important;
+}
+.custom_Width_full {
+  width: 75vw !important;
+}
+.customWidth50 {
+  width: 42vw !important;
+}
+.customwidth5 {
+  width: 5vw !important;
+}
+.customWidth63 {
+  width: 62vw !important;
+}
+.customWidth70 {
+  width: 70vw !important;
+}
 .custom-width-5 {
-  width: 5% !important;
+  width: 5vw !important;
+}
+.customwidth33 {
+  width: 33vw !important;
+}
+.customWidth90 {
+  width: 90vw !important;
+}
+.custom-margin {
+  width: 33vw !important;
 }
 .full-width {
-  width: 95% !important;
+  width: 100% !important;
 }
 
-// .closed {
-//   height: 100vh !important;
-// }
 .closed {
-  flex: 1; /* Make the .closed element take up remaining space */
-  overflow: auto; /* Add scrollbars if needed */
+  flex: 1;
+  overflow: auto;
   height: calc(100vh - 50px);
 }
 .vertical_text {
