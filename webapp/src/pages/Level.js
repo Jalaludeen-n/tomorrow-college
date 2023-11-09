@@ -11,20 +11,22 @@ import {
   fetchLevelDetails,
   storeAnsweres,
   gameCompleted,
-  fetchRolePdf,
 } from "../components/services/airtable";
-import { getLevelStatus } from "../components/services/level";
+import { fetchRoundPdf, getLevelStatus } from "../components/services/level";
 import { useLocation } from "react-router-dom";
 import Loader from "./Loader";
 import Layout from "../components/Layout";
 import NavbarLeft from "../components/NavbarLeft";
 import NavbarRight from "../components/NabarRight";
 import { decryptData, getDataFromURL } from "../components/helper/utils";
+import { fetchRolePdf } from "../components/services/role";
 
 const Level = () => {
   const api_url = process.env.REACT_APP_API_URL;
   const [activeComponent, setActiveComponent] = useState("Round1Instruction");
   const [rolePdf, setRolePdf] = useState(null);
+  const [roundPdf, setRoundPdf] = useState(null);
+  const [data, setData] = useState({});
 
   const navigate = useNavigate(); // Initialize the navigate function
   const [pdfData, setPdfData] = useState(getPDFFromLocalStorage());
@@ -289,32 +291,41 @@ const Level = () => {
     setAnswers(newAnswers);
     localStorage.setItem("levelpageans", JSON.stringify(newAnswers));
   };
-  const handleComponentChange = (component) => {
+  const handleComponentChange = async (component) => {
+    if (component == "RoleBriefing") {
+      await fetchRoleInstruction(data);
+    }
+    if (component == "Round1Instruction") {
+      await fetchRoundInstruction(data);
+    }
+    if (component == "HistoricalDecisions") {
+      await fetchRoundInstruction(data);
+    }
     setActiveComponent(component);
   };
-  const fetchPdf = async (decryptData) => {
+  const fetchRoleInstruction = async (decryptData) => {
     const data = {
       GameName: decryptData.GameName,
       role: decryptData.role,
     };
     const res = await fetchRolePdf(data);
-    console.log(res);
     setRolePdf(res.data);
   };
-  const fetchInstraction = async (decryptData) => {
+  const fetchRoundInstruction = async (decryptData) => {
     const data = {
       GameName: decryptData.GameName,
       role: decryptData.role,
+      level: decryptData.level,
     };
-    // const res = await fetchRoundPdf(data);
-    // console.log(res);
-    // setRolePdf(res.data);
+    const res = await fetchRoundPdf(data);
+    setRoundPdf(res.data);
   };
   useEffect(() => {
     const encryptedData = getDataFromURL(location);
     const key = "secret_key";
     const data = decryptData(encryptedData, key);
-    fetchPdf(data);
+    setData(data);
+    fetchRoundInstruction(data);
   }, []);
 
   return (
@@ -329,7 +340,7 @@ const Level = () => {
               activeComponent === "Round1Instruction" ? styles.activeHeader : ""
             }`}
             onClick={() => handleComponentChange("Round1Instruction")}>
-            Round 1 Instruction
+            Round {data.level} Instruction
           </Col>
           <Col
             className={`d-flex align-items-center justify-content-center ${
@@ -348,7 +359,9 @@ const Level = () => {
             Historical Decisions
           </Col>
         </Row>
-        {activeComponent === "Round1Instruction" && <GameDescription />}
+        {activeComponent === "Round1Instruction" && (
+          <GameDescription pdfData={roundPdf} />
+        )}
         {activeComponent === "RoleBriefing" && (
           <GameDescription pdfData={rolePdf} />
         )}
