@@ -13,6 +13,7 @@
 
 .env
 .env.production
+/src/help.json
 
 # misc
 .DS_Store
