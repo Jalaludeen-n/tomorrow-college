@@ -38,6 +38,9 @@ export const decryptData = (encryptedData, secretKey) => {
     return null;
   }
 };
+export const isObjectEmpty = (obj) => {
+  return Object.keys(obj).length === 0 && obj.constructor === Object;
+};
 
 export const encryptData = (data, encryptionKey) => {
   try {
