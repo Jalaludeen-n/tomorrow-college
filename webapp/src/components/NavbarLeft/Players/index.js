@@ -1,16 +1,12 @@
 import React, { useEffect, useState } from "react";
 import styles from "../../../styles/components/navbar/Left.module.scss"; // Use the SCSS Module import
-import { Container, Row, Form, Col, Button } from "react-bootstrap";
-import { decryptData, getDataFromURL } from "../../helper/utils";
-import { useLocation } from "react-router-dom";
+import { Row, Col } from "react-bootstrap";
 import { fetchRolesAndParticipants } from "../../services/airtable";
 import Loader from "../../../pages/Loader";
+import { isObjectEmpty } from "../../helper/utils";
 
-const Players = ({ name }) => {
-  const names = ["Alice", "Bob", "Charlie", "David", "Eve"];
+const Players = ({ data }) => {
   const [loader, setLoader] = useState(true);
-  const location = useLocation();
-  const [data, setData] = useState({});
   const [players, setPlayers] = useState([]);
 
   const fetchParticipants = async (email, roomNumber, groupName) => {
@@ -43,12 +39,10 @@ const Players = ({ name }) => {
   };
 
   useEffect(() => {
-    const encryptedData = getDataFromURL(location);
-    const key = "secret_key";
-    const data = decryptData(encryptedData, key);
-    setData(data);
-    fetchParticipantsAndSet(data);
-  }, []);
+    if (!isObjectEmpty(data)) {
+      fetchParticipantsAndSet(data);
+    }
+  }, [data]);
 
   return (
     <>

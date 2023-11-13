@@ -1,20 +1,8 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 import style from "../../../styles/components/navbar/Left.module.scss"; // Use the SCSS Module import
 import { Row, Col } from "react-bootstrap";
-import { decryptData, getDataFromURL } from "../../helper/utils";
-import Loader from "../../../pages/Loader";
-import { useLocation } from "react-router-dom";
 
-const GameDetails = ({ name }) => {
-  const location = useLocation();
-  const [data, setData] = useState({});
-
-  useEffect(() => {
-    const encryptedData = getDataFromURL(location);
-    const key = "secret_key";
-    const data = decryptData(encryptedData, key);
-    setData(data);
-  }, []);
+const GameDetails = ({ data }) => {
   return (
     <div className={style.GameDetails}>
       <Row className={`${style.GameDetailsHeader}`}>Game details</Row>

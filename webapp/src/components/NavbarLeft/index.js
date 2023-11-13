@@ -1,14 +1,25 @@
 // Navbar.js
-import React from "react";
+import React, { useEffect, useState } from "react";
 import Welcome from "./Welcome";
 import Close from "../../icons/Close.svg";
-import Open from "../../icons/Open.svg";
-import { Container, Row, Form, Col, Button } from "react-bootstrap";
+import { Row, Col } from "react-bootstrap";
 import GameDetails from "./GameDetails";
 import Players from "./Players";
 import style from "../../styles/components/navbar/Left.module.scss";
+import { useLocation } from "react-router-dom";
+import { decryptData, getDataFromURL } from "../helper/utils";
 
 const NavbarLeft = ({ onClick }) => {
+  const location = useLocation();
+  const [data, setData] = useState({});
+
+  useEffect(() => {
+    const encryptedData = getDataFromURL(location);
+    const key = "secret_key";
+    const data = decryptData(encryptedData, key);
+    setData(data);
+  }, []);
+
   return (
     <Row className={`${style.container} r-0 p-0`}>
       <Row>
@@ -28,13 +39,13 @@ const NavbarLeft = ({ onClick }) => {
       </Row>
 
       <Row>
-        <Welcome name='Anna' />
+        <Welcome name={data.name} />
       </Row>
       <Row>
-        <GameDetails name='Anna' />
+        <GameDetails data={data} />
       </Row>
       <Row>
-        <Players name='Anna' />
+        <Players data={data} />
       </Row>
     </Row>
   );
