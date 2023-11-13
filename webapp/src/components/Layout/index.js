@@ -75,32 +75,34 @@ const Layout = ({ LeftNavbar, RightNavbar, children }) => {
           <Closed onClick={toggleLeftNavbar} text='Game details' />
         </Col>
       )}
-
       <Col
         className={`content p-0 m-0 ${style[width]}`}
         xs={calculateColumnSize(isLeftNavbarVisible, isRightNavbarVisible)}
         md={calculateColumnSize(isLeftNavbarVisible, isRightNavbarVisible)}>
         {children}
       </Col>
-
-      {isRightNavbarVisible ? (
-        <Col
-          xs={3}
-          md={3}
-          className={`${style.rightContainer} ${style.customwidth33}`}>
-          <RightNavbar onClick={toggleRightNavbar} />
-        </Col>
-      ) : (
-        <Col
-          xs={1}
-          md={1}
-          className={`${style.rightContainer} ${style.customwidth5} `}>
-          <Closed
-            onClick={toggleRightNavbar}
-            text='Game Decisions'
-            right={true}
-          />
-        </Col>
+      {RightNavbar && (
+        <>
+          {isRightNavbarVisible ? (
+            <Col
+              xs={3}
+              md={3}
+              className={`${style.rightContainer} ${style.customwidth33}`}>
+              <RightNavbar onClick={toggleRightNavbar} />
+            </Col>
+          ) : (
+            <Col
+              xs={1}
+              md={1}
+              className={`${style.rightContainer} ${style.customwidth5} `}>
+              <Closed
+                onClick={toggleRightNavbar}
+                text='Game Decisions'
+                right={true}
+              />
+            </Col>
+          )}
+        </>
       )}
     </Row>
   );
