@@ -114,21 +114,6 @@ export const fetchGameDetails = async (data) => {
   }
 };
 
-export const fetchLevelDetails = async (data) => {
-  try {
-    const response = await axios.post(`${api_url}/game/level`, data, {
-      headers: {
-        "Content-Type": "application/json",
-      },
-    });
-    return handleSuccess(
-      response,
-      "Roles and participants fetched successfully",
-    );
-  } catch (error) {
-    handleError(error);
-  }
-};
 export const gameCompleted = async (data) => {
   try {
     const response = await axios.post(`${api_url}/game/over`, data, {
