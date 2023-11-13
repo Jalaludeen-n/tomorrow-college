@@ -4,8 +4,40 @@
 .welcome_container {
   border-radius: 8px;
   background: #d90368;
-  height: 20vh;
+  height: 15vh;
   padding: 12px;
   margin: 12px;
 }
+.decision_container {
+  padding: 12px;
+  margin-left: 12px;
+  height: 50vh;
+  background-color: #fff;
+}
 
+.welcomeName {
+  color: #fff;
+  font-family: Open Sans;
+  font-size: 24px;
+  font-style: normal;
+  font-weight: 700;
+  line-height: normal;
+  padding: 14px;
+}
+.welcomeRole {
+  color: #fff;
+  font-family: Open Sans;
+  font-size: 20px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: normal;
+  padding: 14px;
+}
+.decision_header {
+  color: #000;
+  font-family: Open Sans;
+  font-size: 23.272px;
+  font-style: normal;
+  font-weight: 600;
+  line-height: normal;
+}

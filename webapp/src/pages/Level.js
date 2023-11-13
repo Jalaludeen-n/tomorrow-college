@@ -7,11 +7,7 @@ import { useNavigate } from "react-router-dom";
 import GameDescription from "../components/game/GameDescription";
 import { io } from "socket.io-client";
 
-import {
-  fetchLevelDetails,
-  storeAnsweres,
-  gameCompleted,
-} from "../components/services/airtable";
+import { storeAnsweres, gameCompleted } from "../components/services/airtable";
 import { fetchRoundPdf, getLevelStatus } from "../components/services/level";
 import { useLocation } from "react-router-dom";
 import Loader from "./Loader";
@@ -135,7 +131,7 @@ const Level = () => {
         }),
       );
 
-      const res = await fetchLevelDetails(formData);
+      const res = "ds";
 
       if (res.success) {
         setQustions(res.data.qustions);
