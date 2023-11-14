@@ -10,9 +10,11 @@
 }
 .decision_container {
   padding: 12px;
-  margin-left: 12px;
-  height: 50vh;
-  background-color: #fff;
+}
+.questionsContainer {
+  padding-left: 12px;
+  max-height: 50vh;
+  overflow-y: auto;
 }
 
 .welcomeName {
@@ -23,6 +25,27 @@
   font-weight: 700;
   line-height: normal;
   padding: 14px;
+}
+.startButtonContainer {
+  position: absolute;
+  bottom: 25px;
+  right: 25px;
+}
+.startButton {
+  color: #fff;
+  text-align: center;
+  font-family: Open Sans;
+  font-size: 16.977px;
+  font-style: normal;
+  font-weight: 700;
+  line-height: normal;
+  letter-spacing: 0.34px;
+  text-transform: uppercase;
+  border-radius: 20.21px;
+  background: #d90368;
+  width: 173.305px;
+  height: 60.631px;
+  flex-shrink: 0;
 }
 .welcomeRole {
   color: #fff;
@@ -40,4 +63,5 @@
   font-style: normal;
   font-weight: 600;
   line-height: normal;
+  margin: 0px 12px 12px !important;
 }
