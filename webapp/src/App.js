@@ -17,17 +17,21 @@ import { UserAuth } from "./components/auth/UserAuth";
 import { AdminAuthProvider } from "./components/auth/AdminAuth";
 import Layout from "./components/Layout";
 import Roles from "./pages/Roles.js";
+import Result from "./pages/Result.js";
+
 const HeaderedHomepage = WithHeader(Homepage);
 const HeaderedRolepage = WithHeader(Roles);
 
 // const WithLayout = Layout(Homepage);
 const HeaderedLeaderboard = WithHeader(Leaderboard);
 const HeaderedLevel = WithHeader(Level);
+const HeaderedResult = WithHeader(Result);
 
 function App() {
   return (
     <BrowserRouter>
       <Routes>
+        <Route path='/result' element={<HeaderedResult />} />
         <Route path='/roles' element={<HeaderedRolepage />} />
         <Route path='/home' element={<HeaderedHomepage />} />
         <Route path='/level' element={<HeaderedLevel />} />

@@ -16,6 +16,20 @@ export const fetchQustions = async (data) => {
     handleError(error);
   }
 };
+export const fetchResults = async (data) => {
+  try {
+    const response = await axios.get(`${api_url}/decision-form/results`, {
+      params: data,
+      responseType: "json",
+    });
+    return handleSuccess(
+      response,
+      "Roles and participants fetched successfully",
+    );
+  } catch (error) {
+    handleError(error);
+  }
+};
 export const storeAnsweres = async (data) => {
   try {
     const response = await axios.post(
@@ -27,6 +41,20 @@ export const storeAnsweres = async (data) => {
         },
       },
     );
+    return handleSuccess(
+      response,
+      "Roles and participants fetched successfully",
+    );
+  } catch (error) {
+    handleError(error);
+  }
+};
+export const fetchResultPdf = async (data) => {
+  try {
+    const response = await axios.get(`${api_url}/decision-form/result`, {
+      params: data,
+      responseType: "json",
+    });
     return handleSuccess(
       response,
       "Roles and participants fetched successfully",

@@ -1,0 +1,56 @@
+.resultItem {
+  background-color: #eef2f4;
+  margin: 24px !important;
+  height: auto;
+}
+.header {
+  margin: 10px !important;
+}
+.resultsContainer {
+  max-height: 80vh;
+  overflow-y: auto;
+}
+.ans {
+  margin: 10px !important;
+  color: #000;
+  font-family: Open Sans;
+  font-size: 20px;
+  font-style: normal;
+  font-weight: 600;
+  line-height: 22.882px; /* 114.412% */
+}
+.round {
+  color: #000;
+  text-align: center;
+  font-family: Open Sans;
+  font-size: 24px;
+  font-style: normal;
+  font-weight: 700;
+  line-height: 22.882px; /* 95.343% */
+}
+.output {
+  border-radius: 19.667px;
+  border: 2px solid #d90368;
+  background: #fff;
+  color: #d90368;
+  text-align: center;
+  font-family: Open Sans;
+  font-size: 16.52px;
+  font-style: normal;
+  font-weight: 600;
+  line-height: normal;
+  letter-spacing: 0.33px;
+  text-transform: uppercase;
+  width: 105px;
+  padding: 10px;
+  flex-shrink: 0;
+}
+.decision {
+  color: #000;
+  text-align: center;
+  font-family: Open Sans;
+  font-size: 22px;
+  font-style: normal;
+  font-weight: 700;
+  line-height: 22.882px; /* 104.011% */
+}

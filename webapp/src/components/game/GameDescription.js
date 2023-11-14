@@ -4,12 +4,14 @@ import React, { useState } from "react";
 // import { PDFViewer } from "pdf-viewer-reactjs"; // Import PDFViewer
 // import "pdf-viewer-reactjs/dist/index.css"; // Import the CSS (make sure it's available in your project)
 
-const GameDescription = ({ pdfData, header }) => {
+const GameDescription = ({ pdfData, header, show }) => {
   return (
     <div className={`${styles.pdfContainer}`}>
-      <div className={`${styles.descriptionHeadline}`}>
-        <div className={`${styles.descriptionTitle}`}>{header}</div>
-      </div>
+      {show && (
+        <div className={`${styles.descriptionHeadline}`}>
+          <div className={`${styles.descriptionTitle}`}>{header}</div>
+        </div>
+      )}
       <iframe
         className={`${styles.description}`}
         src={`data:application/pdf;base64,${pdfData}`}

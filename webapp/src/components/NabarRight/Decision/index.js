@@ -1,12 +1,15 @@
 import React, { useEffect, useState } from "react";
 import styles from "../../../styles/components/navbar/Right.module.scss";
 import { Row, Form, Col } from "react-bootstrap";
-import { isObjectEmpty } from "../../helper/utils";
+import { encryptData, isObjectEmpty } from "../../helper/utils";
 import { fetchQustions, storeAnsweres } from "../../services/decision";
+import { useNavigate } from "react-router-dom";
 
 const Decision = ({ data }) => {
-  const [questions, setQustions] = useState([]); // Initialize state using useState
-  const [answers, setAnswers] = useState([]); // Initialize state using useState
+  const navigate = useNavigate();
+
+  const [questions, setQustions] = useState([]);
+  const [answers, setAnswers] = useState([]);
 
   const fetchLevelDetailsAndSet = async (data) => {
     const formData = {
@@ -26,14 +29,12 @@ const Decision = ({ data }) => {
     if (!isObjectEmpty(data)) {
       fetchLevelDetailsAndSet(data);
     }
-  }, [data, fetchQustions]); 
+  }, [data, fetchQustions]);
 
-  
   const handleRadioChange = (questionIndex, selectedValue) => {
     const newAnswers = [...answers];
     newAnswers[questionIndex] = selectedValue;
     setAnswers(newAnswers);
-    localStorage.setItem("levelpageans", JSON.stringify(newAnswers));
   };
 
   const handleSubmit = async (event) => {
@@ -47,19 +48,18 @@ const Decision = ({ data }) => {
         sheetID: data.GoogleSheetID,
         answers: answers,
         level: data.level,
+        groupName: data.groupName,
+        gameId: data.GameID,
+        roomNumber: data.roomNumber,
+        email: data.email,
+        resultsSubmission: data.ResultsSubmission,
       }),
     );
 
     await storeAnsweres(formData);
-    // const res = await updateLevel(formData);
 
-    // const updatedData = {
-    //   ...data,
-    //   level: res.data.updatedData.CurrentLevel,
-    // };
-
-    // const encryptedData = encryptData(updatedData, "secret_key");
-    // navigate(`/level?data=${encodeURIComponent(encryptedData)}`);
+    const encryptedData = encryptData(data, "secret_key");
+    navigate(`/result?data=${encodeURIComponent(encryptedData)}`);
   };
 
   return (

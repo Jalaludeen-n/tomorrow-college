@@ -13,6 +13,7 @@ import NavbarLeft from "../components/NavbarLeft";
 import NavbarRight from "../components/NabarRight";
 import { decryptData, getDataFromURL } from "../components/helper/utils";
 import { fetchRolePdf } from "../components/services/role";
+import Decision from "../components/Decision";
 
 const Level = () => {
   const api_url = process.env.REACT_APP_API_URL;
@@ -85,9 +86,6 @@ const Level = () => {
     if (component == "Round1Instruction") {
       await fetchRoundInstruction(data);
     }
-    if (component == "HistoricalDecisions") {
-      await fetchRoundInstruction(data);
-    }
     setActiveComponent(component);
   };
   const fetchRoleInstruction = async (decryptData) => {
@@ -114,7 +112,6 @@ const Level = () => {
     setData(data);
     fetchRoundInstruction(data);
   }, []);
-
 
   return (
     <>
@@ -153,7 +150,7 @@ const Level = () => {
         {activeComponent === "RoleBriefing" && (
           <GameDescription pdfData={rolePdf} />
         )}
-        {activeComponent === "HistoricalDecisions" && <GameDescription />}
+        {activeComponent === "HistoricalDecisions" && <Decision />}
       </Layout>
     </>
   );
