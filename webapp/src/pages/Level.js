@@ -57,29 +57,6 @@ const Level = () => {
     };
   }, []);
 
-  const checkIfLevelStarted = async (decryptedData) => {
-    try {
-      const formData = {
-        RoomNumber: decryptedData.roomNumber,
-        GameID: decryptedData.GameID,
-        Level: decryptedData.level,
-      };
-
-      const res = await getLevelStatus(formData);
-      const data = res.levelStatus;
-      const started = data.some((obj) => obj.Level === decryptedData.level);
-
-      if (started) {
-        setStarted(true);
-        localStorage.setItem("started", true);
-      } else {
-        console.log(`Not started`);
-      }
-    } catch (err) {
-      console.log(err);
-    }
-  };
-
   const handleComponentChange = async (component) => {
     if (component == "RoleBriefing") {
       await fetchRoleInstruction(data);
@@ -104,6 +81,7 @@ const Level = () => {
       level: decryptData.level,
     };
     const res = await fetchRoundPdf(data);
+
     setRoundPdf(res.data);
   };
   useEffect(() => {

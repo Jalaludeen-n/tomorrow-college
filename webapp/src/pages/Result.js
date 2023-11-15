@@ -4,7 +4,7 @@ import { Row, Col } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
 import GameDescription from "../components/game/GameDescription";
 
-import { fetchRoundPdf, updateLevel } from "../components/services/level";
+import { getLevelStatus, updateLevel } from "../components/services/level";
 import { useLocation } from "react-router-dom";
 import Loader from "./Loader";
 import Layout from "../components/Layout";
@@ -51,29 +51,23 @@ const Result = () => {
   }, []);
 
   const handleStartClick = async () => {
-    const formData = new FormData();
-
-    formData.append(
-      "data",
-      JSON.stringify({
-        gameId: data.GameID,
-        groupName: data.groupName,
-        email: data.email,
-        roomNumber: data.roomNumber,
-        resultsSubmission: data.ResultsSubmission,
-      }),
-    );
-
-    const res = await updateLevel(formData);
-    console.log(res);
-
-    const updatedData = {
-      ...data,
-      level: res.data.CurrentLevel,
+    const formData = {
+      roomNumber: data.roomNumber,
+      gameId: data.GameID,
+      level: data.level,
     };
 
-    const encryptedData = encryptData(updatedData, "secret_key");
-    navigate(`/level?data=${encodeURIComponent(encryptedData)}`);
+    const res = await getLevelStatus(formData);
+    const started = res.data.started;
+
+    if (started) {
+      const encryptedData = encryptData(data, "secret_key");
+      navigate(`/level?data=${encodeURIComponent(encryptedData)}`);
+    } else {
+      alert(
+        "Please wait; the round has not yet started. We will redirect you once the admin starts the round.",
+      );
+    }
   };
 
   return (

@@ -33,7 +33,7 @@ export const startLevel = async (formattedData) => {
 };
 export const getLevelStatus = async (data) => {
   try {
-    const response = await axios.get(`${api_url}/level/status`, {
+    const response = await axios.get(`${api_url}/level/current-status`, {
       params: data,
       responseType: "json",
     });

@@ -56,10 +56,16 @@ const Decision = ({ data }) => {
       }),
     );
 
-    await storeAnsweres(formData);
+    const res = await storeAnsweres(formData);
+    console.log(res);
+    const updatedData = {
+      ...data,
+      level: res.data.CurrentLevel,
+      started: res.data.started,
+    };
 
-    const encryptedData = encryptData(data, "secret_key");
-    navigate(`/result?data=${encodeURIComponent(encryptedData)}`);
+    // const encryptedData = encryptData(updatedData, "secret_key");
+    // navigate(`/result?data=${encodeURIComponent(encryptedData)}`);
   };
 
   return (

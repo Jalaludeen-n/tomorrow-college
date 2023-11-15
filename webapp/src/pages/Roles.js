@@ -67,10 +67,17 @@ const Roles = ({ name }) => {
     const updatedData = {
       ...data,
       level: res.data.CurrentLevel,
+      started: res.data.started,
     };
 
-    const encryptedData = encryptData(updatedData, "secret_key");
-    navigate(`/level?data=${encodeURIComponent(encryptedData)}`);
+    if (res.data.started) {
+      const encryptedData = encryptData(updatedData, "secret_key");
+      navigate(`/level?data=${encodeURIComponent(encryptedData)}`);
+    } else {
+      alert(
+        "Please wait; the round has not yet started. We will redirect you once the admin starts the round.",
+      );
+    }
   };
 
   const fetchParticipants = async (email, roomNumber, groupName) => {

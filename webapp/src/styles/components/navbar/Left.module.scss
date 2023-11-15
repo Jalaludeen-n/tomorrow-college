@@ -1,31 +1,41 @@
+:root {
+  --welcome-container-height: 15vh;
+  --welcome-font-size: 1.5rem;
+  --welcome-date-size: 1.2rem;
+  --welcome-font-weight-bold: 700;
+  --welcome-font-weight-regular: 400;
+  --welcome-padding: 1rem;
+}
+
 .welcome_container {
   border-radius: 8px;
   background: #d90368;
-  // height: 20vh;
-  padding: 12px;
-  margin: 12px;
+  height: var(--welcome-container-height);
+  margin: 1vh;
 }
-.PlayerList {
-  max-height: 30vh;
-  overflow-y: auto;
-}
-.welcomeName {
-  color: #fff;
-  font-family: Open Sans;
-  font-size: 24px;
-  font-style: normal;
-  font-weight: 700;
-  line-height: normal;
-  padding: 14px;
-}
+
+.welcomeName,
 .welcomeDate {
   color: #fff;
-  font-family: Open Sans;
-  font-size: 20px;
-  font-style: normal;
-  font-weight: 400;
+  font-family: "Open Sans";
   line-height: normal;
-  padding: 14px;
+  padding: var(--welcome-padding);
+}
+
+.welcomeName {
+  font-size: var(--welcome-font-size);
+  font-weight: var(--welcome-font-weight-bold);
+}
+
+.welcomeDate {
+  font-size: var(--welcome-date-size);
+  font-weight: var(--welcome-font-weight-regular);
+}
+
+.PlayerList {
+  max-height: 25vh;
+  overflow-y: auto;
+  overflow-x: hidden;
 }
 
 .GameDetails {
@@ -35,9 +45,14 @@
   margin: 12px !important;
 }
 
+.GameDetailItems {
+  overflow-y: auto;
+  max-height: 17vh;
+}
+
 .GameDetailsHeader {
   border-radius: 15px 15px 0px 0px;
-  border: 1.5px solid #d90368;
+  border: 1.5px solid #7b6c73;
   background: #d90368;
   color: #fff;
   font-family: Open Sans;
@@ -61,7 +76,7 @@
   margin-left: 0;
   margin-right: 0;
   // height: 8vh;
-  padding: 12px;
+  padding: 0.5vh;
 }
 
 .DetailsRow:last-child {

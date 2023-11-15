@@ -8,7 +8,7 @@ const Decision = ({ data, round }) => {
     <Row className={style.resultItem}>
       <Row className={style.header}>
         <Col xs={6} md={6} className='d-flex align-items-center'>
-          <div className={style.round}>Round {round}</div>
+          <div className={style.round}>Round {round + 1}</div>
         </Col>
         <Col
           xs={6}

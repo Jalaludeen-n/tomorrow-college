@@ -63,10 +63,16 @@ const Homepage = () => {
       const updatedData = {
         ...decryptedData,
         level: res.data.CurrentLevel,
+        started: res.data.started,
       };
-
-      const encryptedData = encryptData(updatedData, "secret_key");
-      navigate(`/level?data=${encodeURIComponent(encryptedData)}`);
+      if (res.data.started) {
+        const encryptedData = encryptData(updatedData, "secret_key");
+        navigate(`/level?data=${encodeURIComponent(encryptedData)}`);
+      } else {
+        alert(
+          "Please wait; the round has not yet started. We will redirect you once the admin starts the round.",
+        );
+      }
     } else navigate(`/roles?data=${encodeURIComponent(encryptedData)}`);
   };
 
