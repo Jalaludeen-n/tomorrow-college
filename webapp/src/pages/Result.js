@@ -72,8 +72,8 @@ const Result = () => {
       level: res.data.CurrentLevel,
     };
 
-    // const encryptedData = encryptData(updatedData, "secret_key");
-    // navigate(`/level?data=${encodeURIComponent(encryptedData)}`);
+    const encryptedData = encryptData(updatedData, "secret_key");
+    navigate(`/level?data=${encodeURIComponent(encryptedData)}`);
   };
 
   return (
