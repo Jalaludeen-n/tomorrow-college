@@ -5,7 +5,7 @@ import { useNavigate } from "react-router-dom";
 import GameDescription from "../components/game/GameDescription";
 import { io } from "socket.io-client";
 
-import { fetchRoundPdf } from "../components/services/level";
+import { fetchRoundPdf, getLevelStatus } from "../components/services/level";
 import { useLocation } from "react-router-dom";
 import Loader from "./Loader";
 import Layout from "../components/Layout";
@@ -21,6 +21,7 @@ const Level = () => {
   const [rolePdf, setRolePdf] = useState(null);
   const [roundPdf, setRoundPdf] = useState(null);
   const [data, setData] = useState({});
+  const [started, setStarted] = useState(false);
 
   const navigate = useNavigate();
   const location = useLocation();
@@ -56,28 +57,28 @@ const Level = () => {
     };
   }, []);
 
-  // const checkIfLevelStarted = async (decryptedData) => {
-  //   try {
-  //     const formData = {
-  //       RoomNumber: decryptedData.roomNumber,
-  //       GameID: decryptedData.GameID,
-  //       Level: decryptedData.level,
-  //     };
-  //     const res = await getLevelStatus(formData);
-  //     const data = res.levelStatus;
-  //     const started = data.some((obj) => obj.Level === decryptedData.level);
+  const checkIfLevelStarted = async (decryptedData) => {
+    try {
+      const formData = {
+        RoomNumber: decryptedData.roomNumber,
+        GameID: decryptedData.GameID,
+        Level: decryptedData.level,
+      };
 
-  //     if (started) {
-  //       setStarted(true);
-  //       localStorage.setItem("started", true);
-  //     } else {
-  //       console.log(`Not started`);
-  //     }
-  //     setFirstLoader(false);
-  //   } catch (err) {
-  //     console.log(err);
-  //   }
-  // };
+      const res = await getLevelStatus(formData);
+      const data = res.levelStatus;
+      const started = data.some((obj) => obj.Level === decryptedData.level);
+
+      if (started) {
+        setStarted(true);
+        localStorage.setItem("started", true);
+      } else {
+        console.log(`Not started`);
+      }
+    } catch (err) {
+      console.log(err);
+    }
+  };
 
   const handleComponentChange = async (component) => {
     if (component == "RoleBriefing") {

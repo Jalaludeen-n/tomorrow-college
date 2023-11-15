@@ -19,6 +19,26 @@
   line-height: 22.882px;
   cursor: pointer;
 }
+.startButtonContainer {
+  position: absolute;
+  bottom: 25px;
+  right: 25px;
+}
+.startButton {
+  width: 266px;
+  height: 75px;
+  flex-shrink: 0;
+  border-radius: 15px;
+  background: #d90368;
+  color: #fff;
+  font-family: Open Sans;
+  font-size: 21px;
+  font-style: normal;
+  font-weight: 700;
+  line-height: normal;
+  letter-spacing: 0.42px;
+  text-transform: uppercase;
+}
 .header {
   border-left: 1px solid #d90368;
   border-right: 1px solid #d90368;

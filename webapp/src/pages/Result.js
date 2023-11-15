@@ -4,19 +4,21 @@ import { Row, Col } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
 import GameDescription from "../components/game/GameDescription";
 
-import { fetchRoundPdf } from "../components/services/level";
+import { fetchRoundPdf, updateLevel } from "../components/services/level";
 import { useLocation } from "react-router-dom";
 import Loader from "./Loader";
 import Layout from "../components/Layout";
 import NavbarLeft from "../components/NavbarLeft";
-import { decryptData, getDataFromURL } from "../components/helper/utils";
+import {
+  decryptData,
+  encryptData,
+  getDataFromURL,
+} from "../components/helper/utils";
 import Decision from "../components/Decision";
 import { fetchResultPdf } from "../components/services/decision";
 
 const Result = () => {
-  const api_url = process.env.REACT_APP_API_URL;
   const [activeComponent, setActiveComponent] = useState("RoundResult");
-  const [rolePdf, setRolePdf] = useState(null);
   const [roundPdf, setRoundPdf] = useState(null);
   const [data, setData] = useState({});
 
@@ -27,7 +29,6 @@ const Result = () => {
 
   const handleComponentChange = async (component) => {
     if (component == "RoundResult") {
-      //   await fetchRoundInstruction(data);
       await fetchResult(data);
     }
     setActiveComponent(component);
@@ -41,15 +42,6 @@ const Result = () => {
     setRoundPdf(res.data);
   };
 
-  const fetchRoundInstruction = async (decryptData) => {
-    const data = {
-      GameName: decryptData.GameName,
-      role: decryptData.role,
-      level: decryptData.level,
-    };
-    const res = await fetchRoundPdf(data);
-    setRoundPdf(res.data);
-  };
   useEffect(() => {
     const encryptedData = getDataFromURL(location);
     const key = "secret_key";
@@ -57,6 +49,32 @@ const Result = () => {
     setData(data);
     fetchResult(data);
   }, []);
+
+  const handleStartClick = async () => {
+    const formData = new FormData();
+
+    formData.append(
+      "data",
+      JSON.stringify({
+        gameId: data.GameID,
+        groupName: data.groupName,
+        email: data.email,
+        roomNumber: data.roomNumber,
+        resultsSubmission: data.ResultsSubmission,
+      }),
+    );
+
+    const res = await updateLevel(formData);
+    console.log(res);
+
+    const updatedData = {
+      ...data,
+      level: res.data.CurrentLevel,
+    };
+
+    // const encryptedData = encryptData(updatedData, "secret_key");
+    // navigate(`/level?data=${encodeURIComponent(encryptedData)}`);
+  };
 
   return (
     <>
@@ -86,6 +104,11 @@ const Result = () => {
         )}
         {activeComponent === "HistoricalDecisions" && <Decision />}
       </Layout>
+      <div className={styles.startButtonContainer}>
+        <button className={styles.startButton} onClick={handleStartClick}>
+          Start NEXT ROUND
+        </button>
+      </div>
     </>
   );
 };

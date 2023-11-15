@@ -22,6 +22,7 @@ import {
   getDataFromURL,
 } from "../../components/helper/utils";
 import { decryptAndStoreData } from "./helper/homePageUtils";
+import { updateLevel } from "../../components/services/level";
 
 const Homepage = () => {
   const location = useLocation();
@@ -40,10 +41,31 @@ const Homepage = () => {
   const handleError = (error) => {
     console.error("Error:", error);
   };
-  const handleStartClick = () => {
+  const handleStartClick = async () => {
     const encryptedData = encryptData(decryptedData, "secret_key");
 
     if (decryptedData.roleAutoAssigned && decryptedData.role) {
+      const formData = new FormData();
+
+      formData.append(
+        "data",
+        JSON.stringify({
+          gameId: decryptedData.GameID,
+          groupName: decryptedData.groupName,
+          email: decryptedData.email,
+          roomNumber: decryptedData.roomNumber,
+          resultsSubmission: decryptedData.ResultsSubmission,
+        }),
+      );
+
+      const res = await updateLevel(formData);
+
+      const updatedData = {
+        ...decryptedData,
+        level: res.data.CurrentLevel,
+      };
+
+      const encryptedData = encryptData(updatedData, "secret_key");
       navigate(`/level?data=${encodeURIComponent(encryptedData)}`);
     } else navigate(`/roles?data=${encodeURIComponent(encryptedData)}`);
   };

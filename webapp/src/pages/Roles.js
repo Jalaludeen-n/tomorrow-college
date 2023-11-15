@@ -66,7 +66,7 @@ const Roles = ({ name }) => {
 
     const updatedData = {
       ...data,
-      level: res.data.updatedData.CurrentLevel,
+      level: res.data.CurrentLevel,
     };
 
     const encryptedData = encryptData(updatedData, "secret_key");
