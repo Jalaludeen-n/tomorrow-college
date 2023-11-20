@@ -11,7 +11,11 @@ import Loader from "./Loader";
 import Layout from "../components/Layout";
 import NavbarLeft from "../components/NavbarLeft";
 import NavbarRight from "../components/NabarRight";
-import { decryptData, getDataFromURL } from "../components/helper/utils";
+import {
+  decryptData,
+  encryptData,
+  getDataFromURL,
+} from "../components/helper/utils";
 import { fetchRolePdf } from "../components/services/role";
 import Decision from "../components/Decision";
 
@@ -37,19 +41,18 @@ const Level = () => {
       transports: ["websocket"],
     });
 
-    socket.on("connect", () => {
-      console.log("Connected to WebSocket server");
-    });
-    socket.on("level", (data) => {
-      const searchParams = new URLSearchParams(location.search);
-      const encryptedData = searchParams.get("data");
-      if (encryptedData) {
-      }
-    });
-    socket.on("start", (data) => {});
-
-    socket.on("disconnect", () => {
-      console.log("Disconnected from WebSocket server");
+    socket.on("Movelevel", (data) => {
+      console.log("movelevel socket");
+      const encryptedData = getDataFromURL(location);
+      const key = "secret_key";
+      const decryptedData = decryptData(encryptedData, key);
+      const updatedData = {
+        ...decryptedData,
+        level: data.CurrentLevel,
+        started: data.started,
+      };
+      const newData = encryptData(updatedData, "secret_key");
+      navigate(`/result?data=${encodeURIComponent(newData)}`);
     });
 
     return () => {
@@ -72,7 +75,8 @@ const Level = () => {
       role: decryptData.role,
     };
     const res = await fetchRolePdf(data);
-    setRolePdf(res.data);
+    const pdf = res.data;
+    setRolePdf(pdf);
   };
   const fetchRoundInstruction = async (decryptData) => {
     const data = {
@@ -80,15 +84,22 @@ const Level = () => {
       role: decryptData.role,
       level: decryptData.level,
     };
+    console.log("dd");
+    console.log(data);
     const res = await fetchRoundPdf(data);
 
-    setRoundPdf(res.data);
+    if (res.success) {
+      const pdf = res.data;
+      setRoundPdf(pdf);
+    }
   };
   useEffect(() => {
     const encryptedData = getDataFromURL(location);
     const key = "secret_key";
     const data = decryptData(encryptedData, key);
     setData(data);
+    console.log("u");
+    console.log(data);
     fetchRoundInstruction(data);
   }, []);
 

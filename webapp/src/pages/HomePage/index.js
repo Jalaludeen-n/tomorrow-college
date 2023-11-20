@@ -84,18 +84,17 @@ const Homepage = () => {
       console.log("Connected to WebSocket server");
     });
     socket.on("updatelevel", (data) => {
-      console.log("incomssing");
-      console.log(decryptedData);
-      console.log(data);
-
+      const encryptedData = getDataFromURL(location);
+      const key = "secret_key";
+      const decryptedData = decryptData(encryptedData, key);
       const updatedData = {
         ...decryptedData,
         level: data.CurrentLevel,
         started: data.started,
       };
       if (
-        (data.started && decryptedData.level + 1 == data.CurrentLevel) ||
-        data.CurrentLevel == 1
+        (data.started && data.CurrentLevel == 1) ||
+        (data.started && decryptedData.level + 1 == data.CurrentLevel)
       ) {
         const encryptedData = encryptData(updatedData, "secret_key");
         navigate(`/level?data=${encodeURIComponent(encryptedData)}`);
