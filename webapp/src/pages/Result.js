@@ -4,7 +4,7 @@ import { Row, Col } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
 import GameDescription from "../components/game/GameDescription";
 
-import { getLevelStatus, updateLevel } from "../components/services/level";
+import { getCurrentLevelStatus } from "../components/services/level";
 import { useLocation } from "react-router-dom";
 import Loader from "./Loader";
 import Layout from "../components/Layout";
@@ -57,7 +57,7 @@ const Result = () => {
       level: data.level,
     };
 
-    const res = await getLevelStatus(formData);
+    const res = await getCurrentLevelStatus(formData);
     const started = res.data.started;
 
     if (started) {

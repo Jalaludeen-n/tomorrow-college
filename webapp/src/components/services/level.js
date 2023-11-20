@@ -31,9 +31,22 @@ export const startLevel = async (formattedData) => {
     handleError(error);
   }
 };
-export const getLevelStatus = async (data) => {
+export const getCurrentLevelStatus = async (data) => {
   try {
     const response = await axios.get(`${api_url}/level/current-status`, {
+      params: data,
+      responseType: "json",
+    });
+
+    return handleSuccess(response, "Level fetched");
+  } catch (error) {
+    handleError(error);
+  }
+};
+
+export const getLevelStatus = async (data) => {
+  try {
+    const response = await axios.get(`${api_url}/level/status`, {
       params: data,
       responseType: "json",
     });

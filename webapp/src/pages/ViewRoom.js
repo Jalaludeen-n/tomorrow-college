@@ -37,17 +37,14 @@ const ViewRoom = () => {
         fetchGroupDetails(formData),
         getLevelStatus(formData),
       ]);
-      console.log(res);
-      console.log(levelRes);
-
       setLoader(false);
-      if (res.success && res.Data) {
-        setTotal(res.Data.totalLevels);
-        setButtonText(Array(res.Data.totalLevels).fill("start"));
+      if (res.success && res.data) {
+        setTotal(res.data.totalLevels);
+        setButtonText(Array(res.data.totalLevels).fill("start"));
         const levelData = levelRes.levelStatus;
         setData(levelData);
-        const levels = res.Data.Levels;
-        setName(res.Data.Name);
+        const levels = res.data.Levels;
+        setName(res.data.Name);
         setLevels(levels);
       } else {
         console.log("No Active Games");
@@ -97,19 +94,19 @@ const ViewRoom = () => {
   };
 
   useEffect(() => {
-    if (!isLoggedIn) {
-      navigate("/admin");
-    } else {
-      setLoader(true);
-      const searchParams = new URLSearchParams(location.search);
-      const encryptedData = searchParams.get("data");
-      if (encryptedData) {
-        const bytes = CryptoJS.AES.decrypt(encryptedData, "secret_key");
-        const decryptedData = JSON.parse(bytes.toString(CryptoJS.enc.Utf8));
-        setDecryptedData(decryptedData);
-        setRoomNumber(decryptedData.roomNumber);
-        fetchData(decryptedData.roomNumber, decryptedData.GameID);
-      }
+    // if (!isLoggedIn) {
+    //   navigate("/admin");
+    // } else {
+    setLoader(true);
+    const searchParams = new URLSearchParams(location.search);
+    const encryptedData = searchParams.get("data");
+    if (encryptedData) {
+      const bytes = CryptoJS.AES.decrypt(encryptedData, "secret_key");
+      const decryptedData = JSON.parse(bytes.toString(CryptoJS.enc.Utf8));
+      setDecryptedData(decryptedData);
+      setRoomNumber(decryptedData.roomNumber);
+      fetchData(decryptedData.roomNumber, decryptedData.GameID);
+      // }
     }
   }, []);
 
@@ -162,23 +159,24 @@ const ViewRoom = () => {
                     <div className={styles.gameButtons}>
                       <div className={styles.gameListButton}>
                         <Col className={styles.marginLeft}>Round Status</Col>
-                        {Array.from({ length: total }, (_, index) => {
-                          const foundItem = data.find(
-                            (item) => item.Level === index + 1,
-                          );
-                          return (
-                            <Col key={index}>
-                              <button
-                                disabled={buttonText[index] === "Started"}
-                                className={styles.startButton}
-                                onClick={() => start(index + 1)}>
-                                {foundItem && foundItem.Status
-                                  ? foundItem.Status
-                                  : buttonText[index]}
-                              </button>
-                            </Col>
-                          );
-                        })}
+                        {data &&
+                          Array.from({ length: total }, (_, index) => {
+                            const foundItem = data.find(
+                              (item) => item.Level === index + 1,
+                            );
+                            return (
+                              <Col key={index}>
+                                <button
+                                  disabled={buttonText[index] === "Started"}
+                                  className={styles.startButton}
+                                  onClick={() => start(index + 1)}>
+                                  {foundItem && foundItem.Status
+                                    ? foundItem.Status
+                                    : buttonText[index]}
+                                </button>
+                              </Col>
+                            );
+                          })}
                       </div>
                     </div>
                   </Row>

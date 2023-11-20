@@ -1,10 +1,8 @@
 import styles from "../../styles/page/GameDetails.module.scss";
-import { Document, Page } from "react-pdf";
-import React, { useState } from "react";
-// import { PDFViewer } from "pdf-viewer-reactjs"; // Import PDFViewer
-// import "pdf-viewer-reactjs/dist/index.css"; // Import the CSS (make sure it's available in your project)
+import React from "react";
 
 const GameDescription = ({ pdfData, header, show }) => {
+
   return (
     <div className={`${styles.pdfContainer}`}>
       {show && (
@@ -18,7 +16,7 @@ const GameDescription = ({ pdfData, header, show }) => {
         title='PDF'
         style={{
           width: "100%",
-          height: "84vh",
+          height: "80vh",
         }}
       />
     </div>

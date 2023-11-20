@@ -94,24 +94,20 @@ const Score = () => {
   };
 
   useEffect(() => {
-    if (!isLoggedIn) {
-      navigate("/admin");
-    } else {
-      setLoader(true);
-      const searchParams = new URLSearchParams(location.search);
-      const encryptedData = searchParams.get("data");
-      if (encryptedData) {
-        const bytes = CryptoJS.AES.decrypt(encryptedData, "secret_key");
-        const decryptedData = JSON.parse(bytes.toString(CryptoJS.enc.Utf8));
-        setDecryptedData(decryptedData);
-        const total = decryptedData.total;
-        setTotal(total);
-        fetchData(
-          decryptedData.roomNumber,
-          decryptedData.gameID,
-          decryptedData.groupName,
-        );
-      }
+    setLoader(true);
+    const searchParams = new URLSearchParams(location.search);
+    const encryptedData = searchParams.get("data");
+    if (encryptedData) {
+      const bytes = CryptoJS.AES.decrypt(encryptedData, "secret_key");
+      const decryptedData = JSON.parse(bytes.toString(CryptoJS.enc.Utf8));
+      setDecryptedData(decryptedData);
+      const total = decryptedData.total;
+      setTotal(total);
+      fetchData(
+        decryptedData.roomNumber,
+        decryptedData.gameID,
+        decryptedData.groupName,
+      );
     }
   }, []);
   return (

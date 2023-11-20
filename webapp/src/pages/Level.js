@@ -5,7 +5,7 @@ import { useNavigate } from "react-router-dom";
 import GameDescription from "../components/game/GameDescription";
 import { io } from "socket.io-client";
 
-import { fetchRoundPdf, getLevelStatus } from "../components/services/level";
+import { fetchRoundPdf } from "../components/services/level";
 import { useLocation } from "react-router-dom";
 import Loader from "./Loader";
 import Layout from "../components/Layout";

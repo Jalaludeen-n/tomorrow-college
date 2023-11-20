@@ -35,6 +35,7 @@ const Homepage = () => {
   );
 
   const [loader, setLoader] = useState(false);
+  const [NextPageloader, setnextPageloader] = useState(false);
 
   const [decryptedData, setDecryptedData] = useState({});
 
@@ -42,6 +43,7 @@ const Homepage = () => {
     console.error("Error:", error);
   };
   const handleStartClick = async () => {
+    setnextPageloader(true);
     const encryptedData = encryptData(decryptedData, "secret_key");
 
     if (decryptedData.roleAutoAssigned && decryptedData.role) {
@@ -58,21 +60,7 @@ const Homepage = () => {
         }),
       );
 
-      const res = await updateLevel(formData);
-
-      const updatedData = {
-        ...decryptedData,
-        level: res.data.CurrentLevel,
-        started: res.data.started,
-      };
-      if (res.data.started) {
-        const encryptedData = encryptData(updatedData, "secret_key");
-        navigate(`/level?data=${encodeURIComponent(encryptedData)}`);
-      } else {
-        alert(
-          "Please wait; the round has not yet started. We will redirect you once the admin starts the round.",
-        );
-      }
+      await updateLevel(formData);
     } else navigate(`/roles?data=${encodeURIComponent(encryptedData)}`);
   };
 
@@ -95,7 +83,29 @@ const Homepage = () => {
     socket.on("connect", () => {
       console.log("Connected to WebSocket server");
     });
-    socket.on("participants", (data) => {});
+    socket.on("updatelevel", (data) => {
+      console.log("incomssing");
+      console.log(decryptedData);
+      console.log(data);
+
+      const updatedData = {
+        ...decryptedData,
+        level: data.CurrentLevel,
+        started: data.started,
+      };
+      if (
+        (data.started && decryptedData.level + 1 == data.CurrentLevel) ||
+        data.CurrentLevel == 1
+      ) {
+        const encryptedData = encryptData(updatedData, "secret_key");
+        navigate(`/level?data=${encodeURIComponent(encryptedData)}`);
+      } else {
+        setnextPageloader(false);
+        alert(
+          "Please wait; the round has not yet started. We will redirect you once the admin starts the round.",
+        );
+      }
+    });
 
     socket.on("disconnect", () => {
       console.log("Disconnected from WebSocket server");
@@ -114,33 +124,41 @@ const Homepage = () => {
   }, [location]);
 
   return (
-    <Layout LeftNavbar={NavbarLeft}>
-      <div className={styles.homeContainer}>
-        <div className={styles.bottomSectionContainer}>
-          <div>
-            {!loader ? (
-              <GameDescription
-                pdfData={state.gameInstructions}
-                header={"Game Introduction"}
-              />
-            ) : (
-              <Loader />
+    <>
+      {NextPageloader ? (
+        <Loader />
+      ) : (
+        <Layout LeftNavbar={NavbarLeft}>
+          <div className={styles.homeContainer}>
+            <div className={styles.bottomSectionContainer}>
+              <div>
+                {!loader ? (
+                  <GameDescription
+                    pdfData={state.gameInstructions}
+                    header={"Game Introduction"}
+                  />
+                ) : (
+                  <Loader />
+                )}
+              </div>
+            </div>
+            {!loader && (
+              <Row className={`mt-1 text-end ${styles.mt5} mr-0`}>
+                <Col className=''>
+                  <button
+                    className={styles.startButton}
+                    onClick={handleStartClick}>
+                    {decryptedData.roleAutoAssigned && decryptedData.role
+                      ? "Start THE ROUND"
+                      : "CHOOSE YOUR ROLE"}
+                  </button>
+                </Col>
+              </Row>
             )}
           </div>
-        </div>
-        {!loader && (
-          <Row className={`mt-1 text-end ${styles.mt5} mr-0`}>
-            <Col className=''>
-              <button className={styles.startButton} onClick={handleStartClick}>
-                {decryptedData.roleAutoAssigned && decryptedData.role
-                  ? "Start THE ROUND"
-                  : "CHOOSE YOUR ROLE"}
-              </button>
-            </Col>
-          </Row>
-        )}
-      </div>
-    </Layout>
+        </Layout>
+      )}
+    </>
   );
 };
 

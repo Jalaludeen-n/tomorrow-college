@@ -4,6 +4,7 @@ import style from "../../styles/page/Result.module.scss";
 import { useLocation } from "react-router-dom";
 import { fetchResults } from "../services/decision";
 import ResultItem from "./DecisionItem";
+import { Row, Col } from "react-bootstrap";
 import { decryptData, getDataFromURL } from "../helper/utils";
 
 const Decision = ({ onClick }) => {
@@ -35,8 +36,11 @@ const Decision = ({ onClick }) => {
 
   return (
     <div className={style.resultsContainer}>
-      {results.length &&
-        results.map((data, index) => <ResultItem data={data} round={index} />)}
+      <>
+        {results.map((data, index) => (
+          <ResultItem data={data} round={index} />
+        ))}
+      </>
     </div>
   );
 };

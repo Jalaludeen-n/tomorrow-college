@@ -57,15 +57,15 @@ const Decision = ({ data }) => {
     );
 
     const res = await storeAnsweres(formData);
-    console.log(res);
     const updatedData = {
       ...data,
-      level: res.data.CurrentLevel,
-      started: res.data.started,
+      level: res.data.data.CurrentLevel,
+      started: res.data.data.started,
     };
+    console.log(updatedData);
 
-    // const encryptedData = encryptData(updatedData, "secret_key");
-    // navigate(`/result?data=${encodeURIComponent(encryptedData)}`);
+    const encryptedData = encryptData(updatedData, "secret_key");
+    navigate(`/result?data=${encodeURIComponent(encryptedData)}`);
   };
 
   return (

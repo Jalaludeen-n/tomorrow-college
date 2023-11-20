@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import styles from "../styles/page/Roles.module.scss"; // Use the SCSS Module import
-import { Container, Row, Form, Col, Button } from "react-bootstrap";
+import { Row, Col } from "react-bootstrap";
 import {
   decryptData,
   encryptData,
@@ -15,9 +15,8 @@ import {
 import Loader from "./Loader";
 import { updateLevel } from "../components/services/level";
 
-const Roles = ({ name }) => {
+const Roles = () => {
   const navigate = useNavigate();
-  const names = ["Alice", "Bob", "Charlie", "David", "Eve"];
   const [loader, setLoader] = useState(true);
   const location = useLocation();
   const [data, setData] = useState({});
@@ -25,7 +24,6 @@ const Roles = ({ name }) => {
   const [roles, setRoles] = useState([]);
   const handleRoleChange = async (role) => {
     const formData = new FormData();
-    console.log(role);
     const updatedData = { ...data };
     updatedData.role = role;
     setData(updatedData);
