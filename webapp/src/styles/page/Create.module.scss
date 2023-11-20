@@ -9,6 +9,26 @@
 .form-control {
   width: 100%;
 }
+.container {
+  height: 100vh;
+  overflow-y: auto;
+}
+.scrollableContainer {
+  padding-bottom: 30vh;
+}
+.inputContainer {
+  padding-right: 15px;
+  margin-bottom: 10px;
+  margin-left: 10px;
+}
+
+.buttonContainer {
+  position: sticky;
+  bottom: 0;
+  z-index: -44; /* Adjust z-index if needed */
+  background-color: white; /* Ensure button container has a background */
+  padding: 10px; /* Adjust padding as necessary */
+}
 
 .RoleHeadline {
   color: #000;
