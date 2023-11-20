@@ -255,7 +255,7 @@ const Create = () => {
                 handleLevelPDF={handleLevelPDF}
               />
             )}
-            <div className={`fixed-bottom pb-5`}>
+            <div className={`fixed-bottom pb-5 ${styles.buttonContainer}`}>
               <Row className='justify-content-end'>
                 <Col md={3} className='text-right'>
                   <button onClick={cancel} className={styles.cancelButton}>
@@ -263,7 +263,7 @@ const Create = () => {
                   </button>
                   <button onClick={next} className={styles.nextButton}>
                     {!isNext ? "Next" : "Submit"}
-                  </button>{" "}
+                  </button>
                 </Col>
               </Row>
             </div>
