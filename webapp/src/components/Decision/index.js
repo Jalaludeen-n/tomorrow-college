@@ -37,9 +37,13 @@ const Decision = ({ onClick }) => {
   return (
     <div className={style.resultsContainer}>
       <>
-        {results.map((data, index) => (
-          <ResultItem data={data} round={index} />
-        ))}
+        {results.length > 0 ? (
+          results.map((data, index) => <ResultItem data={data} round={index} />)
+        ) : (
+          <div className='text-center mt-4'>
+            <p>You haven't submitted any decisions yet.</p>
+          </div>
+        )}
       </>
     </div>
   );
