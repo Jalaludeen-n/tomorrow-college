@@ -15,8 +15,14 @@
   padding-left: 12px;
   max-height: 50vh;
   overflow-y: auto;
+  margin-bottom: 12px !important;
 }
-
+.question {
+  margin-bottom: 4px !important;
+}
+.questions{
+  margin-bottom: 12px;
+}
 .welcomeName {
   color: #fff;
   font-family: Open Sans;
