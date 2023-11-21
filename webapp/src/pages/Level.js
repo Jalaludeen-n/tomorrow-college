@@ -1,65 +1,24 @@
 import React, { useState, useEffect } from "react";
 import styles from "../styles/page/Level.module.css";
 import { Row, Col } from "react-bootstrap";
-import { useNavigate } from "react-router-dom";
 import GameDescription from "../components/game/GameDescription";
-import { io } from "socket.io-client";
 
 import { fetchRoundPdf } from "../components/services/level";
 import { useLocation } from "react-router-dom";
-import Loader from "./Loader";
 import Layout from "../components/Layout";
 import NavbarLeft from "../components/NavbarLeft";
 import NavbarRight from "../components/NabarRight";
-import {
-  decryptData,
-  encryptData,
-  getDataFromURL,
-} from "../components/helper/utils";
+import { decryptData, getDataFromURL } from "../components/helper/utils";
 import { fetchRolePdf } from "../components/services/role";
 import Decision from "../components/Decision";
 
 const Level = () => {
-  const api_url = process.env.REACT_APP_API_URL;
   const [activeComponent, setActiveComponent] = useState("Round1Instruction");
   const [rolePdf, setRolePdf] = useState(null);
   const [roundPdf, setRoundPdf] = useState(null);
   const [data, setData] = useState({});
-  const [started, setStarted] = useState(false);
 
-  const navigate = useNavigate();
   const location = useLocation();
-
-  const [loader, setLoader] = useState(false);
-
-  const handleError = (error) => {
-    console.error("Error:", error);
-  };
-
-  useEffect(() => {
-    const socket = io(`${api_url}`, {
-      transports: ["websocket"],
-    });
-
-    socket.on("Movelevel", (data) => {
-      console.log("movelevel socket");
-      const encryptedData = getDataFromURL(location);
-      const key = "secret_key";
-      const decryptedData = decryptData(encryptedData, key);
-      const updatedData = {
-        ...decryptedData,
-        level: data.CurrentLevel,
-        started: data.started,
-        completed: data.completed,
-      };
-      const newData = encryptData(updatedData, "secret_key");
-      navigate(`/result?data=${encodeURIComponent(newData)}`);
-    });
-
-    return () => {
-      socket.disconnect();
-    };
-  }, []);
 
   const handleComponentChange = async (component) => {
     if (component == "RoleBriefing") {

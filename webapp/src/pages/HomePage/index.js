@@ -84,25 +84,33 @@ const Homepage = () => {
       console.log("Connected to WebSocket server");
     });
     socket.on("updatelevel", (data) => {
-      const encryptedData = getDataFromURL(location);
-      const key = "secret_key";
-      const decryptedData = decryptData(encryptedData, key);
       const updatedData = {
         ...decryptedData,
         level: data.CurrentLevel,
         started: data.started,
       };
-      if (
-        (data.started && data.CurrentLevel == 1) ||
-        (data.started && decryptedData.level + 1 == data.CurrentLevel)
+
+      if (data.playerClick) {
+        if (data.email == decryptedData.email) {
+          if (data.started) {
+            const encryptedData = encryptData(updatedData, "secret_key");
+            navigate(`/level?data=${encodeURIComponent(encryptedData)}`);
+          } else {
+            setLoader(false);
+            alert(
+              "Please wait; the round has not yet started. We will redirect you once the admin starts the round.",
+            );
+          }
+        } else if (data.started) {
+          const encryptedData = encryptData(updatedData, "secret_key");
+          navigate(`/level?data=${encodeURIComponent(encryptedData)}`);
+        }
+      } else if (
+        (data.CurrentLevel == decryptedData.level || data.CurrentLevel == 1) &&
+        data.started
       ) {
         const encryptedData = encryptData(updatedData, "secret_key");
         navigate(`/level?data=${encodeURIComponent(encryptedData)}`);
-      } else {
-        setnextPageloader(false);
-        alert(
-          "Please wait; the round has not yet started. We will redirect you once the admin starts the round.",
-        );
       }
     });
 
@@ -119,7 +127,6 @@ const Homepage = () => {
     const encryptedData = getDataFromURL(location);
     const key = "secret_key";
     const data = decryptData(encryptedData, key);
-    console.log(data);
     decryptAndShowPdf(data);
   }, [location]);
 

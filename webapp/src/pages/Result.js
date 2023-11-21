@@ -51,19 +51,31 @@ const Result = () => {
     socket.on("connect", () => {
       console.log("Connected to WebSocket server");
     });
-    socket.on("updatelevel", (data) => {
-      const encryptedData = getDataFromURL(location);
-      const key = "secret_key";
-      const decryptedData = decryptData(encryptedData, key);
-      const updatedData = {
-        ...decryptedData,
-        level: data.CurrentLevel,
-        started: data.started,
+
+    socket.on("updatelevel", (receivedData) => {
+      let updatedData = {
+        ...receivedData,
+        level: receivedData.CurrentLevel,
+        started: receivedData.started,
       };
 
-      const updateEncryptedData = encryptData(updatedData, "secret_key");
-      if (!decryptData.completed)
-        navigate(`/level?data=${encodeURIComponent(updateEncryptedData)}`);
+      if (receivedData.playerClick && receivedData.email === data.email) {
+        if (receivedData.started) {
+          const encryptedData = encryptData(updatedData, "secret_key");
+          navigate(`/level?data=${encodeURIComponent(encryptedData)}`);
+        } else {
+          setLoader(false);
+          alert(
+            "Please wait; the round has not yet started. We will redirect you once the admin starts the round.",
+          );
+        }
+      } else if (
+        receivedData.started &&
+        receivedData.CurrentLevel === data.level
+      ) {
+        const encryptedData = encryptData(updatedData, "secret_key");
+        navigate(`/level?data=${encodeURIComponent(encryptedData)}`);
+      }
     });
 
     socket.on("disconnect", () => {

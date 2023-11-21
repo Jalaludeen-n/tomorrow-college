@@ -1,13 +1,22 @@
 import React, { useEffect, useState } from "react";
 import styles from "../../../styles/components/navbar/Right.module.scss";
 import { Row, Form, Col } from "react-bootstrap";
-import { encryptData, isObjectEmpty } from "../../helper/utils";
+import {
+  decryptData,
+  encryptData,
+  getDataFromURL,
+  isObjectEmpty,
+} from "../../helper/utils";
 import { fetchQustions, storeAnsweres } from "../../services/decision";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import Loader from "../../../pages/Loader";
+import { io } from "socket.io-client";
 
 const Decision = ({ data }) => {
+  const location = useLocation();
+
   const navigate = useNavigate();
+  const api_url = process.env.REACT_APP_API_URL;
 
   const [questions, setQustions] = useState([]);
   const [answers, setAnswers] = useState([]);
@@ -66,14 +75,46 @@ const Decision = ({ data }) => {
     const res = await storeAnsweres(formData);
     const updatedData = {
       ...data,
-      level: res.data.CurrentLevel,
-      started: res.data.started,
-      completed: res.data.completed,
+      level: res.CurrentLevel,
+      started: res.started,
+      completed: res.completed,
     };
-    setLoader(true);
     const encryptedData = encryptData(updatedData, "secret_key");
     navigate(`/result?data=${encodeURIComponent(encryptedData)}`);
   };
+
+  useEffect(() => {
+    const socket = io(`${api_url}`, {
+      transports: ["websocket"],
+    });
+
+    socket.on("Movelevel", (data) => {
+      const encryptedData = getDataFromURL(location);
+      const key = "secret_key";
+      const decryptedData = decryptData(encryptedData, key);
+      const updatedData = {
+        ...decryptedData,
+        level: data.CurrentLevel,
+        started: data.started,
+        completed: data.completed,
+      };
+
+      if (
+        data.email !== decryptedData.email &&
+        data.groupName === decryptedData.groupName
+      ) {
+        alert(
+          `Your team, led by ${data.name}, has submitted the answer, so we are redirecting to the result page.`,
+        );
+        const newData = encryptData(updatedData, "secret_key");
+        navigate(`/result?data=${encodeURIComponent(newData)}`);
+      }
+    });
+
+    return () => {
+      socket.disconnect();
+    };
+  }, []);
 
   return (
     <div className={styles.decision_container}>
