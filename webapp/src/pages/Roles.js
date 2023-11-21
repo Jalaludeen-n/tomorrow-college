@@ -64,8 +64,12 @@ const Roles = () => {
         level: data.CurrentLevel,
         started: data.started,
       };
-      console.log(data);
-      if (data.started) {
+      if (
+        (decryptedData.role && data.started && data.CurrentLevel == 1) ||
+        (decryptedData.role &&
+          data.started &&
+          decryptedData.level + 1 == data.CurrentLevel)
+      ) {
         const encryptedData = encryptData(updatedData, "secret_key");
         navigate(`/level?data=${encodeURIComponent(encryptedData)}`);
       } else {
