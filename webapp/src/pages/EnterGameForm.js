@@ -1,19 +1,14 @@
-import React, { useState, useContext } from "react";
-import { Container, Row, Col, Button, Form } from "react-bootstrap";
+import React, { useState } from "react";
+import { Container, Row, Col, Form } from "react-bootstrap";
 import styles from "./../styles/components/user/EnterGameForm.module.css";
 import { joinGame } from "../components/services/airtable";
-import CryptoJS from "crypto-js";
 import Loader from "./Loader";
-import { useLocation } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
 import AppHeader from "../components/AppHeader";
 import { encryptData, setLocalStorageItem } from "../components/helper/utils";
 
 const EnterGameForm = () => {
-  // const { login } = useContext(AuthContext);
-
   const navigate = useNavigate();
-  const location = useLocation();
   const [email, setEmail] = useState("");
   const [name, setName] = useState("");
   const [roomNumber, setRoomNumber] = useState("");
@@ -60,7 +55,6 @@ const EnterGameForm = () => {
       );
       setLocalStorageItem("gameInstruction", gameInstruction);
       const encryptedData = encryptData(gameData, "secret_key");
-      // login();
       navigate(`/home?data=${encodeURIComponent(encryptedData)}`);
     } else {
       alert(res.message);
@@ -116,7 +110,6 @@ const EnterGameForm = () => {
 
       return { gameData, gameInstruction };
     } else {
-      // Handle the case when res.success is false
       throw new Error("Failed to format game data");
     }
   };

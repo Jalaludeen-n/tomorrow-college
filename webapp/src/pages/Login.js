@@ -1,10 +1,6 @@
 import React, { useState, useContext } from "react";
 import { Container, Row, Col, Button, Form } from "react-bootstrap";
 import styles from "./../styles/components/user/EnterGameForm.module.css";
-import { joinGame } from "../components/services/airtable";
-import CryptoJS from "crypto-js";
-import Loader from "./Loader";
-import { useLocation } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
 import AppHeader from "../components/AppHeader";
 import { AdminAuthContext } from "./../components/auth/AdminAuth";

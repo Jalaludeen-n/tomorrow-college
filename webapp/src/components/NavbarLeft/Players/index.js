@@ -22,11 +22,10 @@ const Players = ({ data }) => {
       );
 
       const res = await fetchRolesAndParticipants(formData);
-
-      setLoader(false);
-      if (res && res.data.filteredparticipants.length) {
-        setPlayers(res.data.filteredparticipants);
+      if (res?.data?.length) {
+        setPlayers(res.data);
       }
+      setLoader(false);
     } catch (error) {
       console.error(error);
     }
