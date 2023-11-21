@@ -22,6 +22,7 @@ const Players = ({ data }) => {
       );
 
       const res = await fetchRolesAndParticipants(formData);
+
       setLoader(false);
       if (res && res.data.filteredparticipants.length) {
         setPlayers(res.data.filteredparticipants);

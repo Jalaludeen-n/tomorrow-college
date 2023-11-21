@@ -50,6 +50,7 @@ const Level = () => {
         ...decryptedData,
         level: data.CurrentLevel,
         started: data.started,
+        completed: data.completed,
       };
       const newData = encryptData(updatedData, "secret_key");
       navigate(`/result?data=${encodeURIComponent(newData)}`);
@@ -84,8 +85,6 @@ const Level = () => {
       role: decryptData.role,
       level: decryptData.level,
     };
-    console.log("dd");
-    console.log(data);
     const res = await fetchRoundPdf(data);
 
     if (res.success) {
@@ -98,8 +97,6 @@ const Level = () => {
     const key = "secret_key";
     const data = decryptData(encryptedData, key);
     setData(data);
-    console.log("u");
-    console.log(data);
     fetchRoundInstruction(data);
   }, []);
 

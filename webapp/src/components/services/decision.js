@@ -30,6 +30,24 @@ export const fetchResults = async (data) => {
     handleError(error);
   }
 };
+export const fetchIndividualResultPdf = async (data) => {
+  try {
+    const response = await axios.get(
+      `${api_url}/decision-form/individual-result`,
+      {
+        params: data,
+        responseType: "json",
+      },
+    );
+    return handleSuccess(
+      response,
+      "Roles and participants fetched successfully",
+    );
+  } catch (error) {
+    handleError(error);
+  }
+};
+
 export const storeAnsweres = async (data) => {
   try {
     const response = await axios.post(

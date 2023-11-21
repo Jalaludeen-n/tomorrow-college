@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import styles from "../styles/page/Roles.module.scss"; // Use the SCSS Module import
 import { Row, Col } from "react-bootstrap";
+import { io } from "socket.io-client";
 import {
   decryptData,
   encryptData,
@@ -16,6 +17,7 @@ import Loader from "./Loader";
 import { updateLevel } from "../components/services/level";
 
 const Roles = () => {
+  const api_url = process.env.REACT_APP_API_URL;
   const navigate = useNavigate();
   const [loader, setLoader] = useState(true);
   const location = useLocation();
@@ -45,6 +47,47 @@ const Roles = () => {
       console.error(er);
     }
   };
+  useEffect(() => {
+    const socket = io(`${api_url}`, {
+      transports: ["websocket"],
+    });
+
+    socket.on("connect", () => {
+      console.log("Connected to WebSocket server");
+    });
+    socket.on("updatelevel", (data) => {
+      const encryptedData = getDataFromURL(location);
+      const key = "secret_key";
+      const decryptedData = decryptData(encryptedData, key);
+      const updatedData = {
+        ...decryptedData,
+        level: data.CurrentLevel,
+        started: data.started,
+      };
+      if (
+        (decryptedData.role && data.started && data.CurrentLevel == 1) ||
+        (decryptedData.role &&
+          data.started &&
+          decryptedData.level + 1 == data.CurrentLevel)
+      ) {
+        const encryptedData = encryptData(updatedData, "secret_key");
+        navigate(`/level?data=${encodeURIComponent(encryptedData)}`);
+      } else {
+        setLoader(false);
+        alert(
+          "Please wait; the round has not yet started. We will redirect you once the admin starts the round.",
+        );
+      }
+    });
+
+    socket.on("disconnect", () => {
+      console.log("Disconnected from WebSocket server");
+    });
+
+    return () => {
+      socket.disconnect();
+    };
+  }, []);
 
   const handleStartClick = async () => {
     setLoader(true);
@@ -60,22 +103,7 @@ const Roles = () => {
         resultsSubmission: data.ResultsSubmission,
       }),
     );
-    const res = await updateLevel(formData);
-
-    const updatedData = {
-      ...data,
-      level: res.data.CurrentLevel,
-      started: res.data.started,
-    };
-
-    if (res.data.started) {
-      const encryptedData = encryptData(updatedData, "secret_key");
-      navigate(`/level?data=${encodeURIComponent(encryptedData)}`);
-    } else {
-      alert(
-        "Please wait; the round has not yet started. We will redirect you once the admin starts the round.",
-      );
-    }
+    await updateLevel(formData);
   };
 
   const fetchParticipants = async (email, roomNumber, groupName) => {

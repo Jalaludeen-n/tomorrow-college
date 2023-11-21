@@ -1,9 +1,27 @@
 // Navbar.js
-import React from "react";
+import React, { useState } from "react";
 import { Row, Col } from "react-bootstrap";
 import style from "../../styles/page/Result.module.scss";
+import PopupComponent from "../popup";
+import GameDescription from "../game/GameDescription";
+import { fetchResultPdf } from "../services/decision";
 
-const Decision = ({ data, round }) => {
+const Decision = ({ data, round, fullData }) => {
+  const [showPopup, setShowPopup] = useState(false);
+  const [pdf, setRoundPdf] = useState(null);
+
+  const togglePopup = async () => {
+    const formatData = {
+      sheetID: fullData.GoogleSheetID,
+      level: parseInt(round) + 2,
+    };
+    console.log(formatData);
+    if (!showPopup) {
+      const res = await fetchResultPdf(formatData);
+      setRoundPdf(res.data);
+    }
+    setShowPopup(!showPopup);
+  };
   return (
     <Row className={style.resultItem}>
       <Row className={style.header}>
@@ -14,7 +32,9 @@ const Decision = ({ data, round }) => {
           xs={6}
           md={6}
           className='d-flex align-items-center justify-content-end'>
-          <div className={style.output}>Output</div>
+          <div className={style.output} onClick={togglePopup}>
+            Output
+          </div>
         </Col>
       </Row>
       <Row className={style.header}>
@@ -41,6 +61,12 @@ const Decision = ({ data, round }) => {
           </Col>
         </Row>
       ))}
+      {showPopup && (
+        <PopupComponent
+          onClose={togglePopup}
+          contentComponent={<GameDescription pdfData={pdf} show={false} />}
+        />
+      )}
     </Row>
   );
 };

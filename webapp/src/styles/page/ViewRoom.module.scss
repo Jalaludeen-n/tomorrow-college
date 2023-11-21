@@ -97,6 +97,8 @@
   margin: 0 auto;
   padding-right: 0 !important; /* Remove padding-right */
   padding-left: 0 !important; /* Remove padding-left */
+  height: 57vh;
+  overflow-y: auto;
 
   &__headline {
     font-weight: bold;

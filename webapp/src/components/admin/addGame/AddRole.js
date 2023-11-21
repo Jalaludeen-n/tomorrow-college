@@ -7,8 +7,8 @@ import styles from "../../../styles/page/Create.module.scss";
 
 function AddRole({ roleInputs, handleAddRoleClick, handleInputChange, roles }) {
   return (
-    <div className={styles.scrollableContainer}>
-      <div className={styles.inputContainer}>
+    <div className={styles.scrollableContainesr}>
+      <div className={styles.inputContainesr}>
         {roleInputs.map((input, index) => (
           <Row key={index} className='pb-2'>
             <Col md={3}>

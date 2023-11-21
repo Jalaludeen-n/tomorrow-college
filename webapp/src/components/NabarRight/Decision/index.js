@@ -58,16 +58,17 @@ const Decision = ({ data }) => {
         roomNumber: data.roomNumber,
         email: data.email,
         resultsSubmission: data.ResultsSubmission,
+        numberOfRounds: data.NumberOfRounds,
+        name: data.name,
       }),
     );
 
     const res = await storeAnsweres(formData);
-    console.log(res);
-    console.log("desic");
     const updatedData = {
       ...data,
-      level: res.data.data.CurrentLevel,
-      started: res.data.data.started,
+      level: res.data.CurrentLevel,
+      started: res.data.started,
+      completed: res.data.completed,
     };
     setLoader(true);
     const encryptedData = encryptData(updatedData, "secret_key");

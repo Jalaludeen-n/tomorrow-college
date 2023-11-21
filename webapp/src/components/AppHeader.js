@@ -1,8 +1,25 @@
 import React from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate, useLocation } from "react-router-dom";
 import styles from "../styles/components/AppHeader.module.css"; // Import your style module
 import Logo from "./../icons/logo.svg";
+import { decryptData, encryptData, getDataFromURL } from "./helper/utils";
+
 const AppHeader = ({ form }) => {
+  const location = useLocation();
+  const navigate = useNavigate();
+
+  const handleClick = () => {
+    const encryptedData = getDataFromURL(location);
+    const key = "secret_key";
+    const decryptedData = decryptData(encryptedData, key);
+    const updatedData = {
+      ...decryptedData,
+      main: true,
+    };
+    const newData = encryptData(updatedData, "secret_key");
+    navigate(`/result?data=${encodeURIComponent(newData)}`);
+  };
+
   return (
     <div className={styles["sub-header"]}>
       <div className={styles["icon-container"]}>

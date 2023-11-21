@@ -3,6 +3,7 @@ import styles from "../styles/page/Level.module.css";
 import { Row, Col } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
 import GameDescription from "../components/game/GameDescription";
+import { io } from "socket.io-client";
 
 import { getCurrentLevelStatus } from "../components/services/level";
 import { useLocation } from "react-router-dom";
@@ -18,6 +19,7 @@ import Decision from "../components/Decision";
 import { fetchResultPdf } from "../components/services/decision";
 
 const Result = () => {
+  const api_url = process.env.REACT_APP_API_URL;
   const [activeComponent, setActiveComponent] = useState("RoundResult");
   const [roundPdf, setRoundPdf] = useState(null);
   const [data, setData] = useState({});
@@ -41,6 +43,37 @@ const Result = () => {
     const res = await fetchResultPdf(data);
     setRoundPdf(res.data);
   };
+  useEffect(() => {
+    const socket = io(`${api_url}`, {
+      transports: ["websocket"],
+    });
+
+    socket.on("connect", () => {
+      console.log("Connected to WebSocket server");
+    });
+    socket.on("updatelevel", (data) => {
+      const encryptedData = getDataFromURL(location);
+      const key = "secret_key";
+      const decryptedData = decryptData(encryptedData, key);
+      const updatedData = {
+        ...decryptedData,
+        level: data.CurrentLevel,
+        started: data.started,
+      };
+
+      const updateEncryptedData = encryptData(updatedData, "secret_key");
+      if (!decryptData.completed)
+        navigate(`/level?data=${encodeURIComponent(updateEncryptedData)}`);
+    });
+
+    socket.on("disconnect", () => {
+      console.log("Disconnected from WebSocket server");
+    });
+
+    return () => {
+      socket.disconnect();
+    };
+  }, []);
 
   useEffect(() => {
     const encryptedData = getDataFromURL(location);
@@ -51,6 +84,7 @@ const Result = () => {
   }, []);
 
   const handleStartClick = async () => {
+    setLoader(true);
     const formData = {
       roomNumber: data.roomNumber,
       gameId: data.GameID,
@@ -64,6 +98,7 @@ const Result = () => {
       const encryptedData = encryptData(data, "secret_key");
       navigate(`/level?data=${encodeURIComponent(encryptedData)}`);
     } else {
+      setLoader(false);
       alert(
         "Please wait; the round has not yet started. We will redirect you once the admin starts the round.",
       );
@@ -72,37 +107,46 @@ const Result = () => {
 
   return (
     <>
-      <Layout
-        className={`app-container ${styles.levelPage}`}
-        LeftNavbar={NavbarLeft}>
-        <Row className={styles.levelHeaders}>
-          <Col
-            className={`d-flex align-items-center justify-content-center ${
-              activeComponent === "RoundResult" ? styles.activeHeader : ""
-            }`}
-            onClick={() => handleComponentChange("RoundResult")}>
-            Round {data.level} Result
-          </Col>
-          <Col
-            className={`d-flex align-items-center justify-content-center ${
-              activeComponent === "HistoricalDecisions"
-                ? styles.activeHeader
-                : ""
-            }`}
-            onClick={() => handleComponentChange("HistoricalDecisions")}>
-            Historical Decisions
-          </Col>
-        </Row>
-        {activeComponent === "RoundResult" && (
-          <GameDescription pdfData={roundPdf} show={false} />
-        )}
-        {activeComponent === "HistoricalDecisions" && <Decision />}
-      </Layout>
-      <div className={styles.startButtonContainer}>
-        <button className={styles.startButton} onClick={handleStartClick}>
-          Start NEXT ROUND
-        </button>
-      </div>
+      {loader ? (
+        <Loader />
+      ) : (
+        <>
+          <Layout
+            className={`app-container ${styles.levelPage}`}
+            LeftNavbar={NavbarLeft}>
+            <Row className={styles.levelHeaders}>
+              <Col
+                className={`d-flex align-items-center justify-content-center ${
+                  activeComponent === "RoundResult" ? styles.activeHeader : ""
+                }`}
+                onClick={() => handleComponentChange("RoundResult")}>
+                Round {data.completed ? data.level : data.level - 1} Result
+              </Col>
+              <Col
+                className={`d-flex align-items-center justify-content-center ${
+                  activeComponent === "HistoricalDecisions"
+                    ? styles.activeHeader
+                    : ""
+                }`}
+                onClick={() => handleComponentChange("HistoricalDecisions")}>
+                Historical Decisions
+              </Col>
+            </Row>
+            {activeComponent === "RoundResult" && (
+              <GameDescription pdfData={roundPdf} show={false} />
+            )}
+            {activeComponent === "HistoricalDecisions" && <Decision />}
+          </Layout>
+
+          {!data.completed && (
+            <div className={styles.startButtonContainer}>
+              <button className={styles.startButton} onClick={handleStartClick}>
+                Start NEXT ROUND
+              </button>
+            </div>
+          )}
+        </>
+      )}
     </>
   );
 };

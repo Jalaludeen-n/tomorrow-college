@@ -5,16 +5,23 @@
   align-items: flex-start;
   margin-bottom: 20px;
 }
+.pdfContainer {
+  overflow-y: auto;
+  height: 80vh;
+}
+.mainContainer {
+  height: 80vh;
+  overflow-y: auto;
+}
 
 .form-control {
   width: 100%;
 }
 .container {
-  height: 100vh;
-  overflow-y: auto;
 }
 .scrollableContainer {
-  padding-bottom: 30vh;
+  height: 23vh;
+  overflow-y: auto;
 }
 .inputContainer {
   padding-right: 15px;
@@ -24,8 +31,7 @@
 
 .buttonContainer {
   position: sticky;
-  bottom: 0;
-  z-index: -44; /* Adjust z-index if needed */
+  bottom: 10px;
   background-color: white; /* Ensure button container has a background */
   padding: 10px; /* Adjust padding as necessary */
 }

@@ -145,9 +145,9 @@ const Create = () => {
     if (isNext) {
       const formattedData = formatDataForAirtable();
       try {
-        // setLoader(true);
+        setLoader(true);
         await sendGameData(formattedData);
-        // navigate("/list");
+        navigate("/list");
       } catch (error) {
         console.error("Error sending data to Airtable:", error);
       }
@@ -210,7 +210,7 @@ const Create = () => {
   return (
     <>
       {!loader ? (
-        <Container>
+        <Container className={styles.mainContainer}>
           <Form>
             <Row className={`justify-content-center mt-5 ${styles.pageTitle}`}>
               <h2>New game</h2>

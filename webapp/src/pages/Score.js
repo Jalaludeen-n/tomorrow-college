@@ -9,6 +9,8 @@ import Loader from "./Loader";
 import Arrow from "../icons/Arrow.svg";
 import { AdminAuthContext } from "../components/auth/AdminAuth";
 import { useNavigate } from "react-router-dom";
+import { fetchIndividualResultPdf } from "../components/services/decision";
+import { decryptData, getDataFromURL } from "../components/helper/utils";
 
 const Score = () => {
   const navigate = useNavigate();
@@ -51,16 +53,21 @@ const Score = () => {
         }),
       );
 
-      const res = await fetchScore(formData);
+      const formatData = {
+        gameID,
+        level,
+        roomNumber,
+        groupName,
+        email,
+      };
+      console.log(decryptedData);
+      console.log("dssd");
+      console.log(formatData);
+
+      const res = await fetchIndividualResultPdf(formatData);
       setScoreLoader(false);
 
-      setType(res.type);
-      if (res.type === "number") {
-        setData(res.data);
-      } else {
-        setPdf(res.data);
-      }
-      setSheetID(res.sheetID);
+      setPdf(res.data);
     } catch (error) {
       console.error("Error fetching data:", error);
     }
@@ -94,21 +101,14 @@ const Score = () => {
   };
 
   useEffect(() => {
+    const encryptedData = getDataFromURL(location);
+    const key = "secret_key";
+    const data = decryptData(encryptedData, key);
     setLoader(true);
-    const searchParams = new URLSearchParams(location.search);
-    const encryptedData = searchParams.get("data");
-    if (encryptedData) {
-      const bytes = CryptoJS.AES.decrypt(encryptedData, "secret_key");
-      const decryptedData = JSON.parse(bytes.toString(CryptoJS.enc.Utf8));
-      setDecryptedData(decryptedData);
-      const total = decryptedData.total;
-      setTotal(total);
-      fetchData(
-        decryptedData.roomNumber,
-        decryptedData.gameID,
-        decryptedData.groupName,
-      );
-    }
+    setDecryptedData(data);
+    const total = data.total;
+    setTotal(total);
+    fetchData(data.roomNumber, data.gameID, data.groupName);
   }, []);
   return (
     <Container className={styles.viewRoom__container}>
@@ -206,30 +206,19 @@ const Score = () => {
                 <Row className=' d-flex justify-content-center align-items-center'>
                   {!scoreLoader ? (
                     <div>
-                      {type === "number" ? (
-                        <Col
-                          className='d-flex align-items-center justify-content-center'
+                      <Col>
+                        <iframe
+                          className={`${styles.description}`}
+                          src={`data:application/pdf;base64,${pdf}`}
+                          title='PDF'
                           style={{
                             width: "100%",
                             height: "50vh",
-                          }}>
-                          Score: {data}
-                        </Col>
-                      ) : (
-                        <Col>
-                          <iframe
-                            className={`${styles.description}`}
-                            src={`data:application/pdf;base64,${pdf}`}
-                            title='PDF'
-                            style={{
-                              width: "100%",
-                              height: "50vh",
-                              border: "none",
-                              zoom: "100%",
-                            }}
-                          />
-                        </Col>
-                      )}
+                            border: "none",
+                            zoom: "100%",
+                          }}
+                        />
+                      </Col>
                     </div>
                   ) : (
                     <Col
