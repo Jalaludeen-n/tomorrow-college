@@ -15,9 +15,22 @@ const AppHeader = ({ form }) => {
     const updatedData = {
       ...decryptedData,
       main: true,
+      from: window.location.pathname,
     };
     const newData = encryptData(updatedData, "secret_key");
-    navigate(`/result?data=${encodeURIComponent(newData)}`);
+    navigate(`/home?data=${encodeURIComponent(newData)}`);
+  };
+  const handleCurrent = () => {
+    console.log("dssss");
+    const encryptedData = getDataFromURL(location);
+    const key = "secret_key";
+    const decryptedData = decryptData(encryptedData, key);
+    const updatedData = {
+      ...decryptedData,
+      main: false,
+    };
+    const newData = encryptData(updatedData, "secret_key");
+    navigate(`${updatedData.from}?data=${encodeURIComponent(newData)}`);
   };
 
   return (
@@ -27,13 +40,13 @@ const AppHeader = ({ form }) => {
       </div>
       {!form && (
         <div className={styles["button-container"]}>
-          <Link
-            to='/home'
+          <div
+            onClick={handleClick}
             className={`${styles["header-link"]} ${
               window.location.pathname === "/home" ? styles["active"] : ""
             }`}>
             Game Homepage
-          </Link>
+          </div>
           <Link
             to='/leaderboard'
             className={`${styles["header-link"]} ${
@@ -43,13 +56,13 @@ const AppHeader = ({ form }) => {
             }`}>
             Leaderboard
           </Link>
-          <Link
-            to='/level'
+          <div
+            onClick={handleCurrent}
             className={`${styles["header-link"]} ${
               window.location.pathname === "/level" ? styles["active"] : ""
             }`}>
             Current Round
-          </Link>
+          </div>
         </div>
       )}
     </div>

@@ -119,6 +119,7 @@ const Homepage = () => {
     const encryptedData = getDataFromURL(location);
     const key = "secret_key";
     const data = decryptData(encryptedData, key);
+    console.log(data);
     decryptAndShowPdf(data);
   }, [location]);
 
@@ -141,7 +142,7 @@ const Homepage = () => {
                 )}
               </div>
             </div>
-            {!loader && (
+            {!loader && !decryptedData.main && (
               <Row className={`mt-1 text-end ${styles.mt5} mr-0`}>
                 <Col className=''>
                   <button
