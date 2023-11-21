@@ -24,10 +24,11 @@ const Roles = () => {
   const [data, setData] = useState({});
   const [players, setPlayers] = useState([]);
   const [roles, setRoles] = useState([]);
+
   const handleRoleChange = async (role) => {
     const formData = new FormData();
-    const updatedData = { ...data };
-    updatedData.role = role;
+
+    const updatedData = { ...data, role: role };
     setData(updatedData);
 
     formData.append(
@@ -47,44 +48,6 @@ const Roles = () => {
       console.error(er);
     }
   };
-  useEffect(() => {
-    const socket = io(`${api_url}`, {
-      transports: ["websocket"],
-    });
-
-    socket.on("connect", () => {
-      console.log("Connected to WebSocket server");
-    });
-    socket.on("updatelevel", (data) => {
-      const encryptedData = getDataFromURL(location);
-      const key = "secret_key";
-      const decryptedData = decryptData(encryptedData, key);
-      const updatedData = {
-        ...decryptedData,
-        level: data.CurrentLevel,
-        started: data.started,
-      };
-      console.log(data);
-      if (decryptedData.role && data.started) {
-        const encryptedData = encryptData(updatedData, "secret_key");
-        navigate(`/level?data=${encodeURIComponent(encryptedData)}`);
-      } else {
-        setLoader(false);
-        alert(
-          "Please wait; the round has not yet started. We will redirect you once the admin starts the round.",
-        );
-      }
-    });
-
-    socket.on("disconnect", () => {
-      console.log("Disconnected from WebSocket server");
-    });
-
-    return () => {
-      socket.disconnect();
-    };
-  }, []);
-
   const handleStartClick = async () => {
     setLoader(true);
     const formData = new FormData();
@@ -102,46 +65,46 @@ const Roles = () => {
     await updateLevel(formData);
   };
 
-  const fetchParticipants = async (email, roomNumber, groupName) => {
+  const fetchParticipants = async (data) => {
     try {
       const formData = new FormData();
       formData.append(
         "data",
         JSON.stringify({
-          groupName: groupName,
-          email: email,
-          roomNumber: roomNumber,
+          roomNumber: data.roomNumber,
+          groupName: data.groupName,
+          email: data.email,
         }),
       );
-
       const res = await fetchRolesAndParticipants(formData);
-      setLoader(false);
-      if (res && res.data.filteredparticipants.length) {
-        setPlayers(res.data.filteredparticipants);
+      if (res?.data?.length) {
+        setPlayers(res.data);
       }
+      setLoader(false);
     } catch (error) {
       console.error(error);
     }
   };
+
   const fetchParticipantsAndSet = async (data) => {
     try {
-      await fetchParticipants(data.email, data.roomNumber, data.groupName);
+      setData(data);
+      await fetchParticipants(data);
+
       const gameData = {
         roomNumber: data.roomNumber,
         groupName: data.groupName,
+        roleAutoAssigned: data.roleAutoAssigned,
+        gameId: data.GameID,
+        email: data.email,
       };
+
       const res = await fetchRemainingRoles(gameData);
-      if (res.data.length) {
-        const data = res.data;
-        const seen = new Set();
-        const roles = data.filter((item) => {
-          if (item !== null && !seen.has(item)) {
-            seen.add(item);
-            return true;
-          }
-          return false;
-        });
-        setRoles(roles);
+      if (res?.data?.length) {
+        const uniqueRoles = [
+          ...new Set(res.data.filter((item) => item !== null)),
+        ];
+        setRoles(uniqueRoles);
       }
     } catch (error) {
       console.error(error);
@@ -149,13 +112,66 @@ const Roles = () => {
   };
 
   useEffect(() => {
+    const socket = io(`${api_url}`, {
+      transports: ["websocket"],
+    });
+
     const encryptedData = getDataFromURL(location);
     const key = "secret_key";
-    const data = decryptData(encryptedData, key);
-    setData(data);
-    fetchParticipantsAndSet(data);
-  }, []);
+    const decryptedData = decryptData(encryptedData, key);
+    console.log(decryptedData);
 
+    socket.on("connect", () => {
+      console.log("Connected to WebSocket server");
+    });
+
+    socket.on("updatelevel", (data) => {
+      const updatedData = {
+        ...decryptedData,
+        level: data.CurrentLevel,
+        started: data.started,
+      };
+
+      if (data.playerClick) {
+        if (data.email == decryptedData.email) {
+          if (data.started) {
+            const encryptedData = encryptData(updatedData, "secret_key");
+            navigate(`/level?data=${encodeURIComponent(encryptedData)}`);
+          } else {
+            setLoader(false);
+            alert(
+              "Please wait; the round has not yet started. We will redirect you once the admin starts the round.",
+            );
+          }
+        } else if (data.started) {
+          const encryptedData = encryptData(updatedData, "secret_key");
+          navigate(`/level?data=${encodeURIComponent(encryptedData)}`);
+        }
+      } else if (
+        (data.CurrentLevel == decryptedData.level || data.CurrentLevel == 1) &&
+        data.started
+      ) {
+        if (decryptedData.role) {
+          const encryptedData = encryptData(updatedData, "secret_key");
+          navigate(`/level?data=${encodeURIComponent(encryptedData)}`);
+        } else {
+          alert(
+            "The admin has started the game. Please choose your role and begin playing.",
+          );
+        }
+      }
+    });
+
+    socket.on("disconnect", () => {
+      console.log("Disconnected from WebSocket server");
+    });
+
+    fetchParticipantsAndSet(decryptedData);
+
+    return () => {
+      socket.disconnect();
+    };
+  }, [location]);
   return (
     <>
       {loader ? (
@@ -183,6 +199,7 @@ const Roles = () => {
                     </Col>
                     <Col className={styles.PlayerName}>{player.Name}</Col>
                     <Col className={styles.PlayerRole}>
+                      {console.log(data.email)}
                       {player.ParticipantEmail === data.email ? (
                         <>
                           {data.autoSelection || data.role ? (
