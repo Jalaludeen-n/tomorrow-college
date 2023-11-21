@@ -39,11 +39,43 @@ const List = () => {
   const copyNumber = () => {
     const textToCopy = randomNumber;
 
-    navigator.clipboard.writeText(textToCopy).catch((error) => {
-      console.error("Error copying text:", error);
-    });
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard
+        .writeText(textToCopy)
+        .then(() => {
+          console.log("Text copied to clipboard");
+        })
+        .catch((error) => {
+          console.error("Error using Clipboard API:", error);
+          fallbackCopyTextToClipboard(textToCopy);
+        });
+    } else {
+      fallbackCopyTextToClipboard(textToCopy);
+    }
   };
 
+  function fallbackCopyTextToClipboard(text) {
+    const textArea = document.createElement("textarea");
+    textArea.value = text;
+
+    textArea.style.top = "0";
+    textArea.style.left = "0";
+    textArea.style.position = "fixed";
+
+    document.body.appendChild(textArea);
+    textArea.focus();
+    textArea.select();
+
+    try {
+      const successful = document.execCommand("copy");
+      const msg = successful ? "successful" : "unsuccessful";
+      console.log(`Fallback: Copying text was ${msg}`);
+    } catch (error) {
+      console.error("Fallback: Unable to copy text:", error);
+    }
+
+    document.body.removeChild(textArea);
+  }
   const close = () => {
     navigate("/dashboard");
   };
