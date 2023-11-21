@@ -92,10 +92,7 @@ const Homepage = () => {
         level: data.CurrentLevel,
         started: data.started,
       };
-      if (
-        (data.started && data.CurrentLevel == 1) ||
-        (data.started && decryptedData.level + 1 == data.CurrentLevel)
-      ) {
+      if (data.started) {
         const encryptedData = encryptData(updatedData, "secret_key");
         navigate(`/level?data=${encodeURIComponent(encryptedData)}`);
       } else {
