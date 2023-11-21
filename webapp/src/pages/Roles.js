@@ -14,7 +14,10 @@ import {
   selectRole,
 } from "../components/services/airtable";
 import Loader from "./Loader";
-import { updateLevel } from "../components/services/level";
+import {
+  updateIndivitualLevel,
+  updateLevel,
+} from "../components/services/level";
 
 const Roles = () => {
   const api_url = process.env.REACT_APP_API_URL;
@@ -30,6 +33,8 @@ const Roles = () => {
 
     const updatedData = { ...data, role: role };
     setData(updatedData);
+    const updatedEncryptedData = encryptData(updatedData, "secret_key");
+    navigate(`/roles?data=${encodeURIComponent(updatedEncryptedData)}`);
 
     formData.append(
       "data",
@@ -42,8 +47,6 @@ const Roles = () => {
     );
     try {
       await selectRole(formData);
-      const updatedEncryptedData = encryptData(updatedData, "secret_key");
-      navigate(`/roles?data=${encodeURIComponent(updatedEncryptedData)}`);
     } catch (er) {
       console.error(er);
     }
@@ -51,6 +54,7 @@ const Roles = () => {
   const handleStartClick = async () => {
     setLoader(true);
     const formData = new FormData();
+    console.log("update");
 
     formData.append(
       "data",
@@ -62,7 +66,48 @@ const Roles = () => {
         resultsSubmission: data.ResultsSubmission,
       }),
     );
-    await updateLevel(formData);
+    const res = await updateLevel(formData);
+    console.log(res);
+    console.log("resssss");
+    const updatedData = {
+      ...data,
+      level: res.data.CurrentLevel,
+      started: res.data.started,
+    };
+    if (res.data.started) {
+      const encryptedData = encryptData(updatedData, "secret_key");
+      navigate(`/level?data=${encodeURIComponent(encryptedData)}`);
+    } else {
+      setLoader(false);
+      alert(
+        "Please wait; the round has not yet started. We will redirect you once the admin starts the round.",
+      );
+    }
+  };
+  const update = async (data) => {
+    const formData = new FormData();
+    console.log("update");
+
+    formData.append(
+      "data",
+      JSON.stringify({
+        gameId: data.GameID,
+        groupName: data.groupName,
+        email: data.email,
+        roomNumber: data.roomNumber,
+        resultsSubmission: data.ResultsSubmission,
+      }),
+    );
+    const res = await updateIndivitualLevel(formData);
+    console.log(res);
+    console.log("ress");
+    const updatedData = {
+      ...data,
+      level: res.data.CurrentLevel,
+      started: res.data.started,
+    };
+    const encryptedData = encryptData(updatedData, "secret_key");
+    navigate(`/level?data=${encodeURIComponent(encryptedData)}`);
   };
 
   const fetchParticipants = async (data) => {
@@ -133,27 +178,24 @@ const Roles = () => {
       };
 
       if (data.playerClick) {
-        if (data.email == decryptedData.email) {
-          if (data.started) {
-            const encryptedData = encryptData(updatedData, "secret_key");
-            navigate(`/level?data=${encodeURIComponent(encryptedData)}`);
-          } else {
-            setLoader(false);
-            alert(
-              "Please wait; the round has not yet started. We will redirect you once the admin starts the round.",
-            );
-          }
-        } else if (data.started) {
+        if (
+          data.started &&
+          data.role &&
+          (data.CurrentLevel === 1 || data.CurrentLevel === decryptedData.level)
+        ) {
           const encryptedData = encryptData(updatedData, "secret_key");
           navigate(`/level?data=${encodeURIComponent(encryptedData)}`);
+          return;
         }
-      } else if (
-        (data.CurrentLevel == decryptedData.level || data.CurrentLevel == 1) &&
+      }
+
+      if (
+        (data.CurrentLevel === decryptedData.level ||
+          data.CurrentLevel === 1) &&
         data.started
       ) {
-        if (decryptedData.role) {
-          const encryptedData = encryptData(updatedData, "secret_key");
-          navigate(`/level?data=${encodeURIComponent(encryptedData)}`);
+        if (decryptedData.role && data.update) {
+          update(decryptedData);
         } else {
           alert(
             "The admin has started the game. Please choose your role and begin playing.",

@@ -70,3 +70,21 @@ export const updateLevel = async (data) => {
     handleError(error);
   }
 };
+
+export const updateIndivitualLevel = async (data) => {
+  try {
+    const response = await axios.patch(
+      `${api_url}/level/indivitual-update`,
+      data,
+      {
+        headers: {
+          "Content-Type": "application/json",
+        },
+      },
+    );
+
+    return handleSuccess(response, "Level updated");
+  } catch (error) {
+    handleError(error);
+  }
+};

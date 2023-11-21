@@ -75,9 +75,9 @@ const Decision = ({ data }) => {
     const res = await storeAnsweres(formData);
     const updatedData = {
       ...data,
-      level: res.CurrentLevel,
-      started: res.started,
-      completed: res.completed,
+      level: res.data.CurrentLevel,
+      started: res.data.started,
+      completed: res.data.completed,
     };
     const encryptedData = encryptData(updatedData, "secret_key");
     navigate(`/result?data=${encodeURIComponent(encryptedData)}`);
@@ -89,6 +89,8 @@ const Decision = ({ data }) => {
     });
 
     socket.on("Movelevel", (data) => {
+      console.log("dss");
+      console.log(data);
       const encryptedData = getDataFromURL(location);
       const key = "secret_key";
       const decryptedData = decryptData(encryptedData, key);
@@ -114,7 +116,7 @@ const Decision = ({ data }) => {
     return () => {
       socket.disconnect();
     };
-  }, []);
+  }, [location]);
 
   return (
     <div className={styles.decision_container}>

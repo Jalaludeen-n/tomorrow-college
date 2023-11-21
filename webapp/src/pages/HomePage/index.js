@@ -22,7 +22,10 @@ import {
   getDataFromURL,
 } from "../../components/helper/utils";
 import { decryptAndStoreData } from "./helper/homePageUtils";
-import { updateLevel } from "../../components/services/level";
+import {
+  updateIndivitualLevel,
+  updateLevel,
+} from "../../components/services/level";
 
 const Homepage = () => {
   const location = useLocation();
@@ -91,26 +94,29 @@ const Homepage = () => {
       };
 
       if (data.playerClick) {
-        if (data.email == decryptedData.email) {
-          if (data.started) {
-            const encryptedData = encryptData(updatedData, "secret_key");
-            navigate(`/level?data=${encodeURIComponent(encryptedData)}`);
-          } else {
-            setLoader(false);
-            alert(
-              "Please wait; the round has not yet started. We will redirect you once the admin starts the round.",
-            );
-          }
-        } else if (data.started) {
+        if (
+          data.started &&
+          data.role &&
+          (data.CurrentLevel === 1 || data.CurrentLevel === decryptedData.level)
+        ) {
           const encryptedData = encryptData(updatedData, "secret_key");
           navigate(`/level?data=${encodeURIComponent(encryptedData)}`);
+          return;
         }
-      } else if (
-        (data.CurrentLevel == decryptedData.level || data.CurrentLevel == 1) &&
+      }
+
+      if (
+        (data.CurrentLevel === decryptedData.level ||
+          data.CurrentLevel === 1) &&
         data.started
       ) {
-        const encryptedData = encryptData(updatedData, "secret_key");
-        navigate(`/level?data=${encodeURIComponent(encryptedData)}`);
+        if (decryptedData.role && data.update) {
+          update(decryptedData);
+        } else {
+          alert(
+            "The admin has started the game. Please choose your role and begin playing.",
+          );
+        }
       }
     });
 
@@ -122,6 +128,30 @@ const Homepage = () => {
       socket.disconnect();
     };
   }, []);
+  const update = async (data) => {
+    const formData = new FormData();
+    console.log("update");
+
+    formData.append(
+      "data",
+      JSON.stringify({
+        gameId: data.GameID,
+        groupName: data.groupName,
+        email: data.email,
+        roomNumber: data.roomNumber,
+        resultsSubmission: data.ResultsSubmission,
+      }),
+    );
+
+    const res = await updateIndivitualLevel(formData);
+    const updatedData = {
+      ...data,
+      level: res.data.CurrentLevel,
+      started: res.data.started,
+    };
+    const encryptedData = encryptData(updatedData, "secret_key");
+    navigate(`/level?data=${encodeURIComponent(encryptedData)}`);
+  };
 
   useEffect(() => {
     const encryptedData = getDataFromURL(location);

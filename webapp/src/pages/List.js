@@ -110,7 +110,7 @@ const List = () => {
             All games
           </div>
           {games.length === 0 ? (
-            <div>No participants have joined the game.</div>
+            <div>No Active games.</div>
           ) : (
             <>
               {!showPopup ? (

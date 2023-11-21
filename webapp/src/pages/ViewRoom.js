@@ -47,7 +47,7 @@ const ViewRoom = () => {
         setName(res.data.Name);
         setLevels(levels);
       } else {
-        console.log("No Active Games");
+        console.log("No participants have joined the game.");
         setActiveGame(false);
       }
     } catch (error) {
@@ -228,7 +228,8 @@ const ViewRoom = () => {
             className='d-flex justify-content-center align-items-center'
             style={{ height: "100vh" }}>
             <Col className='text-center'>
-              No Active games <Link to='/dashboard'> Go Home</Link>
+              No participants have joined the game.
+              <Link to='/dashboard'> Go Home</Link>
             </Col>
           </Row>
         </>

@@ -44,6 +44,12 @@ const Result = () => {
     setRoundPdf(res.data);
   };
   useEffect(() => {
+    const encryptedData = getDataFromURL(location);
+    const key = "secret_key";
+    const data = decryptData(encryptedData, key);
+    console.log(data);
+    setData(data);
+    fetchResult(data);
     const socket = io(`${api_url}`, {
       transports: ["websocket"],
     });
@@ -54,13 +60,15 @@ const Result = () => {
 
     socket.on("updatelevel", (receivedData) => {
       let updatedData = {
-        ...receivedData,
-        level: receivedData.CurrentLevel,
+        ...data,
         started: receivedData.started,
       };
 
       if (receivedData.playerClick && receivedData.email === data.email) {
-        if (receivedData.started) {
+        if (
+          receivedData.started &&
+          receivedData.CurrentLevel === parseInt(data.level)
+        ) {
           const encryptedData = encryptData(updatedData, "secret_key");
           navigate(`/level?data=${encodeURIComponent(encryptedData)}`);
         } else {
@@ -71,7 +79,7 @@ const Result = () => {
         }
       } else if (
         receivedData.started &&
-        receivedData.CurrentLevel === data.level
+        receivedData.CurrentLevel === parseInt(data.level)
       ) {
         const encryptedData = encryptData(updatedData, "secret_key");
         navigate(`/level?data=${encodeURIComponent(encryptedData)}`);
@@ -85,15 +93,7 @@ const Result = () => {
     return () => {
       socket.disconnect();
     };
-  }, []);
-
-  useEffect(() => {
-    const encryptedData = getDataFromURL(location);
-    const key = "secret_key";
-    const data = decryptData(encryptedData, key);
-    setData(data);
-    fetchResult(data);
-  }, []);
+  }, [location]);
 
   const handleStartClick = async () => {
     setLoader(true);
@@ -104,7 +104,7 @@ const Result = () => {
     };
 
     const res = await getCurrentLevelStatus(formData);
-    const started = res.data.started;
+    const started = res.data;
 
     if (started) {
       const encryptedData = encryptData(data, "secret_key");
