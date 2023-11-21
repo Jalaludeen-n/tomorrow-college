@@ -64,7 +64,8 @@ const Roles = () => {
         level: data.CurrentLevel,
         started: data.started,
       };
-      if (decryptedData.role && data.started) {
+      console.log(data);
+      if (data.started) {
         const encryptedData = encryptData(updatedData, "secret_key");
         navigate(`/level?data=${encodeURIComponent(encryptedData)}`);
       } else {
