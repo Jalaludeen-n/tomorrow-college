@@ -55,7 +55,6 @@
 
 .closed {
   flex: 1;
-  overflow: auto;
   height: calc(100vh - 50px);
 }
 .vertical_text {
@@ -65,12 +64,13 @@
 }
 .navText {
   color: #2a2d31;
-  text-align: center;
+  margin-top: 20vh;
   font-family: Open Sans;
-  font-size: 28px;
+  font-size: 1.2vw;
   font-style: normal;
   font-weight: 700;
   line-height: normal;
+  margin-left: 0.5vw;
 }
 
 .flex_wrap {
@@ -85,6 +85,8 @@
 }
 
 .flex_bottom_center {
-  justify-content: flex-end;
+  justify-content: center;
   align-items: center;
+  text-align: center;
+  display: flex;
 }

@@ -47,7 +47,7 @@ const AppHeader = ({ form }) => {
             }`}>
             Game Homepage
           </div>
-          <Link
+          {/* <Link
             to='/leaderboard'
             className={`${styles["header-link"]} ${
               window.location.pathname === "/leaderboard"
@@ -55,7 +55,7 @@ const AppHeader = ({ form }) => {
                 : ""
             }`}>
             Leaderboard
-          </Link>
+          </Link> */}
           <div
             onClick={handleCurrent}
             className={`${styles["header-link"]} ${

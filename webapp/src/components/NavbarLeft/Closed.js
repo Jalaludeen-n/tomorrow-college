@@ -12,8 +12,8 @@ const Closed = ({ onClick, text, right }) => {
           className={`align-self-start ${style.closeButton}`}
           src={right ? Close : Open}
           alt='Back Icon'
-          width='50'
-          height='100'
+          width='100'
+          height='80'
         />
       </div>
       <div

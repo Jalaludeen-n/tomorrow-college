@@ -129,7 +129,7 @@
 
     &__top-button {
       margin-left: 10px;
-      padding: 20px;
+      padding: 20px 0px;
       text-decoration: none;
       border-radius: 5px;
       margin: 5px;
@@ -137,10 +137,11 @@
       border-radius: 25px;
       border: 3px var(--white) solid;
       color: var(--white);
+      text-align: center;
       &__new-game {
         color: #d90368;
         margin-left: 10px;
-        padding: 20px;
+        padding: 20px 0px;
         text-decoration: none;
         border-radius: 5px;
         margin: 5px;
@@ -149,6 +150,19 @@
         border: 3px solid #fff;
         background-color: #fff;
         height: 20%;
+        text-align: center;
+      }
+      &__dup-game {
+        margin-left: 10px;
+        padding: 20px;
+        text-decoration: none;
+        margin: 5px;
+        border-radius: 25px;
+        height: 20%;
+        border-radius: 25px;
+        border: 3px var(--white) solid;
+        color: var(--white);
+        text-align: center;
       }
 
       &:hover {

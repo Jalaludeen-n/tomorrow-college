@@ -20,7 +20,9 @@ const Header = () => {
           className='top-section__top-buttons__top-button__new-game'>
           NEW GAME
         </Link>
-        <Link to='/list' className='top-section__top-buttons__top-button'>
+        <Link
+          to='/list'
+          className='top-section__top-buttons__top-button__dup-game'>
           DUPLICATE GAMES
         </Link>
       </div>
