@@ -135,6 +135,7 @@ const Homepage = () => {
     const encryptedData = getDataFromURL(location);
     const key = "secret_key";
     const data = decryptData(encryptedData, key);
+    console.log(data);
     decryptAndShowPdf(data);
   }, [location]);
 

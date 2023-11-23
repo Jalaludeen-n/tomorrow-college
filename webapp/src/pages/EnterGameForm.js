@@ -91,6 +91,7 @@ const EnterGameForm = () => {
         role,
         submit,
         level,
+        IndividualInstructionsPerRound,
       } = res.data;
 
       const gameData = {
@@ -110,6 +111,7 @@ const EnterGameForm = () => {
         role,
         submit,
         level,
+        individualInstructionsPerRound: IndividualInstructionsPerRound,
       };
 
       return { gameData, gameInstruction };

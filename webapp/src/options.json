@@ -1,12 +1,12 @@
 {
   "resultsSubmission": [
     {
-      "value": "Each member does  their own submission",
-      "label": "Each member does  their own submission"
+      "value": "Each member does their own submission",
+      "label": "Each member does their own submission"
     },
     {
-      "value": "Each group member can submit  group answer",
-      "label": "Each group member can submit  group answer"
+      "value": "Each group member can submit group answer",
+      "label": "Each group member can submit group answer"
     },
     {
       "value": "Only one person can submit group answer",

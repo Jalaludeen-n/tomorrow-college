@@ -43,6 +43,8 @@ const Level = () => {
       GameName: decryptData.GameName,
       role: decryptData.role,
       level: decryptData.level,
+      individualInstructionsPerRound:
+        decryptData.individualInstructionsPerRound,
     };
     const res = await fetchRoundPdf(data);
 
