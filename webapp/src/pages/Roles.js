@@ -14,10 +14,7 @@ import {
   selectRole,
 } from "../components/services/airtable";
 import Loader from "./Loader";
-import {
-  updateIndivitualLevel,
-  updateLevel,
-} from "../components/services/level";
+import { updateIndivitualLevel } from "../components/services/level";
 
 const Roles = () => {
   const api_url = process.env.REACT_APP_API_URL;

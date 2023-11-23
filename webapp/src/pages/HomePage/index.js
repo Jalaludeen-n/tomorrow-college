@@ -22,10 +22,7 @@ import {
   getDataFromURL,
 } from "../../components/helper/utils";
 import { decryptAndStoreData } from "./helper/homePageUtils";
-import {
-  updateIndivitualLevel,
-  updateLevel,
-} from "../../components/services/level";
+import { updateIndivitualLevel } from "../../components/services/level";
 
 const Homepage = () => {
   const location = useLocation();
@@ -113,7 +110,10 @@ const Homepage = () => {
       const encryptedData = getDataFromURL(location);
       const key = "secret_key";
       const decryptedData = decryptData(encryptedData, key);
-      if (data.CurrentLevel - 1 === decryptedData.level && decryptedData.role) {
+      if (
+        parseInt(data.CurrentLevel) - 1 == parseInt(decryptedData.level) &&
+        decryptedData.role
+      ) {
         update(decryptedData);
       } else {
         alert(

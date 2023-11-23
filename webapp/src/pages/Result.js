@@ -95,33 +95,6 @@ const Result = () => {
         navigate(`/level?data=${encodeURIComponent(encryptedData)}`);
       }
     });
-    // socket.on("updatelevel", (receivedData) => {
-    //   let updatedData = {
-    //     ...data,
-    //     started: receivedData.started,
-    //   };
-
-    //   if (receivedData.playerClick && receivedData.email === data.email) {
-    //     if (
-    //       receivedData.started &&
-    //       receivedData.CurrentLevel === parseInt(data.level)
-    //     ) {
-    //       const encryptedData = encryptData(updatedData, "secret_key");
-    //       navigate(`/level?data=${encodeURIComponent(encryptedData)}`);
-    //     } else {
-    //       setLoader(false);
-    //       alert(
-    //         "Please wait; the round has not yet started. We will redirect you once the admin starts the round.",
-    //       );
-    //     }
-    //   } else if (
-    //     receivedData.started &&
-    //     receivedData.CurrentLevel === parseInt(data.level)
-    //   ) {
-    //     const encryptedData = encryptData(updatedData, "secret_key");
-    //     navigate(`/level?data=${encodeURIComponent(encryptedData)}`);
-    //   }
-    // });
 
     socket.on("disconnect", () => {
       console.log("Disconnected from WebSocket server");
