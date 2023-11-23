@@ -50,12 +50,14 @@ const Roles = () => {
     );
     try {
       const res = await selectRole(formData);
-      setButtonLoader(false);
-      const updatedDatawithSubmit = { ...updatedData, submit: res.data };
+      const submit = res.data;
+      const updatedDatawithSubmit = { ...updatedData, submit };
       const updatedEncryptedData = encryptData(
         updatedDatawithSubmit,
         "secret_key",
       );
+      setButtonLoader(false);
+
       navigate(`/roles?data=${encodeURIComponent(updatedEncryptedData)}`);
     } catch (er) {
       console.error(er);
@@ -155,6 +157,7 @@ const Roles = () => {
     const encryptedData = getDataFromURL(location);
     const key = "secret_key";
     const decryptedData = decryptData(encryptedData, key);
+    console.log(decryptedData);
     socket.on("connect", () => {
       console.log("Connected to WebSocket server");
     });

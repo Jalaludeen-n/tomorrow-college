@@ -192,7 +192,10 @@ export const selectRole = async (formattedData) => {
         },
       },
     );
-    handleSuccess(response, "Game started successfully");
+    return handleSuccess(
+      response,
+      "Roles and participants fetched successfully",
+    );
   } catch (error) {
     handleError(error);
   }
