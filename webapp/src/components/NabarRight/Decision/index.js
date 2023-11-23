@@ -89,8 +89,6 @@ const Decision = ({ data }) => {
     });
 
     socket.on("Movelevel", (data) => {
-      console.log("dss");
-      console.log(data);
       const encryptedData = getDataFromURL(location);
       const key = "secret_key";
       const decryptedData = decryptData(encryptedData, key);
@@ -102,8 +100,8 @@ const Decision = ({ data }) => {
       };
 
       if (
-        data.email !== decryptedData.email &&
-        data.groupName === decryptedData.groupName
+        data.email != decryptedData.email &&
+        data.groupName == decryptedData.groupName
       ) {
         alert(
           `Your team, led by ${data.name}, has submitted the answer, so we are redirecting to the result page.`,
@@ -193,11 +191,13 @@ const Decision = ({ data }) => {
                   </div>
                 ))}
             </Col>
-            <div className={styles.startButtonContainer}>
-              <button className={styles.startButton} type='submit'>
-                Submit
-              </button>
-            </div>
+            {data && data.submit && (
+              <div className={styles.startButtonContainer}>
+                <button className={styles.startButton} type='submit'>
+                  Submit
+                </button>
+              </div>
+            )}
           </Form>
         </>
       )}

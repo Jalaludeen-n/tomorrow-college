@@ -266,7 +266,7 @@ const PDFInstructionsForm = ({
           </Col>
         ))}
       </Row>
-      {storedState.result == "Only one peson can submit group answer" && (
+      {storedState.result == "Only one person can submit group answer" && (
         <>
           <Row>
             <Col className={styles.sectionTitle}>Submission</Col>

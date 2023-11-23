@@ -89,6 +89,8 @@ const EnterGameForm = () => {
         roleAutoAssigned,
         gameInstruction,
         role,
+        submit,
+        level,
       } = res.data;
 
       const gameData = {
@@ -106,6 +108,8 @@ const EnterGameForm = () => {
         GoogleSheetID,
         roleAutoAssigned,
         role,
+        submit,
+        level,
       };
 
       return { gameData, gameInstruction };

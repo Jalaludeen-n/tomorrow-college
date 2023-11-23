@@ -23,6 +23,7 @@ const Roles = () => {
   const api_url = process.env.REACT_APP_API_URL;
   const navigate = useNavigate();
   const [loader, setLoader] = useState(true);
+  const [buttonLoader, setButtonLoader] = useState(false);
   const location = useLocation();
   const [data, setData] = useState({});
   const [players, setPlayers] = useState([]);
@@ -30,11 +31,11 @@ const Roles = () => {
 
   const handleRoleChange = async (role) => {
     const formData = new FormData();
-
     const updatedData = { ...data, role: role };
-    setData(updatedData);
     const updatedEncryptedData = encryptData(updatedData, "secret_key");
     navigate(`/roles?data=${encodeURIComponent(updatedEncryptedData)}`);
+    setData(updatedData);
+    setButtonLoader(true);
 
     formData.append(
       "data",
@@ -43,51 +44,37 @@ const Roles = () => {
         email: data.email,
         roomNumber: data.roomNumber,
         role: role,
+        resultsSubmission: data.ResultsSubmission,
+        gameId: data.GameID,
       }),
     );
     try {
-      await selectRole(formData);
+      const res = await selectRole(formData);
+      setButtonLoader(false);
+      const updatedDatawithSubmit = { ...updatedData, submit: res.data };
+      const updatedEncryptedData = encryptData(
+        updatedDatawithSubmit,
+        "secret_key",
+      );
+      navigate(`/roles?data=${encodeURIComponent(updatedEncryptedData)}`);
     } catch (er) {
       console.error(er);
     }
   };
   const handleStartClick = async () => {
     setLoader(true);
-    const formData = new FormData();
-    console.log("update");
+    const isRoundStarted = await update(data);
 
-    formData.append(
-      "data",
-      JSON.stringify({
-        gameId: data.GameID,
-        groupName: data.groupName,
-        email: data.email,
-        roomNumber: data.roomNumber,
-        resultsSubmission: data.ResultsSubmission,
-      }),
-    );
-    const res = await updateLevel(formData);
-    console.log(res);
-    console.log("resssss");
-    const updatedData = {
-      ...data,
-      level: res.data.CurrentLevel,
-      started: res.data.started,
-    };
-    if (res.data.started) {
-      const encryptedData = encryptData(updatedData, "secret_key");
-      navigate(`/level?data=${encodeURIComponent(encryptedData)}`);
-    } else {
-      setLoader(false);
+    if (!isRoundStarted) {
       alert(
         "Please wait; the round has not yet started. We will redirect you once the admin starts the round.",
       );
+      setLoader(false);
     }
   };
+
   const update = async (data) => {
     const formData = new FormData();
-    console.log("update");
-
     formData.append(
       "data",
       JSON.stringify({
@@ -95,19 +82,23 @@ const Roles = () => {
         groupName: data.groupName,
         email: data.email,
         roomNumber: data.roomNumber,
-        resultsSubmission: data.ResultsSubmission,
       }),
     );
+
     const res = await updateIndivitualLevel(formData);
-    console.log(res);
-    console.log("ress");
     const updatedData = {
       ...data,
-      level: res.data.CurrentLevel,
+      level: res.data.level,
       started: res.data.started,
     };
-    const encryptedData = encryptData(updatedData, "secret_key");
-    navigate(`/level?data=${encodeURIComponent(encryptedData)}`);
+
+    if (res.data.started) {
+      const encryptedData = encryptData(updatedData, "secret_key");
+      navigate(`/level?data=${encodeURIComponent(encryptedData)}`);
+      return true;
+    } else {
+      return false;
+    }
   };
 
   const fetchParticipants = async (data) => {
@@ -164,43 +155,20 @@ const Roles = () => {
     const encryptedData = getDataFromURL(location);
     const key = "secret_key";
     const decryptedData = decryptData(encryptedData, key);
-    console.log(decryptedData);
-
     socket.on("connect", () => {
       console.log("Connected to WebSocket server");
     });
 
-    socket.on("updatelevel", (data) => {
-      const updatedData = {
-        ...decryptedData,
-        level: data.CurrentLevel,
-        started: data.started,
-      };
-
-      if (data.playerClick) {
-        if (
-          data.started &&
-          data.role &&
-          (data.CurrentLevel === 1 || data.CurrentLevel === decryptedData.level)
-        ) {
-          const encryptedData = encryptData(updatedData, "secret_key");
-          navigate(`/level?data=${encodeURIComponent(encryptedData)}`);
-          return;
-        }
-      }
-
+    socket.on("gameStarted", (data) => {
       if (
-        (data.CurrentLevel === decryptedData.level ||
-          data.CurrentLevel === 1) &&
-        data.started
+        parseInt(data.CurrentLevel) - 1 == parseInt(decryptedData.level) &&
+        decryptedData.role
       ) {
-        if (decryptedData.role && data.update) {
-          update(decryptedData);
-        } else {
-          alert(
-            "The admin has started the game. Please choose your role and begin playing.",
-          );
-        }
+        update(decryptedData);
+      } else {
+        alert(
+          "The admin has started the game. Please choose your role and begin playing.",
+        );
       }
     });
 
@@ -269,11 +237,13 @@ const Roles = () => {
                 ))}
             </div>
           </div>
-          <div className={styles.startButtonContainer}>
-            <button className={styles.startButton} onClick={handleStartClick}>
-              Start THE ROUND
-            </button>
-          </div>
+          {!buttonLoader && (
+            <div className={styles.startButtonContainer}>
+              <button className={styles.startButton} onClick={handleStartClick}>
+                Start THE ROUND
+              </button>
+            </div>
+          )}
         </div>
       )}
     </>

@@ -5,7 +5,10 @@ import { useNavigate } from "react-router-dom";
 import GameDescription from "../components/game/GameDescription";
 import { io } from "socket.io-client";
 
-import { getCurrentLevelStatus } from "../components/services/level";
+import {
+  getCurrentLevelStatus,
+  updateIndivitualLevel,
+} from "../components/services/level";
 import { useLocation } from "react-router-dom";
 import Loader from "./Loader";
 import Layout from "../components/Layout";
@@ -43,11 +46,38 @@ const Result = () => {
     const res = await fetchResultPdf(data);
     setRoundPdf(res.data);
   };
+
+  const update = async (data) => {
+    const formData = new FormData();
+    formData.append(
+      "data",
+      JSON.stringify({
+        gameId: data.GameID,
+        groupName: data.groupName,
+        email: data.email,
+        roomNumber: data.roomNumber,
+      }),
+    );
+    const res = await updateIndivitualLevel(formData);
+    const updatedData = {
+      ...data,
+      level: res.data.level,
+      started: res.data.started,
+    };
+
+    if (res.data.started) {
+      const encryptedData = encryptData(updatedData, "secret_key");
+      navigate(`/level?data=${encodeURIComponent(encryptedData)}`);
+    } else {
+      alert(
+        "Please wait; the round has not yet started. We will redirect you once the admin starts the round.",
+      );
+    }
+  };
   useEffect(() => {
     const encryptedData = getDataFromURL(location);
     const key = "secret_key";
     const data = decryptData(encryptedData, key);
-    console.log(data);
     setData(data);
     fetchResult(data);
     const socket = io(`${api_url}`, {
@@ -57,34 +87,41 @@ const Result = () => {
     socket.on("connect", () => {
       console.log("Connected to WebSocket server");
     });
-
-    socket.on("updatelevel", (receivedData) => {
-      let updatedData = {
-        ...data,
-        started: receivedData.started,
-      };
-
-      if (receivedData.playerClick && receivedData.email === data.email) {
-        if (
-          receivedData.started &&
-          receivedData.CurrentLevel === parseInt(data.level)
-        ) {
-          const encryptedData = encryptData(updatedData, "secret_key");
-          navigate(`/level?data=${encodeURIComponent(encryptedData)}`);
-        } else {
-          setLoader(false);
-          alert(
-            "Please wait; the round has not yet started. We will redirect you once the admin starts the round.",
-          );
-        }
-      } else if (
-        receivedData.started &&
-        receivedData.CurrentLevel === parseInt(data.level)
-      ) {
-        const encryptedData = encryptData(updatedData, "secret_key");
+    socket.on("gameStarted", (data) => {
+      const encryptedData = getDataFromURL(location);
+      const key = "secret_key";
+      const decryptedData = decryptData(encryptedData, key);
+      if (parseInt(data.CurrentLevel) == parseInt(decryptedData.level)) {
         navigate(`/level?data=${encodeURIComponent(encryptedData)}`);
       }
     });
+    // socket.on("updatelevel", (receivedData) => {
+    //   let updatedData = {
+    //     ...data,
+    //     started: receivedData.started,
+    //   };
+
+    //   if (receivedData.playerClick && receivedData.email === data.email) {
+    //     if (
+    //       receivedData.started &&
+    //       receivedData.CurrentLevel === parseInt(data.level)
+    //     ) {
+    //       const encryptedData = encryptData(updatedData, "secret_key");
+    //       navigate(`/level?data=${encodeURIComponent(encryptedData)}`);
+    //     } else {
+    //       setLoader(false);
+    //       alert(
+    //         "Please wait; the round has not yet started. We will redirect you once the admin starts the round.",
+    //       );
+    //     }
+    //   } else if (
+    //     receivedData.started &&
+    //     receivedData.CurrentLevel === parseInt(data.level)
+    //   ) {
+    //     const encryptedData = encryptData(updatedData, "secret_key");
+    //     navigate(`/level?data=${encodeURIComponent(encryptedData)}`);
+    //   }
+    // });
 
     socket.on("disconnect", () => {
       console.log("Disconnected from WebSocket server");

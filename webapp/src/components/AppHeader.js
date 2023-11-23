@@ -1,5 +1,5 @@
 import React from "react";
-import { Link, useNavigate, useLocation } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import styles from "../styles/components/AppHeader.module.css"; // Import your style module
 import Logo from "./../icons/logo.svg";
 import { decryptData, encryptData, getDataFromURL } from "./helper/utils";
@@ -12,16 +12,16 @@ const AppHeader = ({ form }) => {
     const encryptedData = getDataFromURL(location);
     const key = "secret_key";
     const decryptedData = decryptData(encryptedData, key);
+    const currentPath = location.pathname;
     const updatedData = {
       ...decryptedData,
       main: true,
-      from: window.location.pathname,
+      from: currentPath,
     };
     const newData = encryptData(updatedData, "secret_key");
     navigate(`/home?data=${encodeURIComponent(newData)}`);
   };
   const handleCurrent = () => {
-    console.log("dssss");
     const encryptedData = getDataFromURL(location);
     const key = "secret_key";
     const decryptedData = decryptData(encryptedData, key);
@@ -29,8 +29,10 @@ const AppHeader = ({ form }) => {
       ...decryptedData,
       main: false,
     };
+    console.log("to path");
+    console.log(decryptedData);
     const newData = encryptData(updatedData, "secret_key");
-    navigate(`${updatedData.from}?data=${encodeURIComponent(newData)}`);
+    navigate(`${decryptedData.from}?data=${encodeURIComponent(newData)}`);
   };
 
   return (
