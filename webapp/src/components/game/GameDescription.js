@@ -1,8 +1,12 @@
 import styles from "../../styles/page/GameDetails.module.scss";
-import React from "react";
+import React, { useEffect } from "react";
 
 const GameDescription = ({ pdfData, header, show }) => {
-
+  useEffect(() => {
+    if (pdfData === null) {
+      window.location.reload(); // Refresh the page if pdfData is null
+    }
+  }, [pdfData]);
   return (
     <div className={`${styles.pdfContainer}`}>
       {show && (
