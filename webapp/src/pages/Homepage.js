@@ -212,23 +212,7 @@ const Homepage = () => {
     <Layout LeftNavbar={NavbarLeft}>
       <div className={styles.homeContainer}>
         <div className={styles.bottomSectionContainer}>
-          {/* <Header
-            gameName={state.gameName}
-            groupName={state.groupName}
-            numberOfRounds={state.rounds}
-            className={`${styles.headerContainer}`}
-          /> */}
-
           <div>
-            {/* <Row className={` m-0 p-0`}> */}
-            {/* <Col xs={5} className=' m-0'>
-                {!loader ? (
-                  <Players state={state} updateRole={updateRole} />
-                ) : (
-                  <Loader />
-                )}
-              </Col> */}
-            {/* <Col className='p-0'> */}
             {!loader ? (
               <GameDescription
                 pdfData={state.gameInstructions}
@@ -238,8 +222,6 @@ const Homepage = () => {
             ) : (
               <Loader />
             )}
-            {/* </Col> */}
-            {/* </Row> */}
           </div>
         </div>
         {!started && (

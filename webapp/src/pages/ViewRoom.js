@@ -1,11 +1,10 @@
-import React, { useEffect, useState, useContext } from "react";
+import React, { useEffect, useState } from "react";
 import CryptoJS from "crypto-js";
 import Arrow from "../icons/Arrow.svg";
-import { AdminAuthContext } from "../components/auth/AdminAuth";
-import { fetchGroupDetails, startGame } from "../components/services/airtable";
+import { fetchGroupDetails } from "../components/services/airtable";
 import { getLevelStatus, startLevel } from "../components/services/level";
 
-import { Container, Row, Form, Col, Button } from "react-bootstrap";
+import { Container, Row, Col } from "react-bootstrap";
 import styles from "../styles/page/ViewRoom.module.scss"; // Import your SCSS module styles
 import { useLocation } from "react-router-dom";
 import { Link } from "react-router-dom";
@@ -13,7 +12,6 @@ import Loader from "./Loader";
 import { useNavigate } from "react-router-dom";
 
 const ViewRoom = () => {
-  const { isLoggedIn } = useContext(AdminAuthContext);
   const [decryptedData, setDecryptedData] = useState(null);
   const location = useLocation();
   const [levels, setLevels] = useState([]);

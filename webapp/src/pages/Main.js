@@ -3,9 +3,10 @@ import "./../styles/page/main.scss";
 import Header from "./../components/admin/main/Header";
 import GameList from "../components/admin/main/GameList";
 import { fetchRunningAndPastGames } from "../components/services/airtable";
-import { Link } from "react-router-dom";
 import { AdminAuthContext } from "../components/auth/AdminAuth";
 import { useNavigate } from "react-router-dom";
+import { io } from "socket.io-client";
+
 const Main = () => {
   const [runningGames, setrunningGames] = useState([]);
   const [completedGames, setcompletedGames] = useState([]);
@@ -13,7 +14,9 @@ const Main = () => {
   const navigate = useNavigate();
   const fetchData = async () => {
     try {
+
       const res = await fetchRunningAndPastGames();
+      
 
       if (res.data) {
         const allGames = res.data;
@@ -38,6 +41,24 @@ const Main = () => {
     } else {
       fetchData();
     }
+    const api_url = process.env.REACT_APP_API_URL;
+    const socket = io(`${api_url}`, {
+      transports: ["websocket"],
+    });
+
+    socket.on("connect", () => {
+      console.log("Connected to WebSocket server");
+    });
+    socket.on("newplayer", (data) => {
+      fetchData();
+    });
+    socket.on("disconnect", () => {
+      console.log("Disconnected from WebSocket server");
+    });
+
+    return () => {
+      socket.disconnect();
+    };
   }, []);
 
   return (

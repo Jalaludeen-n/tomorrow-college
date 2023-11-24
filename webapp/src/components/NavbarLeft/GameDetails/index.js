@@ -21,7 +21,7 @@ const GameDetails = ({ data }) => {
         </Row>
         <Row className={`${style.DetailsRow}`}>
           <Col className={`${style.LeftColumn} text-left m-2`}>
-            Number of rounds
+            No. of rounds
           </Col>
           <Col className={`${style.RightColumn} text-left m-2`}>
             {data.NumberOfRounds}
