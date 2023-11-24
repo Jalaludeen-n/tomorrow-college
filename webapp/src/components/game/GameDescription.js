@@ -6,7 +6,7 @@ const GameDescription = ({ pdfData, header, show }) => {
     if (pdfData === null) {
       window.location.reload(); // Refresh the page if pdfData is null
     }
-  }, [pdfData]);
+  }, []);
   return (
     <div className={`${styles.pdfContainer}`}>
       {show && (
