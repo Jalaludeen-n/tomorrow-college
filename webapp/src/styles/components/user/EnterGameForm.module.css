@@ -4,18 +4,20 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  height: 100vh;
+  height: 88vh;
 }
 .loginButton {
-  width: 216px;
-  height: 60px;
+  width: 12vw;
+  height: 6vh;
+  border: none;
+  font-size: 1vw;
+
+  background-color: #ff6700;
+
   flex-shrink: 0;
   border-radius: 20px;
-  background-color: #d90368;
-
   color: #fff;
   font-family: Open Sans;
-  font-size: 16.8px;
   font-style: normal;
   font-weight: 700;
   line-height: normal;

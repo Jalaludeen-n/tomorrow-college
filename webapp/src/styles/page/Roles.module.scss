@@ -39,14 +39,16 @@
   right: 25px;
 }
 .startButton {
-  width: 266px;
-  height: 75px;
+  width: 12vw;
+  height: 6vh;
+  border: none;
+  font-size: 1vw;
+
   flex-shrink: 0;
   border-radius: 15px;
   background: #ff6700;
   color: #fff;
   font-family: Open Sans;
-  font-size: 21px;
   font-style: normal;
   font-weight: 700;
   line-height: normal;

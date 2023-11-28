@@ -1,12 +1,20 @@
+:root {
+  --welcome-container-height: 15vh;
+  --welcome-font-size: 1.5vw;
+  --welcome-date-size: 1.2rem;
+  --welcome-font-weight-bold: 700;
+  --welcome-font-weight-regular: 400;
+  --welcome-padding: 1rem;
+}
+
 .container {
   padding: 5%;
 }
 .welcome_container {
   border-radius: 8px;
   background: #d90368;
-  height: 15vh;
-  padding: 12px;
-  margin: 12px;
+  margin: 1vh;
+  width: 28vw !important;
 }
 .decision_container {
   padding: 12px;
@@ -23,14 +31,22 @@
 .questions {
   margin-bottom: 12px;
 }
-.welcomeName {
+.welcomeName,
+.welcomeRole {
   color: #fff;
-  font-family: Open Sans;
-  font-size: 24px;
-  font-style: normal;
-  font-weight: 700;
+  font-family: "Open Sans";
   line-height: normal;
-  padding: 14px;
+  padding: var(--welcome-padding);
+}
+.welcomeName {
+  font-size: var(--welcome-font-size);
+  font-weight: var(--welcome-font-weight-bold);
+}
+
+.welcomeRole {
+  padding-top: 0;
+  font-size: 1.3vw;
+  font-weight: var(--welcome-font-weight-regular);
 }
 .startButtonContainer {
   position: absolute;
@@ -38,34 +54,27 @@
   right: 25px;
 }
 .startButton {
+  width: 12vw;
+  height: 6vh;
+  border: none;
+  font-size: 1vw;
   color: #fff;
   text-align: center;
   font-family: Open Sans;
-  font-size: 16.977px;
   font-style: normal;
   font-weight: 700;
   line-height: normal;
   letter-spacing: 0.34px;
   text-transform: uppercase;
   border-radius: 20.21px;
-  background: #FF6700;
-  width: 173.305px;
-  height: 60.631px;
+  background: #ff6700;
   flex-shrink: 0;
 }
-.welcomeRole {
-  color: #fff;
-  font-family: Open Sans;
-  font-size: 20px;
-  font-style: normal;
-  font-weight: 400;
-  line-height: normal;
-  padding: 14px;
-}
+
 .decision_header {
   color: #000;
   font-family: Open Sans;
-  font-size: 23.272px;
+  font-size: 18px;
   font-style: normal;
   font-weight: 600;
   line-height: normal;

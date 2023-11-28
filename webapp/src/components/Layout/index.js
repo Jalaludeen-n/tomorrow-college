@@ -62,7 +62,7 @@ const Layout = ({ LeftNavbar, RightNavbar, children }) => {
   }, [width]);
 
   return (
-    <Row className='m-0'>
+    <Row className='m-0 p-0'>
       {isLeftNavbarVisible ? (
         <Col xs={3} md={3} className={style.leftContainer}>
           <LeftNavbar onClick={toggleLeftNavbar} />

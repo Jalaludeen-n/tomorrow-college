@@ -21,8 +21,17 @@ const NavbarLeft = ({ onClick }) => {
   }, []);
 
   return (
-    <Row className={`${style.container} r-0 p-0`}>
-      <Row>
+    <Row
+      className={`${style.container} r-0 p-0`}
+      style={{
+        flexShrink: "unset",
+        width: "auto",
+        maxWidth: "none",
+        padding: 0,
+        marginTop: 0,
+        margin: 0,
+      }}>
+      <Row className='r-0 p-0'>
         <Col xs={8} md={10}></Col>
         <Col
           xs={4}
@@ -38,13 +47,36 @@ const NavbarLeft = ({ onClick }) => {
         </Col>
       </Row>
 
-      <Row>
+      <Row
+        className=''
+        style={{
+          flexShrink: "unset",
+          maxWidth: "none",
+          padding: 0,
+          margin: 0,
+        }}>
         <Welcome name={data.name} />
       </Row>
-      <Row>
+      <Row
+        className=''
+        style={{
+          flexShrink: "unset",
+          width: "auto",
+          maxWidth: "none",
+          padding: 0,
+          margin: 0,
+        }}>
         <GameDetails data={data} />
       </Row>
-      <Row>
+      <Row
+        className=''
+        style={{
+          flexShrink: "unset",
+          width: "auto",
+          maxWidth: "none",
+          padding: 0,
+          margin: 0,
+        }}>
         <Players data={data} />
       </Row>
     </Row>

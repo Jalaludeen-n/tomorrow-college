@@ -5,9 +5,16 @@ import { Row, Col } from "react-bootstrap";
 const GameDetails = ({ data }) => {
   return (
     <div className={style.GameDetails}>
-      <Row className={`${style.GameDetailsHeader}`}>Game details</Row>
-      <Row className={style.GameDetailItems}>
-        <Row className={`${style.DetailsRow}`}>
+      <Row
+        className={`${style.GameDetailsHeader}`}
+        style={{
+          marginLeft: 0,
+          marginRight: 0,
+        }}>
+        Game details
+      </Row>
+      <Row className={`${style.GameDetailItems} p-0 m-0`}>
+        <Row className={`${style.DetailsRow} p-0 m-0`}>
           <Col className={`${style.LeftColumn} text-left m-2`}>Game name</Col>
           <Col className={`${style.RightColumn} text-left m-2`}>
             {data.GameName}

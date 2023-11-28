@@ -11,6 +11,7 @@
   border-radius: 8px;
   background: #d90368;
   margin: 1vh;
+  width: 22vw !important;
 }
 
 .welcomeName,
@@ -43,6 +44,10 @@
   border: 1px solid #d90368; /* Added border style */
   border-radius: 16px 16px 15px 15px;
   margin: 12px !important;
+  padding: 0 !important;
+  flex-shrink: unset !important;
+  width: 22vw !important;
+  max-width: "none" !important;
 }
 
 .GameDetailItems {
@@ -70,12 +75,13 @@
 
 .DetailsRow {
   display: flex;
+  width: 100% !important;
   justify-content: space-between;
   border-bottom: 1.5px solid #d90368;
-  margin-left: 0;
-  margin-right: 0;
+  margin-left: 0 !important;
+  margin-right: 0 !important;
   // height: 8vh;
-  padding: 0.5vh;
+  padding: 0.5vh !important;
 }
 
 .DetailsRow:last-child {
@@ -114,5 +120,4 @@
   font-weight: 700;
   line-height: 22.882px;
   padding: 14px;
-  margin-left: 12px;
 }

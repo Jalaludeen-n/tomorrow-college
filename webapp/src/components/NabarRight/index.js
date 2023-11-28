@@ -20,7 +20,16 @@ const NavbarRight = ({ onClick }) => {
   }, []);
 
   return (
-    <Row className={`${style.container} r-0 p-0`}>
+    <Row
+      className={`${style.container} r-0 p-0`}
+      style={{
+        flexShrink: "unset",
+        width: "auto",
+        maxWidth: "none",
+        padding: 0,
+        marginTop: 0,
+        margin: 0,
+      }}>
       <Row>
         <Col xs={4} md={2} className='pointer'>
           <img
@@ -33,10 +42,18 @@ const NavbarRight = ({ onClick }) => {
         </Col>
         <Col xs={8} md={10}></Col>
       </Row>
-      <Row>
+      <Row
+        style={{
+          flexShrink: "unset",
+          maxWidth: "none",
+        }}>
         <Welcome level={data.level} role={data.role} />
       </Row>
-      <Row>
+      <Row
+        style={{
+          flexShrink: "unset",
+          maxWidth: "none",
+        }}>
         <Decision data={data} />
       </Row>
     </Row>

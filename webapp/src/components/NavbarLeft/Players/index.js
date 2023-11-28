@@ -49,8 +49,19 @@ const Players = ({ data }) => {
       {loader ? (
         <Loader />
       ) : (
-        <div className={styles.GameDetails}>
-          <Row className={styles.PlayerHeader}>
+        <div
+          className={styles.GameDetails}
+          style={{
+            marginLeft: 0,
+            marginRight: 0,
+          }}>
+          <Row
+            className={styles.PlayerHeader}
+            style={{
+              marginLeft: 0,
+              marginRight: 0,
+              width: "22vw",
+            }}>
             <Col md={1}></Col>
             <Col>Players</Col>
             <Col>Role</Col>
