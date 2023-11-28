@@ -34,8 +34,8 @@ const EnterGameForm = () => {
   };
 
   const handleGroupNameChange = (event) => {
-    const newValue = event.target.value.replace(/\s+/g, "").toLowerCase();
-    setGroupName(newValue);
+    // const newValue = event.target.value.replace(/\s+/g, "").toLowerCase();
+    setGroupName(event.target.value);
     setShowGroupNameAlert(false);
   };
 
@@ -153,7 +153,7 @@ const EnterGameForm = () => {
                     <Form.Control
                       type='text'
                       value={name}
-                      pattern='[a-zA-Z]{3,}'
+                      // pattern='[a-zA-Z]{3,}'
                       onChange={handleNameChange}
                       required
                     />
@@ -184,14 +184,9 @@ const EnterGameForm = () => {
                       type='text'
                       value={groupName}
                       onChange={handleGroupNameChange}
-                      pattern='^[a-z]{3,}$'
+                      // pattern='^[a-z]{3,}$'
                       required
                     />
-                    {showGroupNameAlert && (
-                      <p className='alert'>
-                        Please enter a valid group number.
-                      </p>
-                    )}
                   </Form.Group>
                   <div className='text-center mt-5'>
                     <button className={`${styles.loginButton}`} type='submit'>

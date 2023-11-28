@@ -22,7 +22,7 @@ const NavbarRight = ({ onClick }) => {
   return (
     <Row className={`${style.container} r-0 p-0`}>
       <Row>
-        <Col xs={4} md={2}>
+        <Col xs={4} md={2} className='pointer'>
           <img
             onClick={onClick}
             src={Open}

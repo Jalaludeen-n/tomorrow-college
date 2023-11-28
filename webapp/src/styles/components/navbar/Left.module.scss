@@ -1,6 +1,6 @@
 :root {
   --welcome-container-height: 15vh;
-  --welcome-font-size: 1.5rem;
+  --welcome-font-size: 1.5vw;
   --welcome-date-size: 1.2rem;
   --welcome-font-weight-bold: 700;
   --welcome-font-weight-regular: 400;
@@ -10,7 +10,6 @@
 .welcome_container {
   border-radius: 8px;
   background: #d90368;
-  height: var(--welcome-container-height);
   margin: 1vh;
 }
 
@@ -28,7 +27,8 @@
 }
 
 .welcomeDate {
-  font-size: var(--welcome-date-size);
+  padding-top: 0;
+  font-size: 1.3vw;
   font-weight: var(--welcome-font-weight-regular);
 }
 
@@ -41,7 +41,7 @@
 .GameDetails {
   background: #fff;
   border: 1px solid #d90368; /* Added border style */
-  border-radius: 15px 15px 15px 15px;
+  border-radius: 16px 16px 15px 15px;
   margin: 12px !important;
 }
 
@@ -52,7 +52,6 @@
 
 .GameDetailsHeader {
   border-radius: 15px 15px 0px 0px;
-  border: 1.5px solid #7b6c73;
   background: #d90368;
   color: #fff;
   font-family: Open Sans;
@@ -86,7 +85,7 @@
 .LeftColumn {
   color: #2a2d31;
   font-family: Open Sans;
-  font-size: 16px;
+  font-size: 1vw;
   font-style: normal;
   font-weight: 400;
   line-height: normal;
@@ -95,12 +94,13 @@
   color: #2a2d31;
   text-align: right;
   font-family: Open Sans;
-  font-size: 16px;
+  font-size: 1vw;
   font-style: normal;
   font-weight: 600;
   line-height: normal;
 }
 .PlayerRow {
+  font-size: 1.2vw;
   padding: 14px;
 }
 .PlayerHeader {

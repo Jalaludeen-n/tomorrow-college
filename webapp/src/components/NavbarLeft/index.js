@@ -27,7 +27,7 @@ const NavbarLeft = ({ onClick }) => {
         <Col
           xs={4}
           md={2}
-          className='d-flex justify-content-end align-items-center order-md-2'>
+          className='d-flex justify-content-end align-items-center order-md-2 pointer'>
           <img
             onClick={onClick}
             src={Close}

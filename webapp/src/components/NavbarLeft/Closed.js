@@ -9,7 +9,7 @@ const Closed = ({ onClick, text, right }) => {
       <div class={`${style.flex_bottom_center} ${style.text_center}`}>
         <img
           onClick={onClick}
-          className={`align-self-start ${style.closeButton}`}
+          className={`align-self-start ${style.closeButton} pointer`}
           src={right ? Close : Open}
           alt='Back Icon'
           width='100'
