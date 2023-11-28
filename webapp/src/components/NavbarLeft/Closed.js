@@ -1,6 +1,6 @@
 import React from "react";
-import Open from "../../icons/Open.svg";
-import Close from "../../icons/Close.svg";
+import Open from "../../icons/Open new.svg";
+import Close from "../../icons/Back.svg";
 import style from "../../styles/components/Layout.module.scss";
 
 const Closed = ({ onClick, text, right }) => {
@@ -12,7 +12,7 @@ const Closed = ({ onClick, text, right }) => {
           className={`align-self-start ${style.closeButton} pointer`}
           src={right ? Close : Open}
           alt='Back Icon'
-          width='100'
+          width='50'
           height='80'
         />
       </div>

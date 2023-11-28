@@ -3,7 +3,7 @@ import React, { useEffect, useState } from "react";
 import { Row, Col } from "react-bootstrap";
 import style from "../../styles/components/navbar/Right.module.scss";
 import Welcome from "./Welcome";
-import Open from "../../icons/Open.svg";
+import Open from "../../icons/Open new.svg";
 import { useLocation } from "react-router-dom";
 import { decryptData, getDataFromURL } from "../helper/utils";
 import Decision from "./Decision";
@@ -27,7 +27,7 @@ const NavbarRight = ({ onClick }) => {
             onClick={onClick}
             src={Open}
             alt='Back Icon'
-            width='100'
+            width='50'
             height='80'
           />
         </Col>

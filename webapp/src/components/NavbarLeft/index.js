@@ -1,7 +1,7 @@
 // Navbar.js
 import React, { useEffect, useState } from "react";
 import Welcome from "./Welcome";
-import Close from "../../icons/Close.svg";
+import Close from "../../icons/Back.svg";
 import { Row, Col } from "react-bootstrap";
 import GameDetails from "./GameDetails";
 import Players from "./Players";
@@ -32,7 +32,7 @@ const NavbarLeft = ({ onClick }) => {
             onClick={onClick}
             src={Close}
             alt='Back Icon'
-            width='100'
+            width='50'
             height='80'
           />
         </Col>
