@@ -9,15 +9,17 @@ const GameDescription = ({ pdfData, header, show }) => {
           <div className={`${styles.descriptionTitle}`}>{header}</div>
         </div>
       )}
-      <iframe
-        className={`${styles.description}`}
-        src={`data:application/pdf;base64,${pdfData}`}
-        title='PDF'
-        style={{
-          width: "100%",
-          height: "80vh",
-        }}
-      />
+      {pdfData && (
+        <iframe
+          className={`${styles.description}`}
+          src={`data:application/pdf;base64,${pdfData}`}
+          title='PDF'
+          style={{
+            width: "100%",
+            height: "80vh",
+          }}
+        />
+      )}
     </div>
   );
 };
