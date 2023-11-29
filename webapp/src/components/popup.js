@@ -6,7 +6,7 @@ const PopupComponent = ({ onClose, contentComponent }) => {
     <div className={style.popup_container}>
       <div className={style.popup_content}>
         <button className={style.close_button} onClick={onClose}>
-          Close
+          X
         </button>
         {contentComponent && React.cloneElement(contentComponent)}
       </div>
