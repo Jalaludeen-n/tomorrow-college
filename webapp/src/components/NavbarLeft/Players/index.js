@@ -61,18 +61,21 @@ const Players = ({ data }) => {
               marginLeft: 0,
               marginRight: 0,
               width: "22vw",
+              paddingLeft: 0,
             }}>
-            <Col md={1}></Col>
-            <Col>Players</Col>
+            <Col className='pl-0'>Players</Col>
             <Col>Role</Col>
           </Row>
           <div className={styles.PlayerList}>
             {players.map((player, index) => (
               <Row key={index} className={styles.PlayerRow}>
-                <Col md={1} className={styles.PlayerNumber}>
-                  {index + 1}
+                {/* <Col md={1} className={styles.PlayerNumber}>
+                  
+                </Col> */}
+                <Col className={styles.PlayerName}>
+                  {index + 1} &nbsp; &nbsp;
+                  {player.Name}
                 </Col>
-                <Col className={styles.PlayerName}>{player.Name}</Col>
                 <Col className={styles.PlayerRole}>{player.Role}</Col>
               </Row>
             ))}

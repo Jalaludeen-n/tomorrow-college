@@ -106,8 +106,17 @@
   line-height: normal;
 }
 .PlayerRow {
-  font-size: 1.2vw;
   padding: 14px;
+  color: #2a2d31;
+  font-family: Open Sans;
+  font-size: 1vw;
+  font-style: normal;
+  font-weight: 600;
+  line-height: normal;
+  border-bottom: 1.5px solid #d90368;
+}
+.PlayerRow:last-child {
+  border-bottom: none;
 }
 .PlayerHeader {
   border-radius: 15px 15px 0px 0px;
