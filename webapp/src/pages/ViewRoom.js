@@ -3,6 +3,7 @@ import CryptoJS from "crypto-js";
 import Arrow from "../icons/Arrow.svg";
 import { fetchGroupDetails } from "../components/services/airtable";
 import { getLevelStatus, startLevel } from "../components/services/level";
+import { io } from "socket.io-client";
 
 import { Container, Row, Col } from "react-bootstrap";
 import styles from "../styles/page/ViewRoom.module.scss"; // Import your SCSS module styles
@@ -35,6 +36,7 @@ const ViewRoom = () => {
         fetchGroupDetails(formData),
         getLevelStatus(formData),
       ]);
+
       setLoader(false);
       if (res.success && res.data) {
         setTotal(res.data.totalLevels);
@@ -53,8 +55,8 @@ const ViewRoom = () => {
     }
   };
 
-  const handleClick = (data) => {
-    const groupName = data.groupName;
+  const handleClick = (name) => {
+    const groupName = name;
     const roomNumber = decryptedData.roomNumber;
     const gameID = decryptedData.GameID;
     const updatedEncryptedData = CryptoJS.AES.encrypt(
@@ -92,9 +94,6 @@ const ViewRoom = () => {
   };
 
   useEffect(() => {
-    // if (!isLoggedIn) {
-    //   navigate("/admin");
-    // } else {
     setLoader(true);
     const searchParams = new URLSearchParams(location.search);
     const encryptedData = searchParams.get("data");
@@ -106,6 +105,24 @@ const ViewRoom = () => {
       fetchData(decryptedData.roomNumber, decryptedData.GameID);
       // }
     }
+    const api_url = process.env.REACT_APP_API_URL;
+    const socket = io(`${api_url}`, {
+      transports: ["websocket"],
+    });
+
+    socket.on("connect", () => {
+      console.log("Connected to WebSocket server");
+    });
+    socket.on("completed", (data) => {
+      fetchData();
+    });
+    socket.on("disconnect", () => {
+      console.log("Disconnected from WebSocket server");
+    });
+
+    return () => {
+      socket.disconnect();
+    };
   }, []);
 
   return (
@@ -178,8 +195,22 @@ const ViewRoom = () => {
                       </div>
                     </div>
                   </Row>
-                  <Row className={styles.gameList__scrollable}>
-                    {levels.map((level, index) => {
+                  {Object.entries(levels).map(([key, value]) => (
+                    <Row key={key} className={styles.gameList__scrollable}>
+                      <div
+                        onClick={(e) => handleClick(key)}
+                        className={styles.gameList__scrollable__items__item}>
+                        <Col
+                          className={`${styles.gameListAttribute} ${styles.marginLeft}`}>
+                          {key}
+                        </Col>
+                        {value.map((item, index) => (
+                          <Col className={styles.gameListAttribute}>{item}</Col>
+                        ))}
+                      </div>
+                    </Row>
+                  ))}
+                  {/* {levels.map((level, index) => {
                       const array = Array(total).fill("");
                       if (level.level === "Completed") {
                         array.fill("Completed", 0, total);
@@ -211,8 +242,7 @@ const ViewRoom = () => {
                           ))}
                         </div>
                       );
-                    })}
-                  </Row>
+                    })} */}
                 </div>
               </>
             ) : (

@@ -85,7 +85,7 @@ export const fetchScore = async (data) => {
 
 export const fetchGroupDetails = async (data) => {
   try {
-    const response = await axios.get(`${api_url}/game/groups`, {
+    const response = await axios.get(`${api_url}/game/group-status`, {
       params: data,
       responseType: "json",
     });
