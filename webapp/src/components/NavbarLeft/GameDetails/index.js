@@ -23,7 +23,11 @@ const GameDetails = ({ data }) => {
           </Col>
         </Row>
         <Row className={`${style.DetailsRow}`}>
-          <Col className={`${style.LeftColumn} text-left mr-2 mt-2 mb-2`}>
+          <Col
+            className={`${style.LeftColumn} text-left mr-2 mt-2 mb-2`}
+            style={{
+              marginLeft: "3px",
+            }}>
             Group name
           </Col>
           <Col className={`${style.RightColumn} text-left m-2`}>
