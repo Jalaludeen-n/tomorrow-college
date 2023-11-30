@@ -53,6 +53,7 @@ const NavbarRight = ({ onClick }) => {
         style={{
           flexShrink: "unset",
           maxWidth: "none",
+          paddingLeft: 0,
         }}>
         <Decision data={data} />
       </Row>

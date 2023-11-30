@@ -15,19 +15,23 @@ const GameDetails = ({ data }) => {
       </Row>
       <Row className={`${style.GameDetailItems} p-0 m-0`}>
         <Row className={`${style.DetailsRow} p-0 m-0`}>
-          <Col className={`${style.LeftColumn} text-left m-2`}>Game name</Col>
+          <Col className={`${style.LeftColumn} text-left mr-2 mt-2 mb-2`}>
+            Game name
+          </Col>
           <Col className={`${style.RightColumn} text-left m-2`}>
             {data.GameName}
           </Col>
         </Row>
         <Row className={`${style.DetailsRow}`}>
-          <Col className={`${style.LeftColumn} text-left m-2`}>Group name</Col>
+          <Col className={`${style.LeftColumn} text-left mr-2 mt-2 mb-2`}>
+            Group name
+          </Col>
           <Col className={`${style.RightColumn} text-left m-2`}>
             {data.groupName}
           </Col>
         </Row>
         <Row className={`${style.DetailsRow}`}>
-          <Col className={`${style.LeftColumn} text-left m-2`}>
+          <Col className={`${style.LeftColumn} text-left mr-2 mt-2 mb-2`}>
             No. of rounds
           </Col>
           <Col className={`${style.RightColumn} text-left m-2`}>
