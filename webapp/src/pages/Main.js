@@ -14,9 +14,7 @@ const Main = () => {
   const navigate = useNavigate();
   const fetchData = async () => {
     try {
-
       const res = await fetchRunningAndPastGames();
-      
 
       if (res.data) {
         const allGames = res.data;
@@ -26,7 +24,7 @@ const Main = () => {
         setrunningGames(runningGames);
 
         const completedGames = allGames.filter(
-          (game) => game.Status === "Completed",
+          (game) => game.Status === "completed",
         );
         setcompletedGames(completedGames);
       }
