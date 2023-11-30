@@ -188,6 +188,20 @@ const Decision = ({ data }) => {
                         />
                       </Form.Group>
                     )}
+                    {question.type === "Text" && (
+                      <Form.Group className={`input ${styles.input}`}>
+                        <Form.Control
+                          type='text'
+                          name={`question-${index}`}
+                          className={`form-control ${styles.numberInput}`}
+                          value={answers[index] || ""}
+                          onChange={(e) =>
+                            handleRadioChange(index, e.target.value)
+                          }
+                          required
+                        />
+                      </Form.Group>
+                    )}
                   </div>
                 ))}
             </Col>
