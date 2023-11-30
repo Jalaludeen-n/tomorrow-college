@@ -15,7 +15,6 @@ const Decision = ({ data, round, fullData }) => {
       sheetID: fullData.GoogleSheetID,
       level: parseInt(round) + 2,
     };
-    console.log(formatData);
     if (!showPopup) {
       const res = await fetchResultPdf(formatData);
       setRoundPdf(res.data);
@@ -33,7 +32,7 @@ const Decision = ({ data, round, fullData }) => {
           md={6}
           className='d-flex align-items-center justify-content-end'>
           <div className={style.output} onClick={togglePopup}>
-            Output
+            Result
           </div>
         </Col>
       </Row>

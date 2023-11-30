@@ -154,7 +154,6 @@ const Roles = () => {
     const encryptedData = getDataFromURL(location);
     const key = "secret_key";
     const decryptedData = decryptData(encryptedData, key);
-    console.log(decryptedData);
     socket.on("connect", () => {
       console.log("Connected to WebSocket server");
     });
@@ -209,7 +208,6 @@ const Roles = () => {
                     </Col>
                     <Col className={styles.PlayerName}>{player.Name}</Col>
                     <Col className={styles.PlayerRole}>
-                      {console.log(data.email)}
                       {player.ParticipantEmail === data.email ? (
                         <>
                           {data.autoSelection || data.role ? (

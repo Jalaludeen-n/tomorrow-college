@@ -60,9 +60,6 @@ const Score = () => {
         groupName,
         email,
       };
-      console.log(decryptedData);
-      console.log("dssd");
-      console.log(formatData);
 
       const res = await fetchIndividualResultPdf(formatData);
       setScoreLoader(false);
