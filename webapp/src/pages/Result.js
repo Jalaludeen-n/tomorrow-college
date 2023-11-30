@@ -39,9 +39,14 @@ const Result = () => {
     setActiveComponent(component);
   };
   const fetchResult = async (decryptData) => {
+    const level = decryptData.completed
+      ? parseInt(decryptData.level) + 1
+      : parseInt(decryptData.level);
     const data = {
       sheetID: decryptData.GoogleSheetID,
-      level: decryptData.level,
+      level: level,
+      email: decryptData.email,
+      name: decryptData.name,
     };
     const res = await fetchResultPdf(data);
     setRoundPdf(res.data);
