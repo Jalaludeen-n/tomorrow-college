@@ -9,17 +9,20 @@ const AppHeader = ({ form }) => {
   const navigate = useNavigate();
 
   const handleClick = () => {
-    const encryptedData = getDataFromURL(location);
-    const key = "secret_key";
-    const decryptedData = decryptData(encryptedData, key);
     const currentPath = location.pathname;
-    const updatedData = {
-      ...decryptedData,
-      main: true,
-      from: currentPath,
-    };
-    const newData = encryptData(updatedData, "secret_key");
-    navigate(`/home?data=${encodeURIComponent(newData)}`);
+
+    if (currentPath.toString() != "/home") {
+      const encryptedData = getDataFromURL(location);
+      const key = "secret_key";
+      const decryptedData = decryptData(encryptedData, key);
+      const updatedData = {
+        ...decryptedData,
+        main: true,
+        from: currentPath,
+      };
+      const newData = encryptData(updatedData, "secret_key");
+      navigate(`/home?data=${encodeURIComponent(newData)}`);
+    }
   };
   const handleCurrent = () => {
     const encryptedData = getDataFromURL(location);
@@ -29,8 +32,7 @@ const AppHeader = ({ form }) => {
       ...decryptedData,
       main: false,
     };
-    console.log("to path");
-    console.log(decryptedData);
+
     const newData = encryptData(updatedData, "secret_key");
     navigate(`${decryptedData.from}?data=${encodeURIComponent(newData)}`);
   };
