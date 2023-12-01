@@ -115,7 +115,7 @@ const Index = ({
             </div>
           </div>
         </Col>
-        <Col>
+        {/* <Col>
           <div className={`custom-dropdown ${styles.customDropdown}`}>
             <Form.Group controlId='scoreDropdown'>
               <Form.Label className={styles.label}>Score visibility</Form.Label>
@@ -137,7 +137,7 @@ const Index = ({
               </Form.Control>
             </Form.Group>
           </div>
-        </Col>
+        </Col> */}
       </Row>
       <Row>
         <Col md={6} className={styles.sectionTitle}>

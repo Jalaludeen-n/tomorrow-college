@@ -7,7 +7,7 @@ export const initialState = {
   gameInstructions: null,
   levelInstruction: null,
   result: "",
-  scoreVisibility: "",
+  scoreVisibility: "See others score",
   dummy: "",
   allowAutoSelection: false,
   individualInstructions: false,
