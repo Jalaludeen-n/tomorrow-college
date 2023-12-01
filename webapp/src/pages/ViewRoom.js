@@ -113,7 +113,7 @@ const ViewRoom = () => {
     socket.on("connect", () => {
       console.log("Connected to WebSocket server");
     });
-    socket.on("completed", (data) => {
+    socket.on("newplayer", (data) => {
       fetchData();
     });
     socket.on("disconnect", () => {
