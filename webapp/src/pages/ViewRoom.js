@@ -114,7 +114,7 @@ const ViewRoom = () => {
       console.log("Connected to WebSocket server");
     });
     socket.on("newplayer", (data) => {
-      fetchData();
+      fetchData(decryptedData.roomNumber, decryptedData.GameID);
     });
     socket.on("disconnect", () => {
       console.log("Disconnected from WebSocket server");
