@@ -114,6 +114,10 @@ const ViewRoom = () => {
       console.log("Connected to WebSocket server");
     });
     socket.on("newplayer", (data) => {
+      const searchParams = new URLSearchParams(location.search);
+      const encryptedData = searchParams.get("data");
+      const bytes = CryptoJS.AES.decrypt(encryptedData, "secret_key");
+      const decryptedData = JSON.parse(bytes.toString(CryptoJS.enc.Utf8));
       fetchData(decryptedData.roomNumber, decryptedData.GameID);
     });
     socket.on("disconnect", () => {

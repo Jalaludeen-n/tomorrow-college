@@ -24,6 +24,21 @@ const Decision = ({ data, round, fullData }) => {
   return (
     <Row className={style.resultItem}>
       <Row className={style.header}>
+        {/* <Col xs={6} md={6} className='d-flex align-items-center'>
+          <div className={style.round}>
+            You have successfully completed the game
+          </div>
+        </Col>
+        <Col
+          xs={6}
+          md={6}
+          className='d-flex align-items-center justify-content-end'>
+          <div className={style.output} onClick={togglePopup}>
+            close the game
+          </div>
+        </Col> */}
+      </Row>
+      <Row className={style.header}>
         <Col xs={6} md={6} className='d-flex align-items-center'>
           <div className={style.round}>Round {round + 1}</div>
         </Col>
