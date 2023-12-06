@@ -11,24 +11,20 @@ const GameDetails = ({ data }) => {
           marginLeft: 0,
           marginRight: 0,
         }}>
-        Game details
+        Details
       </Row>
       <Row className={`${style.GameDetailItems} p-0 m-0`}>
-        <Row className={`${style.DetailsRow} p-0 m-0`}>
+        <Row className={`${style.DetailsRow}`}>
           <Col className={`${style.LeftColumn} text-left mr-2 mt-2 mb-2`}>
-            Game name
+            Name
           </Col>
           <Col className={`${style.RightColumn} text-left m-2`}>
             {data.GameName}
           </Col>
         </Row>
         <Row className={`${style.DetailsRow}`}>
-          <Col
-            className={`${style.LeftColumn} text-left mr-2 mt-2 mb-2`}
-            style={{
-              marginLeft: "3px",
-            }}>
-            Group name
+          <Col className={`${style.LeftColumn} text-left mr-2 mt-2 mb-2`}>
+            Group
           </Col>
           <Col className={`${style.RightColumn} text-left m-2`}>
             {data.groupName}
@@ -36,7 +32,7 @@ const GameDetails = ({ data }) => {
         </Row>
         <Row className={`${style.DetailsRow}`}>
           <Col className={`${style.LeftColumn} text-left mr-2 mt-2 mb-2`}>
-            No. of rounds
+            Rounds
           </Col>
           <Col className={`${style.RightColumn} text-left m-2`}>
             {data.NumberOfRounds}

@@ -164,7 +164,7 @@ const EnterGameForm = () => {
 
                   <Form.Group controlId='formRoomNumber' className='mt-3'>
                     <Form.Label className={styles["form-text"]}>
-                      Room Number:
+                      Game ID:
                     </Form.Label>
                     <Form.Control
                       type='text'
@@ -177,9 +177,16 @@ const EnterGameForm = () => {
                     )}
                   </Form.Group>
                   <Form.Group controlId='formGroupName' className='mt-3'>
-                    <Form.Label className={styles["form-text"]}>
-                      Group Name:
-                    </Form.Label>
+                    <Row>
+                      <Form.Label className={styles["form-text"]}>
+                        Group Name:
+                      </Form.Label>
+                    </Row>
+                    <Row>
+                      <span className={styles.smallText}>
+                        Discuss with your group and enter the exact group name!
+                      </span>
+                    </Row>
                     <Form.Control
                       type='text'
                       value={groupName}
@@ -188,7 +195,7 @@ const EnterGameForm = () => {
                       required
                     />
                   </Form.Group>
-                  <div className='text-center mt-5'>
+                  <div className='text-center mt-4'>
                     <button className={`${styles.loginButton}`} type='submit'>
                       Join Game
                     </button>

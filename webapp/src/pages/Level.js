@@ -66,7 +66,8 @@ const Level = () => {
       <Layout
         className={`app-container ${styles.levelPage}`}
         LeftNavbar={NavbarLeft}
-        RightNavbar={NavbarRight}>
+        RightNavbar={NavbarRight}
+        left={false}>
         <Row className={styles.levelHeaders}>
           <Col
             className={`d-flex align-items-center justify-content-center ${
@@ -80,7 +81,7 @@ const Level = () => {
               styles.header
             } ${activeComponent === "RoleBriefing" ? styles.activeHeader : ""}`}
             onClick={() => handleComponentChange("RoleBriefing")}>
-            Your Role Briefing
+            Your Role
           </Col>
           <Col
             className={`d-flex align-items-center justify-content-center ${
@@ -89,7 +90,7 @@ const Level = () => {
                 : ""
             }`}
             onClick={() => handleComponentChange("HistoricalDecisions")}>
-            Historical Decisions
+            History
           </Col>
         </Row>
         {activeComponent === "Round1Instruction" && (

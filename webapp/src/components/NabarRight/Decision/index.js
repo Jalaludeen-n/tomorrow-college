@@ -122,7 +122,14 @@ const Decision = ({ data }) => {
         <Loader />
       ) : (
         <>
-          <Row className={`${styles.decision_header} `}>Decisions</Row>
+          <Row className={`${styles.decision_header} `}>
+            {/* 1. As {role} you will need to submit your own decisions. 2. As {CEO}{" "}
+            you will need to submit decisions for your group. Please discuss
+            with your team. 2.1 The {CEO} of your team will submit the decisions
+            for your group. 3. Anyone can submit for the group. Please discuss
+            with the group before submiting. */}
+         
+          </Row>
           <Form onSubmit={handleSubmit}>
             <Col className={`${styles.questionsContainer}`}>
               {questions.length > 0 &&

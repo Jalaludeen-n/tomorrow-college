@@ -49,7 +49,7 @@ const AppHeader = ({ form }) => {
             className={`${styles["header-link"]} ${
               window.location.pathname === "/home" ? styles["active"] : ""
             }`}>
-            Game Homepage
+            Game Info
           </div>
           {/* <Link
             to='/leaderboard'
@@ -65,7 +65,7 @@ const AppHeader = ({ form }) => {
             className={`${styles["header-link"]} ${
               window.location.pathname === "/level" ? styles["active"] : ""
             }`}>
-            Current Round
+            Active Round
           </div>
         </div>
       )}

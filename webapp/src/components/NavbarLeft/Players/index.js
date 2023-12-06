@@ -60,7 +60,6 @@ const Players = ({ data }) => {
             style={{
               marginLeft: 0,
               marginRight: 0,
-              width: "22vw",
               paddingLeft: 0,
             }}>
             <Col className='pl-0'>Players</Col>

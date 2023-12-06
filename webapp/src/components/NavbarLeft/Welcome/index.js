@@ -6,7 +6,7 @@ import { getCurrentFormattedDate } from "../../helper/date";
 const Welcome = ({ name }) => {
   return (
     <div className={style.welcome_container}>
-      <Row className={`${style.welcomeName} `}>Welcome {name}!</Row>
+      <Row className={`${style.welcomeName} `}>Hi {name}!</Row>
       <Row className={`${style.welcomeDate} `}>{getCurrentFormattedDate()}</Row>
     </div>
   );

@@ -17,7 +17,9 @@ const Closed = ({ onClick, text, right }) => {
         />
       </div>
       <div
-        className={` ${style.vertical_text} ${style.navText} ${style.flex_centered} ${style.text_center}`}>
+        className={` ${style.vertical_text} ${style.navText} ${
+          style.flex_centered
+        } ${style.text_center} ${right ? style.right_closed_container : ""}`}>
         {text}
       </div>
     </div>

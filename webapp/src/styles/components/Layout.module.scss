@@ -11,7 +11,8 @@
   border-bottom: 1px solid rgba(201, 201, 201, 0.2);
 }
 .rightContainer {
-  background-color: #d9e4e9;
+  background-color: #5c6378;
+  color: #fff;
   height: calc(100vh - 8vh);
   border-radius: 0px 0px 0px 40px;
   border-bottom: 1px solid rgba(201, 201, 201, 0.2);
@@ -64,13 +65,16 @@
 }
 .navText {
   color: #2a2d31;
-  margin-top: 20vh;
+  margin-top: 28vh;
   font-family: Open Sans;
   font-size: 1.2vw;
   font-style: normal;
   font-weight: 700;
   line-height: normal;
   margin-left: 0.5vw;
+}
+.right_closed_container {
+  color: #fff;
 }
 
 .flex_wrap {

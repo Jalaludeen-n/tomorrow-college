@@ -158,7 +158,7 @@ const Homepage = () => {
               </div>
             </div>
             {!loader && !decryptedData.main && (
-              <Row className={`mt-1 text-end ${styles.mt5} mr-0`}>
+              <Row className={`text-end ${styles.mt5} mt-3`}>
                 <Col className=''>
                   <button
                     className={styles.startButton}

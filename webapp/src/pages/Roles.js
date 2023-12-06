@@ -186,63 +186,76 @@ const Roles = () => {
       {loader ? (
         <Loader />
       ) : (
-        <div className={styles.centeredContainer}>
-          <div className={styles.rolesContainer}>
-            <Row className={styles.RolesHeader}>
-              <Col md={1}></Col>
-              <Col>Players</Col>
-              <Col>Role</Col>
-            </Row>
-            <div className={styles.PlayerList}>
-              {players
-                .slice()
-                .sort((a, b) => {
-                  if (a.ParticipantEmail === data.email) return -1;
-                  if (b.ParticipantEmail === data.email) return 1;
-                  return 0;
-                })
-                .map((player, index) => (
-                  <Row key={index} className={styles.RolesRow}>
-                    <Col md={1} className={styles.RolesNumber}>
-                      {index + 1}
-                    </Col>
-                    <Col className={styles.PlayerName}>{player.Name}</Col>
-                    <Col className={styles.PlayerRole}>
-                      {player.ParticipantEmail === data.email ? (
-                        <>
-                          {data.autoSelection || data.role ? (
-                            data.role
-                          ) : (
-                            <select
-                              value={data.role || ""}
-                              onChange={(e) =>
-                                handleRoleChange(e.target.value)
-                              }>
-                              <option value=''>Select your role</option>
-                              {roles.map((data) => (
-                                <option key={data} value={data}>
-                                  {data}
-                                </option>
-                              ))}
-                            </select>
-                          )}
-                        </>
-                      ) : (
-                        player.Role
-                      )}
-                    </Col>
-                  </Row>
-                ))}
+        <>
+          <Row>
+            <p>
+              Please discuss with your team before choosing your role. Note that
+              your role cannot be changed later.
+            </p>
+          </Row>
+          <Row>
+            <h4>Choose your role</h4>
+          </Row>
+          <div className={styles.centeredContainer}>
+            <div className={styles.rolesContainer}>
+              <Row className={styles.RolesHeader}>
+                <Col md={1}></Col>
+                <Col className='pl-0'>Players</Col>
+                <Col>Role</Col>
+              </Row>
+              <div className={styles.PlayerList}>
+                {players
+                  .slice()
+                  .sort((a, b) => {
+                    if (a.ParticipantEmail === data.email) return -1;
+                    if (b.ParticipantEmail === data.email) return 1;
+                    return 0;
+                  })
+                  .map((player, index) => (
+                    <Row key={index} className={styles.RolesRow}>
+                      <Col md={1} className={styles.RolesNumber}>
+                        {index + 1}
+                      </Col>
+                      <Col className={styles.PlayerName}>{player.Name}</Col>
+                      <Col className={styles.PlayerRole}>
+                        {player.ParticipantEmail === data.email ? (
+                          <>
+                            {data.autoSelection || data.role ? (
+                              data.role
+                            ) : (
+                              <select
+                                value={data.role || ""}
+                                onChange={(e) =>
+                                  handleRoleChange(e.target.value)
+                                }>
+                                <option value=''>Select your role</option>
+                                {roles.map((data) => (
+                                  <option key={data} value={data}>
+                                    {data}
+                                  </option>
+                                ))}
+                              </select>
+                            )}
+                          </>
+                        ) : (
+                          player.Role
+                        )}
+                      </Col>
+                    </Row>
+                  ))}
+              </div>
             </div>
+            {!buttonLoader && (
+              <div className={styles.startButtonContainer}>
+                <button
+                  className={styles.startButton}
+                  onClick={handleStartClick}>
+                  Start THE ROUND
+                </button>
+              </div>
+            )}
           </div>
-          {!buttonLoader && (
-            <div className={styles.startButtonContainer}>
-              <button className={styles.startButton} onClick={handleStartClick}>
-                Start THE ROUND
-              </button>
-            </div>
-          )}
-        </div>
+        </>
       )}
     </>
   );

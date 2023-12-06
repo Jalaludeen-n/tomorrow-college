@@ -8,7 +8,7 @@
 }
 
 .welcome_container {
-  border-radius: 8px;
+  border-radius: 15px;
   background: #d90368;
   margin: 1vh;
   width: 22vw !important;
@@ -23,13 +23,13 @@
 }
 
 .welcomeName {
-  font-size: var(--welcome-font-size);
+  font-size: 18px;
   font-weight: var(--welcome-font-weight-bold);
 }
 
 .welcomeDate {
   padding-top: 0;
-  font-size: 1.3vw;
+  font-size: 14px;
   font-weight: var(--welcome-font-weight-regular);
 }
 
@@ -60,7 +60,7 @@
   background: #d90368;
   color: #fff;
   font-family: Open Sans;
-  font-size: 18px;
+  font-size: 16px;
   font-style: normal;
   font-weight: 700;
   line-height: 22.882px;
@@ -91,18 +91,17 @@
 .LeftColumn {
   color: #2a2d31;
   font-family: Open Sans;
-  font-size: 1vw;
+  font-size: 13px;
   font-style: normal;
   font-weight: 400;
   line-height: normal;
-  margin-left: 6px;
-  // margin-left: 0 !important;
+  margin-left: 0 !important;
 }
 .RightColumn {
   color: #2a2d31;
   text-align: right;
   font-family: Open Sans;
-  font-size: 1vw;
+  font-size: 13px;
   font-style: normal;
   font-weight: 600;
   line-height: normal;
@@ -111,7 +110,7 @@
   padding: 14px;
   color: #2a2d31;
   font-family: Open Sans;
-  font-size: 1vw;
+  font-size: 13px;
   font-style: normal;
   font-weight: 600;
   line-height: normal;
@@ -126,7 +125,7 @@
   background: #d90368;
   color: #fff;
   font-family: Open Sans;
-  font-size: 18px;
+  font-size: 16px;
   font-style: normal;
   font-weight: 700;
   line-height: 22.882px;

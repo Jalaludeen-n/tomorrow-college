@@ -3,8 +3,10 @@ import { Row, Col } from "react-bootstrap";
 import Closed from "../NavbarLeft/Closed";
 import style from "../../styles/components/Layout.module.scss";
 
-const Layout = ({ LeftNavbar, RightNavbar, children }) => {
-  const [isLeftNavbarVisible, setIsLeftNavbarVisible] = useState(!!LeftNavbar);
+const Layout = ({ LeftNavbar, RightNavbar, children, left = true }) => {
+  const [isLeftNavbarVisible, setIsLeftNavbarVisible] = useState(
+    !!LeftNavbar && left,
+  );
   const [isRightNavbarVisible, setIsRightNavbarVisible] = useState(
     !!RightNavbar,
   );
@@ -72,7 +74,7 @@ const Layout = ({ LeftNavbar, RightNavbar, children }) => {
           xs={1}
           md={1}
           className={`${style.leftContainer} ${style.customwidth5}`}>
-          <Closed onClick={toggleLeftNavbar} text='Game details' />
+          <Closed onClick={toggleLeftNavbar} text='Details' />
         </Col>
       )}
       <Col
@@ -94,11 +96,14 @@ const Layout = ({ LeftNavbar, RightNavbar, children }) => {
             <Col
               xs={1}
               md={1}
-              className={`${style.rightContainer} ${style.customwidth5} `}>
+              className={`${style.rightContainer} ${style.customwidth5} `}
+              style={{ color: "#fff" }}>
               <Closed
                 onClick={toggleRightNavbar}
-                text='Game Decisions'
+                text='Decisions'
+                className={style.right_closed_container}
                 right={true}
+                style={{ color: "#fff" }}
               />
             </Col>
           )}

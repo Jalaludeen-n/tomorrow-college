@@ -156,7 +156,7 @@ const Result = () => {
                     : ""
                 }`}
                 onClick={() => handleComponentChange("HistoricalDecisions")}>
-                Historical Decisions
+                History
               </Col>
             </Row>
             {activeComponent === "RoundResult" && (

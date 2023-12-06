@@ -11,8 +11,8 @@
   padding: 5%;
 }
 .welcome_container {
-  border-radius: 8px;
-  background: #d90368;
+  border-radius: 15px;
+  background: #2b2d42;
   margin: 1vh;
   width: 28vw !important;
 }
@@ -39,13 +39,13 @@
   padding: var(--welcome-padding);
 }
 .welcomeName {
-  font-size: var(--welcome-font-size);
+  font-size: 18px;
   font-weight: var(--welcome-font-weight-bold);
 }
 
 .welcomeRole {
   padding-top: 0;
-  font-size: 1.3vw;
+  font-size: 14px;
   font-weight: var(--welcome-font-weight-regular);
 }
 .startButtonContainer {
@@ -54,10 +54,10 @@
   right: 25px;
 }
 .startButton {
-  width: 12vw;
-  height: 6vh;
+  width: 160px;
+  height: 50px;
+  font-size: 0.8em;
   border: none;
-  font-size: 1vw;
   color: #fff;
   text-align: center;
   font-family: Open Sans;
@@ -72,11 +72,10 @@
 }
 
 .decision_header {
-  color: #000;
+  color: #fff;
   font-family: Open Sans;
-  font-size: 18px;
+  font-size: 13px;
   font-style: normal;
-  font-weight: 600;
   line-height: normal;
   margin: 0px 12px 12px !important;
 }

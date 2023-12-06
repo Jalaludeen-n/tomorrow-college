@@ -4,6 +4,7 @@
 .activeHeader {
   background: #d90368 !important;
   color: #fff;
+  font-weight: 600;
 }
 .levelHeaders {
   border: 1px solid #d90368;
@@ -14,9 +15,8 @@
   color: #0b0b0b;
   text-align: center;
   font-family: Open Sans;
-  font-size: 1.9vh;
+  font-size: 14px;
   font-style: normal;
-  font-weight: 600;
   line-height: 22.882px;
   cursor: pointer;
 }
@@ -26,11 +26,10 @@
   right: 25px;
 }
 .startButton {
-  width: 12vw;
-  height: 6vh;
+  width: 160px;
+  height: 50px;
+  font-size: 0.8em;
   border: none;
-  font-size: 1vw;
-
   flex-shrink: 0;
   border-radius: 15px;
   background: #ff6700;
