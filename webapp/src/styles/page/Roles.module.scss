@@ -2,7 +2,7 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  height: 50vh;
+  height: 60vh;
 }
 
 .rolesContainer {
@@ -10,6 +10,13 @@
   border: 1px solid #d90368;
   border-radius: 15px;
   width: 35vw;
+}
+.container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  width: 39vw;
 }
 .RolesHeader {
   border-radius: 15px 15px 0px 0px;
@@ -29,7 +36,18 @@
   overflow-x: hidden;
   overflow-y: scroll;
 }
+.centeredRow {
+  display: flex;
+  justify-content: center;
+  text-align: center;
+}
 
+.centeredContainer {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
 .RolesRow {
   padding: 14px;
 }
