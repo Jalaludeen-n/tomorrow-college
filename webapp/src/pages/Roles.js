@@ -63,6 +63,7 @@ const Roles = () => {
   const handleStartClick = async () => {
     setLoader(true);
     const isRoundStarted = await update(data);
+    console.log(data);
 
     if (!isRoundStarted) {
       alert(
@@ -189,20 +190,22 @@ const Roles = () => {
         <div className={styles.centeredContainer}>
           <div className={styles.container}>
             <Row className={styles.centeredRow}>
+              <h4>Choose your role</h4>
+            </Row>
+            <Row className={styles.centeredRow}>
               <p>
                 Please discuss with your team before choosing your role. Note
                 that your role cannot be changed later.
               </p>
             </Row>
-            <Row className={styles.centeredRow}>
-              <h4>Choose your role</h4>
-            </Row>
 
             <div>
               <div className={styles.rolesContainer}>
-                <Row className={styles.RolesHeader}>
+                <Row className={`${styles.RolesHeader} pl-0`}>
                   <Col md={1}></Col>
-                  <Col className='pl-0'>Players</Col>
+                  <Col className='pl-0' style={{ padding: "0px" }}>
+                    Players
+                  </Col>
                   <Col>Role</Col>
                 </Row>
                 <div className={styles.PlayerList}>

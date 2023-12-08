@@ -49,28 +49,14 @@ const Players = ({ data }) => {
       {loader ? (
         <Loader />
       ) : (
-        <div
-          className={styles.GameDetails}
-          style={{
-            marginLeft: 0,
-            marginRight: 0,
-          }}>
-          <Row
-            className={styles.PlayerHeader}
-            style={{
-              marginLeft: 0,
-              marginRight: 0,
-              paddingLeft: 0,
-            }}>
-            <Col className='pl-0'>Players</Col>
+        <div className={styles.GameDetails}>
+          <Row className={`${styles.PlayerHeader} m-0`}>
+            <Col className='p-0'>Players</Col>
             <Col>Role</Col>
           </Row>
           <div className={styles.PlayerList}>
             {players.map((player, index) => (
               <Row key={index} className={styles.PlayerRow}>
-                {/* <Col md={1} className={styles.PlayerNumber}>
-                  
-                </Col> */}
                 <Col className={styles.PlayerName}>
                   {index + 1} &nbsp; &nbsp;
                   {player.Name}
