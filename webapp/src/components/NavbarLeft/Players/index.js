@@ -56,8 +56,8 @@ const Players = ({ data }) => {
           </Row>
           <div className={styles.PlayerList}>
             {players.map((player, index) => (
-              <Row key={index} className={styles.PlayerRow}>
-                <Col className={styles.PlayerName}>
+              <Row key={index} className={`${styles.PlayerRow} m-0`}>
+                <Col className={`${styles.PlayerName} p-0`}>
                   {index + 1} &nbsp; &nbsp;
                   {player.Name}
                 </Col>
